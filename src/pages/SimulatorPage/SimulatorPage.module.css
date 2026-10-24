@@ -1,0 +1,19 @@
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 914fr) minmax(0, 446fr);
+  column-gap: 27px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 27px 30px 39px 23px;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+}
+
+.summaryRow {
+  display: flex;
+  gap: 11px;
+  margin: 17px 0 13px;
+}

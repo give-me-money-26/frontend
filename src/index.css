@@ -1,0 +1,36 @@
+:root {
+  --color-primary: #13575f;
+  --color-accent: #20848f;
+  --color-frame-stroke: #95c8ce;
+  --color-card: #d2ebf1;
+  --color-header-1: #8a9eb8;
+  --color-logo-typo: #4daeb9;
+
+  --gradient-main-start: #e1f9ff;
+  --gradient-main-end: #b8e0e9; 
+
+  --radius-card: 24px;
+
+  --font-display: "Offside", sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro", "Noto Sans KR",
+    sans-serif;
+
+  font-family: var(--font-body);
+  color: var(--color-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

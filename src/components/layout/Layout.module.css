@@ -1,0 +1,14 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: radial-gradient(
+    ellipse 53% 98% at 45.6% 78.4%,
+    var(--gradient-main-start) 0%,
+    var(--gradient-main-end) 100%
+  );
+}
+
+.main {
+  flex: 1;
+}

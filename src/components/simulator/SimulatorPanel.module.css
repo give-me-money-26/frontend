@@ -1,0 +1,72 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 0 6px 0 21px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 25px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: var(--color-primary);
+}
+
+.location {
+  margin: 0;
+  font-size: 15px;
+  letter-spacing: -0.05em;
+  color: var(--color-accent);
+}
+
+.mapLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  align-self: center;
+  width: 133px;
+  height: 28px;
+  margin-left: auto;
+  background: var(--color-accent);
+  border: 1px solid var(--color-frame-stroke);
+  border-radius: 22px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.mapArrow {
+  transform: scaleX(-1);
+}
+
+.card {
+  position: relative;
+  height: 466px;
+  overflow: hidden;
+  background: var(--color-card);
+  border: 0.8px solid var(--color-frame-stroke);
+  border-radius: var(--radius-card);
+}
+
+.mode {
+  position: absolute;
+  top: 22px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--color-accent);
+}
