@@ -56,10 +56,6 @@
   cursor: pointer;
 }
 
-.option:hover {
-  background: var(--color-card);
-}
-
 .submit {
   display: flex;
   align-items: center;

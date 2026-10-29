@@ -48,11 +48,11 @@ function OnboardingPage() {
   }, []);
 
   // 새로고침해도 유지되도록 선택한 위치는 URL 쿼리(?location=)로 넘기고,
-  // 계산 조건은 시뮬레이터에서 useLocation().state.conditions로 받는다.
+  // 계산 조건은 state로 넘겨 지도 → 시뮬레이터까지 useLocation().state.conditions로 받는다.
   const handleSubmit = (location) => {
     navigate(
       {
-        pathname: "/simulator",
+        pathname: "/map",
         search: createSearchParams({ location }).toString(),
       },
       { state: { conditions } },

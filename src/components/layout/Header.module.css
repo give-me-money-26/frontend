@@ -24,5 +24,6 @@
 .logo {
   font-size: 24px;
   line-height: normal;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.04em;
+  -webkit-text-stroke: 0.45px currentColor;
 }

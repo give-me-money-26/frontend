@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import arrowLeft from "../../assets/icons/arrow-left.svg";
+import arrowRightWhite from "../../assets/icons/arrow-right-white.svg";
 import modeDot from "../../assets/icons/mode-dot.svg";
 import styles from "./SimulatorPanel.module.css";
 
@@ -10,7 +10,7 @@ function SimulatorPanel({ location, modeLabel = "보기 모드", children }) {
         <h2 className={styles.title}>3D SIMULATOR</h2>
         <p className={styles.location}>{location}</p>
         <Link to="/map" className={styles.mapLink}>
-          <img src={arrowLeft} alt="" className={styles.mapArrow} />
+          <img src={arrowRightWhite} alt="" className={styles.mapArrow} />
           <span>Aero MAP</span>
         </Link>
       </div>
