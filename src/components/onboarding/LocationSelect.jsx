@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ArrowRightIcon from "../../assets/icons/arrow-right.svg?react";
-import CaretDownIcon from "../../assets/icons/caret-down.svg?react";
+import ChevronDownIcon from "../../assets/icons/chevron-down.svg?react";
 import styles from "./LocationSelect.module.css";
 
 function LocationSelect({ options, onSubmit }) {
@@ -34,8 +34,8 @@ function LocationSelect({ options, onSubmit }) {
           onClick={() => setIsOpen((open) => !open)}
         >
           <span>{selected ?? "위치를 선택하세요"}</span>
-          <CaretDownIcon
-            className={`${styles.caret} ${isOpen ? styles.caretOpen : ""}`}
+          <ChevronDownIcon
+            className={isOpen ? styles.caretOpen : undefined}
             aria-hidden="true"
           />
         </button>
@@ -70,8 +70,8 @@ function LocationSelect({ options, onSubmit }) {
       >
         <ArrowRightIcon
           className={styles.submitIcon}
-          width={23}
-          height={12}
+          width={24}
+          height={13}
           aria-hidden="true"
         />
       </button>

@@ -1,13 +1,21 @@
 .page {
   display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
+  /* Figma 방사형 그라데이션: 가운데에서 프레임 가장자리까지 */
   background: radial-gradient(
-    circle at center,
+    50% 50% at 50% 50%,
     var(--gradient-onboarding-start) 0%,
     var(--gradient-onboarding-end) 100%
   );
+}
+
+/* 사이드 패널이 열리면 남은 영역 기준으로 가운데 정렬된다. */
+.main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
 }
 
 .splash {
@@ -32,29 +40,35 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 11px;
 }
 
 .brand .symbol {
-  width: 69px;
-  height: 68px;
+  width: 68px;
+  height: 67px;
 }
 
 .title {
   margin: 0;
   font-weight: 400;
-  line-height: 100%;
+  line-height: normal;
 }
 
+/* Figma 자간 -8%는 브라우저에서 -4%로 렌더링해야 같은 폭(Aero 122px, Harvest 198px)이 나온다. */
 .logo {
   font-size: 53.42px;
-  letter-spacing: -0.065em;
+  letter-spacing: -0.04em;
+}
+
+/* Offside는 400 굵기만 있어서 font-weight 대신 외곽선으로 두께를 더한다. */
+.brand .logo {
+  -webkit-text-stroke: 0.8px currentColor;
 }
 
 .guide {
   display: flex;
   align-items: center;
-  margin: 28px 0 68px;
+  margin: 22px 0 70px;
 }
 
 .guideLink {
@@ -62,7 +76,9 @@
   border: 0;
   background: none;
   font: inherit;
-  font-size: 15px;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: -0.04em;
   color: var(--color-accent);
   cursor: pointer;
 }
