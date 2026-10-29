@@ -5,12 +5,7 @@
   flex-shrink: 0;
   height: 64px;
   overflow: hidden;
-  background: linear-gradient(
-    to right,
-    #aedde7 0%,
-    #bce6ee 19.585%,
-    #b6e5ea 100%
-  );
+  background: var(--gradient-header);
   border-bottom: 2px solid var(--color-frame-stroke);
 }
 
@@ -20,21 +15,14 @@
   padding: 11px 22px 0;
 }
 
-.logo {
+.logoLink {
   display: inline-flex;
   align-items: center;
   padding: 8.5px 9px;
-  font-family: var(--font-display);
+}
+
+.logo {
   font-size: 24px;
   line-height: normal;
   letter-spacing: -0.05em;
-  white-space: nowrap;
-}
-
-.aero {
-  color: var(--color-logo-typo);
-}
-
-.harvest {
-  color: var(--color-accent);
 }

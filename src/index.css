@@ -5,15 +5,27 @@
   --color-card: #d2ebf1;
   --color-header-1: #8a9eb8;
   --color-logo-typo: #4daeb9;
+  --color-white: #ffffff;
+  --color-text: #222222;
+  --color-disabled: #a7b4b7;
+  --color-field-bg: rgba(255, 255, 255, 0.15);
 
+  --gradient-header: linear-gradient(
+    to right,
+    #aedde7 0%,
+    #bce6ee 19.585%,
+    #b6e5ea 100%
+  );
   --gradient-main-start: #e1f9ff;
-  --gradient-main-end: #b8e0e9; 
+  --gradient-main-end: #b8e0e9;
+  --gradient-onboarding-start: #e0f9ff;
+  --gradient-onboarding-end: #bce2ea;
 
   --radius-card: 24px;
 
   --font-display: "Offside", sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro", "Noto Sans KR",
-    sans-serif;
+  --font-body:
+    -apple-system, BlinkMacSystemFont, "SF Pro", "Noto Sans KR", sans-serif;
 
   font-family: var(--font-body);
   color: var(--color-primary);

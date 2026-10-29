@@ -1,13 +1,13 @@
 import { Link } from "react-router";
+import Logo from "../common/Logo";
 import styles from "./Header.module.css";
 
 function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <Link to="/" className={styles.logo}>
-          <span className={styles.aero}>Aero</span>
-          <span className={styles.harvest}>Harvest</span>
+        <Link to="/simulator" className={styles.logoLink}>
+          <Logo className={styles.logo} />
         </Link>
       </div>
     </header>

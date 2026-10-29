@@ -1,0 +1,13 @@
+.logo {
+  font-family: var(--font-display);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.aero {
+  color: var(--color-logo-typo);
+}
+
+.harvest {
+  color: var(--color-accent);
+}
