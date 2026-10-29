@@ -1,5 +1,3 @@
-// 캠퍼스 지도 데이터. 좌표는 지도 이미지(map.svg, 1263×669) 기준이다.
-// outline: Figma 건물 강조 도형(path d, 도형 자체 좌표), offset: 지도 안 위치, label: 이름표 중심 위치.
 export const MAP_WIDTH = 1263;
 export const MAP_HEIGHT = 669;
 
@@ -8,7 +6,6 @@ export const CAMPUS = {
   shortName: "가톨릭대 성심교정",
 };
 
-// summary가 없는 건물은 아직 분석 데이터가 없는 상태로 표시한다.
 export const BUILDINGS = [
   {
     id: "dasol",

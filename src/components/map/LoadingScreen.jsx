@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import windIcon from "../../assets/icons/wind.svg";
-import logoSymbol from "../../assets/images/onboarding-logo.svg";
+import logoSymbol from "../../assets/images/logo-symbol.svg";
 import styles from "./LoadingScreen.module.css";
 
 const DURATION = 2000;
 
-// 바람 자국 위치(1440×900 시안 기준 왼쪽 위 좌표)
 const WINDS = [
   [172, 143],
   [965, 192],
@@ -19,7 +18,6 @@ const WINDS = [
   [749, 772],
 ];
 
-// 건물로 이동하기 전 전체 화면 로딩. 진행률이 100%가 되면 onDone을 부른다.
 function LoadingScreen({ buildingName, onDone }) {
   const [progress, setProgress] = useState(0);
 

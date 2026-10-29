@@ -9,10 +9,9 @@ import ArrowLeftIcon from "../../assets/icons/arrow-left.svg?react";
 import useViewportSize from "../../hooks/useViewportSize";
 import CampusMap from "../../components/map/CampusMap";
 import LoadingScreen from "../../components/map/LoadingScreen";
-import { CAMPUS } from "../../components/map/campus";
+import { CAMPUS } from "../../data/campus";
 import styles from "./MapPage.module.css";
 
-// Figma 프레임에서 헤더를 뺀 영역. 창이 이보다 작으면 페이지 전체를 같은 비율로 줄인다.
 const DESIGN_WIDTH = 1440;
 const DESIGN_HEIGHT = 836;
 const HEADER_HEIGHT = 64;
@@ -31,7 +30,6 @@ function MapPage() {
     availableHeight / DESIGN_HEIGHT,
   );
 
-  // 로딩 화면이 끝나면 이동한다. 온보딩에서 받은 계산 조건(state)은 시뮬레이터까지 그대로 넘긴다.
   const handleLoaded = useCallback(() => {
     navigate(
       {

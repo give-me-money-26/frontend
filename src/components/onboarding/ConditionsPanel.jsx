@@ -13,11 +13,7 @@ const FIELDS = [
   { name: "installCost", label: "터빈 + 설치비 (원)", placeholder: "미입력" },
 ];
 
-function ConditionsPanel({
-  onClose,
-  conditions = DEFAULT_CONDITIONS,
-  onApply,
-}) {
+function ConditionsPanel({ conditions, onApply, onClose }) {
   const idPrefix = useId();
   const [values, setValues] = useState(conditions);
 
@@ -28,7 +24,7 @@ function ConditionsPanel({
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onApply?.(values);
+    onApply(values);
     onClose();
   };
 

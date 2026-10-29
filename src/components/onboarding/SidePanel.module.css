@@ -1,4 +1,3 @@
-/* 패널 폭이 0 → 404px로 늘어나면서 왼쪽 콘텐츠를 밀어낸다. */
 .panel {
   position: sticky;
   top: 0;

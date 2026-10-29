@@ -80,7 +80,6 @@
   cursor: default;
 }
 
-/* 24px로 키운 화살표의 선 굵기를 Figma처럼 2px로 맞춘다. */
 .submitIcon path {
   stroke-width: 1.3;
 }

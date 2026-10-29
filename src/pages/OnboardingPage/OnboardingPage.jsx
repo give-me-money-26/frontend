@@ -1,22 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { createSearchParams, useNavigate } from "react-router";
-import logoSymbol from "../../assets/images/onboarding-logo.svg";
+import logoSymbol from "../../assets/images/logo-symbol.svg";
 import Logo from "../../components/common/Logo";
 import ConditionsPanel from "../../components/onboarding/ConditionsPanel";
 import { DEFAULT_CONDITIONS } from "../../components/onboarding/conditions";
 import GuidePanel from "../../components/onboarding/GuidePanel";
 import LocationSelect from "../../components/onboarding/LocationSelect";
 import PlanningPanel from "../../components/onboarding/PlanningPanel";
+import { CAMPUS } from "../../data/campus";
 import styles from "./OnboardingPage.module.css";
 
 const SPLASH_DURATION = 800;
-const LOCATIONS = ["가톨릭대학교 성심교정"];
-// 메뉴 id → 열릴 사이드 패널.
-const PANELS = {
-  guide: GuidePanel,
-  planning: PlanningPanel,
-  conditions: ConditionsPanel,
-};
+const LOCATIONS = [CAMPUS.name];
 const GUIDE_LINKS = [
   { id: "guide", label: "이용 안내" },
   { id: "planning", label: "서비스 기획" },
@@ -40,15 +35,12 @@ function OnboardingPage() {
   const [openPanel, setOpenPanel] = useState(null);
   const [conditions, setConditions] = useState(DEFAULT_CONDITIONS);
   const closePanel = useCallback(() => setOpenPanel(null), []);
-  const Panel = PANELS[openPanel];
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), SPLASH_DURATION);
     return () => clearTimeout(timer);
   }, []);
 
-  // 새로고침해도 유지되도록 선택한 위치는 URL 쿼리(?location=)로 넘기고,
-  // 계산 조건은 state로 넘겨 지도 → 시뮬레이터까지 useLocation().state.conditions로 받는다.
   const handleSubmit = (location) => {
     navigate(
       {
@@ -89,11 +81,13 @@ function OnboardingPage() {
         )}
       </main>
 
-      {Panel && (
-        <Panel
-          onClose={closePanel}
+      {openPanel === "guide" && <GuidePanel onClose={closePanel} />}
+      {openPanel === "planning" && <PlanningPanel onClose={closePanel} />}
+      {openPanel === "conditions" && (
+        <ConditionsPanel
           conditions={conditions}
           onApply={setConditions}
+          onClose={closePanel}
         />
       )}
     </div>

@@ -1,11 +1,9 @@
-/* 헤더(64px) 아래 남은 화면을 채운다. */
 .page {
   height: calc(100dvh - 64px);
   overflow: hidden;
   background: var(--color-panel-bg);
 }
 
-/* 시안(1440×836) 크기로 그린 뒤 JS에서 zoom으로 화면에 맞춰 통째로 줄인다. */
 .stage {
   position: relative;
   padding-top: 52px;
@@ -32,7 +30,6 @@
   flex-shrink: 0;
 }
 
-/* 시안: 지도 1263×669, 1440 프레임 기준 왼쪽 86px. 화면이 더 넓으면 1440 프레임째 가운데 정렬 */
 .content {
   width: 1263px;
   margin-left: calc(max(0px, (100% - 1440px) / 2) + 86px);

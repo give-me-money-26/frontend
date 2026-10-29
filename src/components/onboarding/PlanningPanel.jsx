@@ -4,8 +4,6 @@ import judgementIcon from "../../assets/icons/judgement.svg";
 import SidePanel from "./SidePanel";
 import styles from "./PlanningPanel.module.css";
 
-// 아이콘은 색이 들어간 이미지라 <img>로 쓰고, 크기는 Figma 원본 그대로 둔다.
-// 설명의 줄바꿈은 시안과 같게 \n으로 고정한다.
 const FLOW = [
   {
     icon: discoveryIcon,

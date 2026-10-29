@@ -2,7 +2,6 @@ import ArrowRightIcon from "../../assets/icons/arrow-right.svg?react";
 import XIcon from "../../assets/icons/x.svg?react";
 import styles from "./BuildingPopup.module.css";
 
-// 선택한 건물 이름표 바로 위에 뜨는 정보 카드
 function BuildingPopup({ building, style, onClose, onNavigate }) {
   const { name, summary } = building;
 

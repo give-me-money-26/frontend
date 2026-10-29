@@ -18,6 +18,9 @@
   --color-popup-bg: #e6faff;
   --color-button-2: #e9f6f9;
   --color-button-2-stroke: #a0cfd5;
+  --color-logo-start: #68afb1;
+  --color-logo-end: #2c8d98;
+  --color-glow: #6bc4c5;
 
   --gradient-header: linear-gradient(
     to right,
@@ -27,6 +30,11 @@
   );
   --gradient-main-start: #e1f9ff;
   --gradient-main-end: #b8e0e9;
+  --gradient-main: radial-gradient(
+    ellipse 53% 98% at 45.6% 78.4%,
+    var(--gradient-main-start) 0%,
+    var(--gradient-main-end) 100%
+  );
   --gradient-onboarding-start: #e0f9ff;
   --gradient-onboarding-end: #bce2ea;
 
