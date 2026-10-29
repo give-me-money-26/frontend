@@ -42,7 +42,7 @@
   font-family: var(--font-display);
   font-size: 15px;
   letter-spacing: -0.03em;
-  color: #fff;
+  color: var(--color-white);
 }
 
 .mapArrow {

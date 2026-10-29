@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import arrowRight from "../../assets/icons/arrow-right.svg";
+import ArrowRightIcon from "../../assets/icons/arrow-right.svg?react";
 import styles from "./SummaryCard.module.css";
 
 function SummaryCard({
@@ -17,7 +17,7 @@ function SummaryCard({
         <h3 className={styles.title}>{title}</h3>
         <span className={styles.more}>
           자세히 보기
-          <img src={arrowRight} alt="" />
+          <ArrowRightIcon aria-hidden="true" />
         </span>
       </div>
       <p className={styles.metric}>

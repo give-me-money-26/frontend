@@ -54,5 +54,5 @@
 .primaryButton {
   padding: 10px 15px;
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-white);
 }
