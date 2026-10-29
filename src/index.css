@@ -7,8 +7,14 @@
   --color-logo-typo: #4daeb9;
   --color-white: #ffffff;
   --color-text: #222222;
-  --color-disabled: #a7b4b7;
+  --color-disabled: #a9a9a9;
+  --color-border-light: #e6e6e6;
   --color-field-bg: rgba(255, 255, 255, 0.15);
+  --color-panel-bg: #deeff3;
+  --color-card-2: #cde8ee;
+  --color-surface-soft: #e1f2f6;
+  --color-button-2: #e9f6f9;
+  --color-button-2-stroke: #a0cfd5;
 
   --gradient-header: linear-gradient(
     to right,
