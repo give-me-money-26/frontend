@@ -35,7 +35,7 @@
 /* 시안: 지도 1263×669, 1440 프레임 기준 왼쪽 86px. 화면이 더 넓으면 1440 프레임째 가운데 정렬 */
 .content {
   width: 1263px;
-  margin-left: calc((100% - 1440px) / 2 + 86px);
+  margin-left: calc(max(0px, (100% - 1440px) / 2) + 86px);
 }
 
 .heading {

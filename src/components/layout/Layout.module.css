@@ -1,3 +1,10 @@
+/* 헤더가 있는 페이지는 스크롤바 자리를 항상 비워 둔다.
+   스크롤이 생기는 페이지(시뮬레이터)와 안 생기는 페이지(지도)에서 헤더 로고 위치가 같아진다. */
+:global(html):has(.layout) {
+  scrollbar-gutter: stable;
+  background: var(--color-panel-bg);
+}
+
 .layout {
   display: flex;
   flex-direction: column;

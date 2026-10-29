@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import {
   createSearchParams,
   useLocation,
@@ -7,6 +8,7 @@ import {
 import ArrowLeftIcon from "../../assets/icons/arrow-left.svg?react";
 import useViewportSize from "../../hooks/useViewportSize";
 import CampusMap from "../../components/map/CampusMap";
+import LoadingScreen from "../../components/map/LoadingScreen";
 import { CAMPUS } from "../../components/map/campus";
 import styles from "./MapPage.module.css";
 
@@ -20,6 +22,7 @@ function MapPage() {
   const { state } = useLocation();
   const [searchParams] = useSearchParams();
   const location = searchParams.get("location") ?? CAMPUS.name;
+  const [loadingBuilding, setLoadingBuilding] = useState(null);
   const viewport = useViewportSize();
   const availableHeight = viewport.height - HEADER_HEIGHT;
   const scale = Math.min(
@@ -28,19 +31,19 @@ function MapPage() {
     availableHeight / DESIGN_HEIGHT,
   );
 
-  // 온보딩에서 받은 계산 조건(state)은 시뮬레이터까지 그대로 넘긴다.
-  const handleNavigate = (building) => {
+  // 로딩 화면이 끝나면 이동한다. 온보딩에서 받은 계산 조건(state)은 시뮬레이터까지 그대로 넘긴다.
+  const handleLoaded = useCallback(() => {
     navigate(
       {
         pathname: "/simulator",
         search: createSearchParams({
           location,
-          building: building.name,
+          building: loadingBuilding.name,
         }).toString(),
       },
       { state },
     );
-  };
+  }, [navigate, location, loadingBuilding, state]);
 
   return (
     <div className={styles.page}>
@@ -48,7 +51,7 @@ function MapPage() {
         className={styles.stage}
         style={{
           zoom: scale,
-          width: viewport.width / scale,
+          width: viewport.contentWidth / scale,
           height: availableHeight / scale,
         }}
       >
@@ -70,9 +73,16 @@ function MapPage() {
             </p>
           </div>
 
-          <CampusMap onNavigate={handleNavigate} />
+          <CampusMap onNavigate={setLoadingBuilding} />
         </div>
       </div>
+
+      {loadingBuilding && (
+        <LoadingScreen
+          buildingName={loadingBuilding.name}
+          onDone={handleLoaded}
+        />
+      )}
     </div>
   );
 }

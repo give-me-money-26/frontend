@@ -1,0 +1,85 @@
+/* 헤더까지 덮는 전체 화면. 시안 기준 1440×900 */
+.screen {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse 53% 98% at 45.6% 78.4%,
+    var(--gradient-main-start) 0%,
+    var(--gradient-main-end) 100%
+  );
+}
+
+.wind {
+  position: absolute;
+  width: 108px;
+  height: 4px;
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  /* 시안에서 묶음이 화면 중앙보다 조금 아래(로고 위쪽 351px)에 있다. */
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 97px;
+  height: 95px;
+  animation: spin 1.6s linear infinite;
+}
+
+.message {
+  margin: 34px 0 0;
+  color: var(--color-accent);
+  font-size: 24px;
+  /* Figma SF Pro 590은 Noto Sans KR 600보다 얇아 보여 500으로 맞춘다. */
+  font-weight: 500;
+  line-height: 29px;
+  letter-spacing: -0.04em;
+}
+
+.track {
+  width: 300px;
+  height: 6px;
+  margin-top: 30px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-frame-stroke);
+}
+
+.bar {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-accent-2);
+}
+
+.percent {
+  margin: 16px 0 0;
+  color: var(--color-accent-2);
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 100%;
+  letter-spacing: -0.04em;
+  -webkit-text-stroke: 0.2px currentColor;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo {
+    animation-duration: 6s;
+  }
+}
