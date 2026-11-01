@@ -1,0 +1,164 @@
+.panel {
+  position: relative;
+  width: 478px;
+  height: 321px;
+  overflow: hidden;
+  background: var(--color-card-2);
+  border: 0.5px solid var(--color-logo-typo);
+  border-radius: 22px;
+}
+
+.scroll {
+  height: 100%;
+  padding: 26px 10px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding: 0 30px 0 10px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.title {
+  margin: 0;
+  padding: 0 8px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.05em;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tableBox {
+  padding: 15px;
+  background: var(--color-button-2);
+  border: 1px solid var(--color-frame-stroke);
+  border-radius: 15px;
+}
+
+.table {
+  width: 386px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 12px;
+  line-height: normal;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.table th:nth-child(1),
+.table td:nth-child(1) {
+  width: 61px;
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+  width: 66px;
+}
+
+.table th:nth-child(4),
+.table td:nth-child(4) {
+  width: 64px;
+}
+
+.table th {
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.table thead th {
+  padding: 2px 0;
+}
+
+.table td {
+  font-weight: 400;
+}
+
+.table tbody th,
+.table tbody td {
+  padding-top: 11px;
+}
+
+.table tbody tr:first-child th,
+.table tbody tr:first-child td {
+  padding-top: 0;
+}
+
+.table thead .lineCell {
+  padding: 7px 0;
+  line-height: 0;
+}
+
+.note {
+  margin: 0;
+  padding: 0 10px;
+  font-size: 12px;
+  line-height: normal;
+  letter-spacing: -0.04em;
+  color: var(--color-accent);
+}
+
+.noteIndent {
+  display: block;
+  padding-left: 1.1em;
+}
+
+.references {
+  margin: 0;
+  padding: 14px 20px;
+  list-style: none;
+  background: var(--color-button-2);
+  border: 1px solid var(--color-frame-stroke);
+  border-radius: 15px;
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: -0.05em;
+}
+
+.references a {
+  word-break: break-all;
+}
+
+.scrollbar {
+  position: absolute;
+  top: 26px;
+  left: 457px;
+  width: 10px;
+  height: 270px;
+  pointer-events: none;
+}
+
+.scrollbar::before {
+  position: absolute;
+  inset: 0 1px;
+  content: "";
+  background: var(--color-frame-stroke);
+  border-radius: 4px;
+}
+
+.scrollThumb {
+  position: absolute;
+  left: 0;
+  width: 10px;
+  height: 35px;
+  background: var(--color-dropdown-text);
+  border-radius: 5px;
+}

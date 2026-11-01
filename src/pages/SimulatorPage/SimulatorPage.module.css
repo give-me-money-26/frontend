@@ -1,10 +1,11 @@
 .page {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 914fr) minmax(0, 446fr);
-  column-gap: 27px;
+  grid-template-columns: minmax(0, 885fr) minmax(0, 446fr);
+  column-gap: 18px;
   max-width: 1440px;
   margin: 0 auto;
-  padding: 27px 30px 39px 23px;
+  padding: 27px 41px 39px 50px;
 }
 
 .left {

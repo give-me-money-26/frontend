@@ -1,0 +1,99 @@
+.container {
+  position: relative;
+  width: 478px;
+  height: 321px;
+}
+
+.viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 22px;
+}
+
+.cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: transform 0.3s ease;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 478px;
+  height: 100%;
+  padding: 25px 10px;
+  overflow: hidden;
+  background: var(--color-card-3);
+  border: 0.5px solid var(--color-logo-typo);
+  border-radius: 22px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  width: 458px;
+  padding: 0 30px 0 10px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.title {
+  margin: 0;
+  padding: 0 8px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.05em;
+}
+
+.textBox {
+  padding: 14px 20px;
+  background: var(--color-button-2);
+  border: 1px solid var(--color-frame-stroke);
+  border-radius: 15px;
+}
+
+.calculation,
+.assumption {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.calculation {
+  line-height: 1.4;
+  letter-spacing: -0.04em;
+}
+
+.assumption {
+  line-height: 1.5;
+  letter-spacing: -0.05em;
+}
+
+.sideButton {
+  position: absolute;
+  top: 110.5px;
+  display: flex;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: grab;
+  touch-action: none;
+  transform: scaleX(-1);
+  transition: left 0.3s ease;
+}
+
+.sideButton:active {
+  cursor: grabbing;
+}
