@@ -1,0 +1,248 @@
+.container {
+  flex: 1 0 0;
+  min-width: 0;
+  padding: 21px 23px;
+  background: var(--color-card-3);
+  border: 0.5px solid var(--color-logo-typo);
+  border-radius: 14px;
+}
+
+.list {
+  display: flex;
+  gap: 11px;
+  height: 160px;
+}
+
+.amount {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  margin: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.value {
+  font-family: var(--font-display);
+  font-size: 35px;
+  letter-spacing: -0.06em;
+  color: var(--color-accent);
+}
+
+.unit {
+  font-size: 18px;
+  letter-spacing: -0.06em;
+}
+
+.costCard {
+  position: relative;
+  flex: 1 0 0;
+  min-width: 0;
+  background: var(--color-button-2);
+  border: 0.8px solid var(--color-logo-typo);
+  border-radius: 24px;
+}
+
+.costBody {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.costContent {
+  position: absolute;
+  top: 77.6px;
+  left: -0.4px;
+  display: flex;
+  gap: 46px;
+  align-items: center;
+  padding: 0 44px;
+}
+
+.costPrice {
+  display: flex;
+  gap: 62px;
+  align-items: center;
+}
+
+.costItem {
+  display: flex;
+  gap: 42px;
+  align-items: center;
+  padding: 0 6px;
+}
+
+.costInstall {
+  gap: 46px;
+}
+
+.costItem .amount {
+  width: 104px;
+}
+
+.costLabel {
+  font-size: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+  letter-spacing: -0.05em;
+}
+
+.costHeader {
+  position: absolute;
+  top: -0.4px;
+  left: -0.4px;
+  right: -0.4px;
+  height: 53px;
+  border-bottom: 0.8px solid var(--color-logo-typo);
+}
+
+.costTitle {
+  position: absolute;
+  top: 53%;
+  left: 17px;
+  transform: translateY(-50%);
+  margin: 0;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.03em;
+}
+
+.dropdown {
+  position: absolute;
+  top: 13px;
+  right: 18px;
+  z-index: 10;
+}
+
+.dropdownButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 126px;
+  height: 31px;
+  padding: 0 0 0 19.5px;
+  background: var(--color-dropdown);
+  border: 0.5px solid var(--color-frame-stroke);
+  border-radius: 11px;
+  font: inherit;
+  font-size: 13px;
+  line-height: normal;
+  letter-spacing: -0.04em;
+  color: var(--color-dropdown-text);
+  cursor: pointer;
+}
+
+.triangle {
+  position: absolute;
+  top: calc(50% - 1px);
+  right: 11.5px;
+  width: 15px;
+  height: 15px;
+  transform: translateY(-50%) scaleY(-1);
+}
+
+.dropdownButton[aria-expanded="true"] .triangle {
+  transform: translateY(calc(-50% + 2.4px));
+}
+
+.triangle img {
+  position: absolute;
+  top: 1px;
+  left: 1.735px;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 3.5px);
+  left: -1.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 170px;
+  margin: 0;
+  padding: 12px;
+  list-style: none;
+  background: var(--color-dropdown);
+  border: 0.5px solid var(--color-button);
+  border-radius: 11px;
+}
+
+.menuItem {
+  display: block;
+  padding: 0 4px;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 13px;
+  line-height: normal;
+  letter-spacing: -0.04em;
+  color: var(--color-dropdown-text);
+  cursor: pointer;
+}
+
+.menuDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 142px;
+  height: 0;
+}
+
+.menuDivider img {
+  transform: rotate(90deg);
+}
+
+.paybackCard {
+  position: relative;
+  flex-shrink: 0;
+  width: 213px;
+  background: var(--color-button-2);
+  border: 0.8px solid var(--color-logo-typo);
+  border-radius: 24px;
+}
+
+.payback {
+  position: absolute;
+  top: 32px;
+  left: calc(50% + 1.5px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120px;
+  transform: translateX(-50%);
+}
+
+.paybackTitle {
+  margin: 0;
+  padding: 10px;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.paybackValue {
+  font-family: var(--font-display);
+  font-size: 40px;
+  letter-spacing: -0.06em;
+  color: var(--color-accent);
+}
+
+.paybackUnit {
+  font-size: 20px;
+  letter-spacing: -0.06em;
+}
+
+.info {
+  top: 2.6px;
+  left: 168.6px;
+}
+
+.infoPopover {
+  top: -108px;
+  left: -174.9px;
+}

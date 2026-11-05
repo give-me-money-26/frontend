@@ -1,3 +1,5 @@
+import { useState } from "react";
+import BackButton from "../../components/common/BackButton";
 import DataCard from "../../components/simulator/DataCard";
 import LiveSimulatorCard from "../../components/simulator/LiveSimulatorCard";
 import SimulatorPanel from "../../components/simulator/SimulatorPanel";
@@ -5,10 +7,17 @@ import SummaryCard from "../../components/simulator/SummaryCard";
 import styles from "./SimulatorPage.module.css";
 
 function SimulatorPage() {
+  const [isControlMode, setIsControlMode] = useState(false);
+
   return (
     <div className={styles.page}>
+      <BackButton to="/map" />
+
       <div className={styles.left}>
-        <SimulatorPanel location="가톨릭대학교 성심교정 · 니콜스관" />
+        <SimulatorPanel
+          campus="가톨릭대 성심교정"
+          isControlMode={isControlMode}
+        />
 
         <div className={styles.summaryRow}>
           <SummaryCard
@@ -35,7 +44,10 @@ function SimulatorPage() {
           />
         </div>
 
-        <LiveSimulatorCard />
+        <LiveSimulatorCard
+          isControlMode={isControlMode}
+          onToggleMode={() => setIsControlMode((prev) => !prev)}
+        />
       </div>
 
       <DataCard />

@@ -14,13 +14,14 @@
   font-weight: 400;
   letter-spacing: -0.03em;
   color: var(--color-primary);
+  -webkit-text-stroke-width: 0.2px currentColor;
 }
 
 .card {
   flex: 1;
   width: 100%;
   padding: 15px 19px;
-  background: var(--color-card);
+  background: var(--color-card-3);
   border: 0.8px solid var(--color-frame-stroke);
   border-radius: var(--radius-card);
 }
@@ -30,4 +31,457 @@
   flex-direction: column;
   gap: 12px;
   width: 100%;
+}
+
+.item {
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--color-card-3);
+  border: 1px solid var(--color-frame-stroke);
+  border-radius: 15px;
+  color: var(--color-primary);
+}
+
+.itemTitle {
+  position: absolute;
+  top: 15px;
+  left: 18px;
+  margin: 0;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.04em;
+}
+
+.buildingItem {
+  display: flex;
+  align-items: center;
+  height: 39px;
+  padding-left: 52px;
+  border-radius: 16px;
+}
+
+.buildingInfo {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.buildingName {
+  width: 148px;
+  padding-left: 2px;
+}
+
+.buildingDivider {
+  flex-shrink: 0;
+  width: 0.5px;
+  height: 21px;
+}
+
+.buildingPriority {
+  margin-left: 33px;
+}
+
+.buildingLabel {
+  font-size: 12px;
+  letter-spacing: -0.03em;
+}
+
+.buildingValue {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--color-accent);
+}
+
+.statRow {
+  position: absolute;
+  top: 39px;
+  left: 17px;
+  display: flex;
+  gap: 11px;
+}
+
+.statBox {
+  position: relative;
+  width: 182px;
+  height: 70px;
+  overflow: hidden;
+  background: var(--color-button-2);
+  border: 1px solid var(--color-card-2);
+  border-radius: 13px;
+}
+
+.statBoxTall {
+  height: 80px;
+}
+
+.statLabel {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  margin: 0;
+  font-size: 11px;
+  line-height: normal;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.statBoxTall .statLabel {
+  top: 11px;
+  left: 12px;
+}
+
+.statValue {
+  position: absolute;
+  right: 21px;
+  bottom: 6px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: 0;
+  font-family: var(--font-display);
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.statNumber {
+  font-size: 35px;
+  letter-spacing: -0.06em;
+  color: var(--color-accent);
+}
+
+.statUnit {
+  font-size: 18px;
+  letter-spacing: -0.06em;
+}
+
+.control {
+  position: absolute;
+  bottom: 9px;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 373px;
+  transform: translateX(-50%);
+}
+
+.controlLabel {
+  margin: 0;
+  padding: 0 6px;
+  font-size: 12px;
+  line-height: normal;
+  letter-spacing: -0.04em;
+  color: var(--color-accent);
+}
+
+.slider {
+  position: relative;
+  height: 20px;
+}
+
+.sliderTrack {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.sliderFill {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  height: 8px;
+  background: var(--color-accent-2);
+  border-radius: 4px;
+}
+
+.sliderThumb {
+  position: absolute;
+  top: 2px;
+  pointer-events: none;
+  clip-path: circle(8px at 62px 8px);
+}
+
+.sliderInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.statusItem {
+  height: 168px;
+}
+
+.maxItem {
+  height: 135px;
+}
+
+.graphItem {
+  height: 192px;
+}
+
+.graphItem .control {
+  top: 147px;
+  bottom: auto;
+}
+
+.graph {
+  position: absolute;
+  top: 41px;
+  left: 18px;
+  width: 369px;
+  height: 107px;
+  overflow: hidden;
+}
+
+.gridRows {
+  position: absolute;
+  top: 7px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 348px;
+}
+
+.gridRow {
+  position: relative;
+  height: 11px;
+}
+
+.gridLabel {
+  position: absolute;
+  top: 0;
+  font-size: 9px;
+  line-height: normal;
+  letter-spacing: -0.01em;
+  color: var(--color-header-1);
+  transform: translateX(-50%);
+}
+
+.gridLine {
+  position: absolute;
+  top: 4.25px;
+}
+
+.gridTop .gridLabel {
+  left: 6px;
+}
+
+.gridTop .gridLine {
+  right: 4px;
+}
+
+.grid15 .gridLabel,
+.grid10 .gridLabel {
+  left: 5px;
+}
+
+.grid15 .gridLine,
+.grid10 .gridLine,
+.grid5 .gridLine {
+  right: 1px;
+}
+
+.grid5 .gridLabel {
+  left: 0;
+  transform: none;
+}
+
+.grid0 .gridLabel {
+  left: 3px;
+}
+
+.grid0 .gridLine {
+  right: 0;
+}
+
+.hourLabel {
+  position: absolute;
+  top: 86px;
+  font-size: 10px;
+  line-height: normal;
+  letter-spacing: -0.08em;
+  text-align: center;
+  color: var(--color-header-1);
+}
+
+.hour10 {
+  left: 43px;
+  width: 42px;
+}
+
+.hour15 {
+  left: 173px;
+  width: 38px;
+}
+
+.hour22 {
+  left: 299px;
+  width: 38px;
+}
+
+.graphCurve {
+  position: absolute;
+  top: 18px;
+  left: -32px;
+}
+
+.marker {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.markerLineClip {
+  position: absolute;
+  top: 0;
+  left: -0.5px;
+  width: 1px;
+  overflow: hidden;
+}
+
+.markerLine {
+  position: absolute;
+  bottom: 27px;
+  left: -27px;
+  transform: rotate(90deg);
+}
+
+.markerOuter,
+.markerMiddle,
+.markerInner {
+  position: absolute;
+}
+
+.markerOuter {
+  top: -7px;
+  left: -7px;
+}
+
+.markerMiddle {
+  top: -5px;
+  left: -5px;
+}
+
+.markerInner {
+  top: -3px;
+  left: -3px;
+}
+
+.markerValue {
+  position: absolute;
+  top: -26px;
+  left: 0;
+  padding: 2px 8px;
+  background: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  border-radius: 22px;
+  font-family: var(--font-display);
+  font-size: 9px;
+  line-height: normal;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  color: #fff;
+  transform: translateX(-50%);
+}
+
+.ventItem {
+  height: 119px;
+}
+
+.ventNote {
+  position: absolute;
+  top: 13px;
+  right: 16px;
+  margin: 0;
+  font-size: 10px;
+  line-height: normal;
+  letter-spacing: -0.03em;
+  color: var(--color-accent);
+}
+
+.ventBox {
+  position: absolute;
+  top: 39px;
+  left: 17px;
+  width: 372px;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  padding-left: 29px;
+  overflow: hidden;
+  background: var(--color-button-2);
+  border: 1px solid var(--color-card-2);
+  border-radius: 13px;
+}
+
+.ventLocation {
+  flex-shrink: 0;
+  width: 89.75px;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.ventDivider {
+  flex-shrink: 0;
+  width: 0.5px;
+  height: 31px;
+}
+
+.ventGrid {
+  display: inline-grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 3px 9px;
+  margin: 0 0 0 23.75px;
+  font-size: 13px;
+  line-height: normal;
+}
+
+.ventCell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.ventCell dt {
+  letter-spacing: -0.04em;
+}
+
+.ventCell dd {
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.ventCellSpread {
+  justify-content: center;
+  gap: 28px;
+}
+
+.optimizeItem {
+  height: 87px;
+}
+
+.optimizeText {
+  position: absolute;
+  top: 39px;
+  left: 19px;
+  width: 368px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.03em;
 }

@@ -3,7 +3,7 @@
   align-items: center;
   height: 99px;
   padding: 0 24px 0 15px;
-  background: var(--color-card);
+  background: var(--color-card-3);
   border: 0.8px solid var(--color-frame-stroke);
   border-radius: var(--radius-card);
 }
@@ -26,6 +26,7 @@
   margin: 0;
   font-size: 13px;
   letter-spacing: -0.03em;
+  color: var(--color-accent);
 }
 
 .actions {
@@ -47,7 +48,7 @@
 }
 
 .secondaryButton {
-  background: var(--color-card);
+  background: var(--color-button-2);
   color: var(--color-primary);
 }
 

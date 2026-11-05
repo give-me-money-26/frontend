@@ -1,7 +1,7 @@
 import liveSimulatorIcon from "../../assets/icons/live-simulator.svg";
 import styles from "./LiveSimulatorCard.module.css";
 
-function LiveSimulatorCard({ onSetBaseline, onToggleMode }) {
+function LiveSimulatorCard({ isControlMode = false, onSetBaseline, onToggleMode }) {
   return (
     <section className={styles.card}>
       <img src={liveSimulatorIcon} alt="" />
@@ -11,6 +11,11 @@ function LiveSimulatorCard({ onSetBaseline, onToggleMode }) {
       </div>
       <div className={styles.actions}>
         <button
+
+
+
+
+
           type="button"
           className={styles.secondaryButton}
           onClick={onSetBaseline}
@@ -20,9 +25,10 @@ function LiveSimulatorCard({ onSetBaseline, onToggleMode }) {
         <button
           type="button"
           className={styles.primaryButton}
+          aria-pressed={isControlMode}
           onClick={onToggleMode}
         >
-          조작모드 변환
+          {isControlMode ? "보기모드 변환" : "조작모드 변환"}
         </button>
       </div>
     </section>
