@@ -7,7 +7,6 @@
   --color-card-2: #cde8ee;
   --color-card-3: #dceef2;
   --color-button-2: #e9f6f9;
-  --color-accent-2: #21a9b8;
   --color-control: #e2854a;
   --color-control-stroke: #ff9554;
   --color-button: #47aab5;
@@ -23,17 +22,20 @@
   --color-border-light: #e6e6e6;
   --color-field-bg: rgba(255, 255, 255, 0.15);
   --color-panel-bg: #deeff3;
-  --color-card-2: #cde8ee;
   --color-surface-soft: #e1f2f6;
-  --color-button: #47aab5;
   --color-popup-bg: #e6faff;
-  --color-button-2: #e9f6f9;
   --color-button-2-stroke: #a0cfd5;
   --color-logo-start: #68afb1;
   --color-logo-end: #2c8d98;
   --color-glow: #6bc4c5;
   --color-bg: #e1eff3;
 
+  --gradient-header: linear-gradient(
+    to right,
+    #aedde7 0%,
+    #bce6ee 19.585%,
+    #b6e5ea 100%
+  );
   --gradient-main-start: #e1f9ff;
   --gradient-main-end: #b8e0e9;
   --gradient-main: radial-gradient(

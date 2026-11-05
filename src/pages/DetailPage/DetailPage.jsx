@@ -102,7 +102,7 @@ function DetailPage({ initialView = "revenue" }) {
                 {toggleLabel}
                 <img src={arrowRightLong} alt="" />
               </button>
-              <Link to="/" className={styles.simulatorButton}>
+              <Link to="/simulator" className={styles.simulatorButton}>
                 <img src={simulatorButtonIcon} alt="" />
                 3D 시뮬레이터 보기
               </Link>
