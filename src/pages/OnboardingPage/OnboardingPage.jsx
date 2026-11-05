@@ -3,11 +3,11 @@ import { createSearchParams, useNavigate } from "react-router";
 import logoSymbol from "../../assets/images/logo-symbol.svg";
 import Logo from "../../components/common/Logo";
 import ConditionsPanel from "../../components/onboarding/ConditionsPanel";
-import { DEFAULT_CONDITIONS } from "../../components/onboarding/conditions";
 import GuidePanel from "../../components/onboarding/GuidePanel";
 import LocationSelect from "../../components/onboarding/LocationSelect";
 import PlanningPanel from "../../components/onboarding/PlanningPanel";
 import { CAMPUS } from "../../data/campus";
+import { DEFAULT_CONDITIONS } from "../../data/conditions";
 import styles from "./OnboardingPage.module.css";
 
 const SPLASH_DURATION = 800;
