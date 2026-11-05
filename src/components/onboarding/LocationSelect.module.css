@@ -1,0 +1,85 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.field {
+  position: relative;
+  width: 513px;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 61px;
+  padding: 0 26px 0 25px;
+  border: 1.5px solid var(--color-accent);
+  border-radius: 56px;
+  background: var(--color-field-bg);
+  font: inherit;
+  font-size: 16px;
+  color: var(--color-accent);
+  cursor: pointer;
+}
+
+.caretOpen {
+  transform: rotate(180deg);
+}
+
+.options {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1.5px solid var(--color-border-light);
+  border-radius: 51px;
+  background: var(--color-white);
+  overflow: hidden;
+}
+
+.option {
+  width: 100%;
+  height: 49px;
+  padding: 0 25px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 61px;
+  height: 61px;
+  padding: 0;
+  border: 1.5px solid var(--color-accent);
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-white);
+  cursor: pointer;
+  transition:
+    background-color 150ms linear,
+    border-color 150ms linear;
+}
+
+.submit:disabled {
+  border-color: var(--color-disabled);
+  background: transparent;
+  color: var(--color-disabled);
+  cursor: default;
+}
+
+.submitIcon path {
+  stroke-width: 1.3;
+}
