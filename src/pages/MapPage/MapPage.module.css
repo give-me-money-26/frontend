@@ -1,0 +1,66 @@
+.page {
+  height: calc(100dvh - 64px);
+  overflow: hidden;
+  background: var(--color-panel-bg);
+}
+
+.stage {
+  position: relative;
+  padding-top: 52px;
+}
+
+.back {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 41.5px;
+  height: 37px;
+  padding: 12px;
+  border: 1px solid var(--color-button-2-stroke);
+  border-radius: 33px;
+  background: var(--color-button-2);
+  color: var(--color-accent);
+  cursor: pointer;
+}
+
+.backIcon {
+  flex-shrink: 0;
+}
+
+.content {
+  width: 1263px;
+  margin-left: calc(max(0px, (100% - 1440px) / 2) + 86px);
+}
+
+.heading {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 13px 31px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.03em;
+  color: var(--color-primary);
+}
+
+.description {
+  margin: 0;
+  color: var(--color-accent);
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: -0.05em;
+}
+
+.description::before {
+  content: "|";
+  margin-right: 6px;
+}

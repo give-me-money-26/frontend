@@ -1,0 +1,41 @@
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  padding: 17px 18px;
+  border-radius: 13px;
+  background: var(--color-card-2);
+}
+
+.stepNumber {
+  display: block;
+  margin-left: 5px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: -0.03em;
+}
+
+.stepTitle {
+  margin: 7px 0 10px 5px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: -0.04em;
+}
+
+.stepDescription {
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--color-surface-soft);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: -0.03em;
+}

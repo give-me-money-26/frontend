@@ -1,0 +1,78 @@
+.screen {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--gradient-main);
+}
+
+.wind {
+  position: absolute;
+  width: 108px;
+  height: 4px;
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 97px;
+  height: 95px;
+  animation: spin 1.6s linear infinite;
+}
+
+.message {
+  margin: 34px 0 0;
+  color: var(--color-accent);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 29px;
+  letter-spacing: -0.04em;
+}
+
+.track {
+  width: 300px;
+  height: 6px;
+  margin-top: 30px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-frame-stroke);
+}
+
+.bar {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-accent-2);
+}
+
+.percent {
+  margin: 16px 0 0;
+  color: var(--color-accent-2);
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 100%;
+  letter-spacing: -0.04em;
+  -webkit-text-stroke: 0.2px currentColor;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo {
+    animation-duration: 6s;
+  }
+}

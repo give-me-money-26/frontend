@@ -1,3 +1,8 @@
+:global(html):has(.layout) {
+  scrollbar-gutter: stable;
+  background: var(--color-panel-bg);
+}
+
 .layout {
   display: flex;
   flex-direction: column;
