@@ -1,6 +1,6 @@
 ---
 name: "✨ Feature"
-about: 새로운 기능 및 UI 추가
+about: 새로운 기능 및 UI 추가 시 작성
 title: "[Feat]"
 labels: ''
 assignees: ''
