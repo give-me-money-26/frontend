@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { lazy, Suspense } from "react";
 import BackButton from "../../components/common/BackButton";
 import DataCard from "../../components/simulator/DataCard";
 import LiveSimulatorCard from "../../components/simulator/LiveSimulatorCard";
 import SimulatorPanel from "../../components/simulator/SimulatorPanel";
 import SummaryCard from "../../components/simulator/SummaryCard";
+import { useSim } from "../../state/simulatorStore";
 import styles from "./SimulatorPage.module.css";
 
+const Simulator3D = lazy(
+  () => import("../../components/simulator/Simulator3D"),
+);
+
 function SimulatorPage() {
-  const [isControlMode, setIsControlMode] = useState(false);
+  const mode = useSim((s) => s.mode);
+  const setSim = useSim((s) => s.set);
+  const isControlMode = mode === "control";
 
   return (
     <div className={styles.page}>
@@ -17,7 +24,11 @@ function SimulatorPage() {
         <SimulatorPanel
           campus="가톨릭대 성심교정"
           isControlMode={isControlMode}
-        />
+        >
+          <Suspense fallback={null}>
+            <Simulator3D />
+          </Suspense>
+        </SimulatorPanel>
 
         <div className={styles.summaryRow}>
           <SummaryCard
@@ -46,7 +57,9 @@ function SimulatorPage() {
 
         <LiveSimulatorCard
           isControlMode={isControlMode}
-          onToggleMode={() => setIsControlMode((prev) => !prev)}
+          onToggleMode={() =>
+            setSim({ mode: isControlMode ? "view" : "control" })
+          }
         />
       </div>
 

@@ -1,0 +1,22 @@
+.host {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.error {
+  display: none;
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 24px;
+  place-items: center;
+  text-align: center;
+  font-size: 14px;
+  color: var(--color-primary);
+}
+
+.host[data-error="true"] .error {
+  display: grid;
+}
