@@ -4,6 +4,9 @@ import logoSymbol from "../../assets/images/logo-symbol.svg";
 import styles from "./LoadingScreen.module.css";
 
 const DURATION = 2000;
+const DESIGN_WIDTH = 1440;
+const DESIGN_HEIGHT = 900;
+const WIND_DURATIONS = [1.1, 1.4, 1.7];
 
 const WINDS = [
   [172, 143],
@@ -36,18 +39,28 @@ function LoadingScreen({ buildingName, onDone }) {
 
   return (
     <div className={styles.screen} role="status">
-      {WINDS.map(([left, top]) => (
-        <img
-          key={`${left}-${top}`}
-          src={windIcon}
-          alt=""
-          className={styles.wind}
-          style={{
-            left: `${(left / 1440) * 100}%`,
-            top: `${(top / 900) * 100}%`,
-          }}
-        />
-      ))}
+      <div className={styles.winds} aria-hidden="true">
+        {WINDS.map(([left, top], index) => {
+          const x = (left / DESIGN_WIDTH) * 100;
+          const duration = WIND_DURATIONS[index % WIND_DURATIONS.length];
+
+          return (
+            <img
+              key={`${left}-${top}`}
+              src={windIcon}
+              alt=""
+              className={styles.wind}
+              style={{
+                "--x": `${x}vw`,
+                left: `${x}%`,
+                top: `${(top / DESIGN_HEIGHT) * 100}%`,
+                animationDuration: `${duration}s`,
+                animationDelay: `${(-duration * x) / 100}s`,
+              }}
+            />
+          );
+        })}
+      </div>
 
       <div className={styles.content}>
         <img src={logoSymbol} alt="" className={styles.logo} />
