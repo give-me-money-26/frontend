@@ -10,7 +10,7 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
     step: 0xf7eee6,
     pier: 0xfbefe5,
   };
-  const { root, seg, add, B, ext, boxOn, finish } = createKit("다솔관", {
+  const { root, seg, add, addBox, ext, boxOn, finish } = createKit("다솔관", {
     wall: COL.wall,
     // 중정 안쪽 벽이 보이도록 양면
     doubleSide: true,
@@ -67,15 +67,15 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
         (g) => gradY(g, 0x1f5283, 0x2c629a),
       );
     }
-    const P = onWall(cx, cz, ang);
+    const wallPoint = onWall(cx, cz, ang);
     for (let i = 1; i < cols; i++) {
       const u = -w / 2 + (w * i) / cols;
-      seg("mull", P(u, y0, out + 0.03), P(u, y1, out + 0.03));
+      seg("mull", wallPoint(u, y0, out + 0.03), wallPoint(u, y1, out + 0.03));
     }
   }
   function rowOnSeg(a, b, ang, us, ys, w, h, opt) {
-    const dx = b[0] - a[0],
-      dz = b[1] - a[1];
+    const dx = b[0] - a[0];
+    const dz = b[1] - a[1];
     us.forEach((t) =>
       ys.forEach((y) =>
         win(a[0] + dx * t, a[1] + dz * t, ang, w, y - h / 2, y + h / 2, opt),
@@ -83,12 +83,12 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
     );
   }
 
-  const F = 3.2,
-    H = 7 * F,
-    LX = 44,
-    ZF = 19,
-    ZB = -19,
-    CH = 4;
+  const F = 3.2;
+  const H = 7 * F;
+  const LX = 44;
+  const ZF = 19;
+  const ZB = -19;
+  const CH = 4;
   const ROWY = [0, 1, 2, 3, 4, 5, 6].map((i) => i * F + 1.75);
   const WH = 1.15;
   const CY = { x0: 11, x1: 33, z0: -9.5, z1: 8 };
@@ -107,7 +107,7 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
   ];
 
   ext(outline, 0, H, COL.wall, "major", [court]);
-  B(CY.x0, CY.x1, 0, 0.06, CY.z0, CY.z1, 0xe7ddd3, null);
+  addBox(CY.x0, CY.x1, 0, 0.06, CY.z0, CY.z1, 0xe7ddd3, null);
   ext(
     [
       [-0.3, ZB - 0.3],
@@ -149,7 +149,7 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
     [CY.x1, CY.z1],
     [CY.x0, CY.z1],
   ].forEach(([x, z]) =>
-    B(x - 1, x + 1, H + 0.75, H + 1.35, z - 1, z + 1, COL.roof, "minor"),
+    addBox(x - 1, x + 1, H + 0.75, H + 1.35, z - 1, z + 1, COL.roof, "minor"),
   );
 
   const ax = (px) => CH + ((px - 52) / 463) * (LX - CH);
@@ -188,9 +188,9 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
     ),
   );
   {
-    const a = [0, ZF - CH],
-      b = [CH, ZF],
-      ang = -Math.PI / 4;
+    const a = [0, ZF - CH];
+    const b = [CH, ZF];
+    const ang = -Math.PI / 4;
     rowOnSeg(a, b, ang, [0.3, 0.7], ROWY, 1.35, WH, { cols: 2 });
   }
   const cxp = (px) => LX - 4.5 - ((px - 155) / 515) * (LX - 4.5);
@@ -247,12 +247,12 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
   cw([CY.x1, CY.z0], [CY.x1, CY.z1], -Math.PI / 2, 4);
 
   {
-    const z0 = -10.3,
-      z1 = -6.9,
-      x1 = LX + 0.8,
-      top = 21.7;
-    B(LX - 0.2, x1, 0, top, z0, z1);
-    B(
+    const z0 = -10.3;
+    const z1 = -6.9;
+    const x1 = LX + 0.8;
+    const top = 21.7;
+    addBox(LX - 0.2, x1, 0, top, z0, z1);
+    addBox(
       LX - 0.25,
       x1 + 0.15,
       top,
@@ -271,7 +271,7 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
       }),
     );
     [11.9, 8.2, 5.5].forEach((y) =>
-      B(
+      addBox(
         x1,
         x1 + 0.18,
         y - 0.15,
@@ -282,9 +282,9 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
         "minor",
       ),
     );
-    const cz = (z0 + z1) / 2,
-      cyy = 10.0,
-      r = 0.95;
+    const cz = (z0 + z1) / 2;
+    const cyy = 10.0;
+    const r = 0.95;
     {
       const g = new THREE.CircleGeometry(r, 32);
       g.rotateY(Math.PI / 2);
@@ -295,8 +295,8 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
       });
     }
     for (let k = 0; k < 48; k++) {
-      const a0 = (k / 48) * Math.PI * 2,
-        a1 = ((k + 1) / 48) * Math.PI * 2;
+      const a0 = (k / 48) * Math.PI * 2;
+      const a1 = ((k + 1) / 48) * Math.PI * 2;
       seg(
         "frame",
         [x1 + 0.08, cyy + Math.sin(a0) * r, cz + Math.cos(a0) * r],
@@ -322,10 +322,10 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
   }
 
   {
-    const cx = LX + 3.0,
-      cz = -13.9,
-      r = 4.0,
-      h = H + 4.3;
+    const cx = LX + 3.0;
+    const cz = -13.9;
+    const r = 4.0;
+    const h = H + 4.3;
     const g = new THREE.CylinderGeometry(r, r, h, 48, 1, false);
     g.translate(cx, h / 2, cz);
     round(g, COL.wall, "major");
@@ -347,8 +347,8 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
     round(lid, COL.inner, "minor");
     for (let y = 3.4; y < h - 0.5; y += 3.4) {
       for (let k = 0; k < 64; k++) {
-        const a0 = (k / 64) * Math.PI * 2,
-          a1 = ((k + 1) / 64) * Math.PI * 2;
+        const a0 = (k / 64) * Math.PI * 2;
+        const a1 = ((k + 1) / 64) * Math.PI * 2;
         seg(
           "minor",
           [cx + Math.cos(a0) * (r + 0.02), y, cz + Math.sin(a0) * (r + 0.02)],
@@ -357,8 +357,8 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
       }
     }
     [[h - 3.0], [4.6]].forEach(([y]) => {
-      const rr = 0.62,
-        g2 = new THREE.CircleGeometry(rr, 28);
+      const rr = 0.62;
+      const g2 = new THREE.CircleGeometry(rr, 28);
       g2.rotateY(Math.PI / 2);
       g2.translate(cx + r + 0.05, y, cz);
       gradY(g2, 0x4a84c0, 0x86bbe6);
@@ -369,8 +369,8 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
         }),
       });
       for (let k = 0; k < 36; k++) {
-        const a0 = (k / 36) * Math.PI * 2,
-          a1 = ((k + 1) / 36) * Math.PI * 2;
+        const a0 = (k / 36) * Math.PI * 2;
+        const a1 = ((k + 1) / 36) * Math.PI * 2;
         seg(
           "frame",
           [cx + r + 0.07, y + Math.sin(a0) * rr, cz + Math.cos(a0) * rr],
@@ -379,10 +379,10 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
       }
     });
     [55, -50].forEach((deg) => {
-      const a = THREE.MathUtils.degToRad(deg),
-        nx = Math.cos(a),
-        nz = Math.sin(a),
-        ang = Math.atan2(nx, nz);
+      const a = THREE.MathUtils.degToRad(deg);
+      const nx = Math.cos(a);
+      const nz = Math.sin(a);
+      const ang = Math.atan2(nx, nz);
       [1.4, 4.8, 8.2, 11.6, 15.0, 18.4].forEach((y) =>
         win(cx + nx * r, cz + nz * r, ang, 0.42, y, y + 1.6, {
           cols: 1,
@@ -395,10 +395,10 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
     });
   }
 
-  const WX = LX,
-    WZ = ZF,
-    WT = 18.0,
-    PI_ = 6.6;
+  const WX = LX;
+  const WZ = ZF;
+  const WT = 18.0;
+  const PI_ = 6.6;
   const wing = [
     [WX, WZ - 1],
     [WX + 14, WZ - 1],
@@ -439,9 +439,9 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
   WY.forEach((y) =>
     win(WX + 0.9, WZ + 9.1, -Math.PI / 4, 1.5, y - 0.6, y + 0.6, { cols: 1 }),
   );
-  B(WX - 1.2, WX + 6.2, 0, H + 3.0, WZ - 1.4, WZ + 0.9);
-  B(WX - 1.2, WX + 6.2, WT, H + 3.0, WZ + 0.9, WZ + 4.6);
-  B(
+  addBox(WX - 1.2, WX + 6.2, 0, H + 3.0, WZ - 1.4, WZ + 0.9);
+  addBox(WX - 1.2, WX + 6.2, WT, H + 3.0, WZ + 0.9, WZ + 4.6);
+  addBox(
     WX - 1.4,
     WX + 6.4,
     H + 3.0,
@@ -452,27 +452,36 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
     "minor",
   );
   const LF = 1.5;
-  B(WX, WX + 14, 0, LF, WZ - 1, WZ + 8.6, COL.step, "minor");
-  B(WX, WX + 1.2, LF, PI_, WZ - 1, WZ + 7.6, COL.wall, "minor");
-  B(WX + 13.4, WX + 14, LF, PI_, WZ - 1, WZ + 8.0, COL.wall, "minor");
+  addBox(WX, WX + 14, 0, LF, WZ - 1, WZ + 8.6, COL.step, "minor");
+  addBox(WX, WX + 1.2, LF, PI_, WZ - 1, WZ + 7.6, COL.wall, "minor");
+  addBox(WX + 13.4, WX + 14, LF, PI_, WZ - 1, WZ + 8.0, COL.wall, "minor");
   const BZ = WZ + 1.2;
-  const GA = [WX + 1.2, WZ + 7.0],
-    GB = [WX + 6.4, BZ + 0.4];
-  B(WX + 6.4, WX + 13.4, LF, PI_, BZ - 0.35, BZ, COL.lobby, "minor");
-  B(WX + 1.2, WX + 6.4, LF, PI_, WZ - 1, BZ - 0.35, COL.lobby, null);
-  B(WX + 0.1, WX + 13.9, PI_ - 0.04, PI_, WZ - 1, WZ + 9.6, 0xf1e6dd, null);
+  const GA = [WX + 1.2, WZ + 7.0];
+  const GB = [WX + 6.4, BZ + 0.4];
+  addBox(WX + 6.4, WX + 13.4, LF, PI_, BZ - 0.35, BZ, COL.lobby, "minor");
+  addBox(WX + 1.2, WX + 6.4, LF, PI_, WZ - 1, BZ - 0.35, COL.lobby, null);
+  addBox(
+    WX + 0.1,
+    WX + 13.9,
+    PI_ - 0.04,
+    PI_,
+    WZ - 1,
+    WZ + 9.6,
+    0xf1e6dd,
+    null,
+  );
   {
-    const dx = GB[0] - GA[0],
-      dz = GB[1] - GA[1],
-      len = Math.hypot(dx, dz),
-      mx = (GA[0] + GB[0]) / 2,
-      mz = (GA[1] + GB[1]) / 2;
+    const dx = GB[0] - GA[0];
+    const dz = GB[1] - GA[1];
+    const len = Math.hypot(dx, dz);
+    const mx = (GA[0] + GB[0]) / 2;
+    const mz = (GA[1] + GB[1]) / 2;
     const rot = -Math.atan2(dz, dx);
     const piece = (...args) => boxOn(mx, mz, rot, ...args);
-    const y0 = LF,
-      y1 = PI_ - 0.3,
-      ty = y1 - 0.85,
-      h = len / 2;
+    const y0 = LF;
+    const y1 = PI_ - 0.3;
+    const ty = y1 - 0.85;
+    const h = len / 2;
     piece(-h, h, y0, y1, -0.04, 0.04, 0, null, (g) =>
       gradY(g, 0x3f7cbb, 0x84b8e3),
     );
@@ -506,26 +515,42 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
     [WX + 8.6, WZ + 4.6],
     [WX + 11.6, WZ + 4.6],
   ].forEach(([x, z]) => {
-    const l = new THREE.Mesh(
+    const lamp = new THREE.Mesh(
       new THREE.CircleGeometry(0.35, 20),
       new THREE.MeshBasicMaterial({ color: 0xffffff }),
     );
-    l.rotation.x = Math.PI / 2;
-    l.position.set(x, PI_ - 0.06, z);
-    root.add(l);
+    lamp.rotation.x = Math.PI / 2;
+    lamp.position.set(x, PI_ - 0.06, z);
+    root.add(lamp);
   });
-  const CHK = LF + 0.6,
-    CL = [WX + 1.9, WZ + 8.6],
-    CR = [WX + 12.9, WZ + 8.6];
-  B(CL[0] - 1.05, CL[0] + 1.05, 0, CHK, CL[1] - 1.0, CL[1] + 1.6, COL.wall);
-  B(CR[0] - 1.05, CR[0] + 1.05, 0, CHK, CR[1] - 1.0, CR[1] + 1.6, COL.wall);
+  const CHK = LF + 0.6;
+  const CL = [WX + 1.9, WZ + 8.6];
+  const CR = [WX + 12.9, WZ + 8.6];
+  addBox(
+    CL[0] - 1.05,
+    CL[0] + 1.05,
+    0,
+    CHK,
+    CL[1] - 1.0,
+    CL[1] + 1.6,
+    COL.wall,
+  );
+  addBox(
+    CR[0] - 1.05,
+    CR[0] + 1.05,
+    0,
+    CHK,
+    CR[1] - 1.0,
+    CR[1] + 1.6,
+    COL.wall,
+  );
   [CL, CR].forEach(([x, z]) => {
     const g = new THREE.CylinderGeometry(0.65, 0.65, PI_ - CHK, 32);
     g.translate(x, (PI_ + CHK) / 2, z);
     round(g, COL.pier, "major");
   });
   for (let i = 0; i < 5; i++)
-    B(
+    addBox(
       CL[0] + 1.05,
       CR[0] - 1.05,
       0,
@@ -544,8 +569,8 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
     [36, 41, 14.5, 18.2, 1.4],
     [38, 41, -17.6, -15.5, 1.0],
   ].forEach(([x0, x1, z0, z1, h]) => {
-    B(x0, x1, H + 0.95, H + 0.95 + h, z0, z1, COL.roof);
-    B(
+    addBox(x0, x1, H + 0.95, H + 0.95 + h, z0, z1, COL.roof);
+    addBox(
       x0 - 0.15,
       x1 + 0.15,
       H + 0.95 + h,
@@ -556,7 +581,7 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
       "minor",
     );
   });
-  B(CH - 0.5, CH + 2.0, H + 0.95, H + 2.6, ZF - 2.5, ZF + 0.2, COL.roof);
+  addBox(CH - 0.5, CH + 2.0, H + 0.95, H + 2.6, ZF - 2.5, ZF + 0.2, COL.roof);
 
   return finish({
     scale,

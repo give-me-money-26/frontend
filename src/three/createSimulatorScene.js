@@ -7,7 +7,6 @@ import {
 } from "./buildings.js";
 import { buildTurbine } from "./models/turbine.js";
 
-// 서버 결과가 없을 때 쓰는 표시용 풍속 (m/s)
 const DEFAULT_WIND_SPEED = 3;
 const WIND_COUNT = 140;
 const WIND_LENGTH = 12;
@@ -111,7 +110,7 @@ export function createSimulatorScene(container) {
   };
   let building = null;
   // 배기구 위치. 바람은 여기서 +x로 흐르고 터빈은 -x(배기구)를 바라봄
-  const V = new THREE.Vector3();
+  const ventPos = new THREE.Vector3();
   const center = new THREE.Vector3();
 
   function setBuilding(buildingId) {
@@ -131,28 +130,32 @@ export function createSimulatorScene(container) {
       if (o.isMesh) o.receiveShadow = true;
     });
     scene.add(building.group);
-    V.copy(building.vent).multiplyScalar(k);
+    ventPos.copy(building.vent).multiplyScalar(k);
     center.set(0, size.y * k * 0.3, 0);
     state.buildingId = id;
 
-    vent.position.copy(V);
+    vent.position.copy(ventPos);
     const r = BUILDING_FIT_SIZE;
-    sun.position.set(V.x - r * 0.7, r * 1.4, V.z + r * 0.9);
-    sun.target.position.copy(V);
+    sun.position.set(ventPos.x - r * 0.7, r * 1.4, ventPos.z + r * 0.9);
+    sun.target.position.copy(ventPos);
     resize();
     placeTurbine();
     resetCamera();
   }
 
   function placeTurbine() {
-    turbineHolder.position.set(V.x + state.distanceM, V.y, V.z);
+    turbineHolder.position.set(
+      ventPos.x + state.distanceM,
+      ventPos.y,
+      ventPos.z,
+    );
     turbineHolder.rotation.y = (-state.angleDegrees * Math.PI) / 180;
   }
 
   function resetCamera() {
     if (state.mode === "control") {
-      controls.target.set(V.x + 3, V.y + 0.6, V.z);
-      camera.position.set(V.x + 8, V.y + 9.5, V.z + 19);
+      controls.target.set(ventPos.x + 3, ventPos.y + 0.6, ventPos.z);
+      camera.position.set(ventPos.x + 8, ventPos.y + 9.5, ventPos.z + 19);
     } else {
       const r = BUILDING_FIT_SIZE;
       controls.target.copy(center);
@@ -211,9 +214,9 @@ export function createSimulatorScene(container) {
     }
     seeds.forEach((s, i) => {
       const d = (t * speed * 1.4 + s.p * WIND_LENGTH) % WIND_LENGTH;
-      const x = V.x + 0.2 + d;
-      const y = V.y + 0.8 + s.y + Math.sin(d * 0.6 + i) * 0.12;
-      const z = V.z + s.z * (1 + d * 0.06);
+      const x = ventPos.x + 0.2 + d;
+      const y = ventPos.y + 0.8 + s.y + Math.sin(d * 0.6 + i) * 0.12;
+      const z = ventPos.z + s.z * (1 + d * 0.06);
       const k = i * 6;
       windPos[k] = x;
       windPos[k + 1] = y;
