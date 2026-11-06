@@ -9,11 +9,22 @@
   background: var(--gradient-main);
 }
 
+.winds {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mask-image: radial-gradient(
+    ellipse 260px 190px at 50% calc(50% + 16px),
+    transparent 65%,
+    #000 100%
+  );
+}
+
 .wind {
   position: absolute;
   width: 108px;
   height: 4px;
-  pointer-events: none;
+  animation: blow linear infinite;
 }
 
 .content {
@@ -71,8 +82,27 @@
   }
 }
 
+@keyframes blow {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--x) - 100%));
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(calc(100vw - var(--x)));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .logo {
     animation-duration: 6s;
+  }
+
+  .wind {
+    animation: none;
   }
 }
