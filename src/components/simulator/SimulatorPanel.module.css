@@ -49,6 +49,7 @@
 
 .mode {
   position: absolute;
+  z-index: 1;
   top: 22px;
   right: 32px;
   display: flex;
