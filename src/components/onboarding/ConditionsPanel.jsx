@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { DEFAULT_CONDITIONS } from "./conditions";
+import { DEFAULT_CONDITIONS } from "../../data/conditions";
 import SidePanel from "./SidePanel";
 import styles from "./ConditionsPanel.module.css";
 
