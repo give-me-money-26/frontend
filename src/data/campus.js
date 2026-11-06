@@ -8,7 +8,7 @@ export const CAMPUS = {
 
 export const BUILDINGS = [
   {
-    id: "dasol",
+    id: "DASOL",
     name: "다솔관",
     label: [378, 263],
     outline:
@@ -16,7 +16,7 @@ export const BUILDINGS = [
     offset: [257.25, 148.75],
   },
   {
-    id: "student-hall",
+    id: "STUDENT-HALL",
     name: "학생회관",
     label: [670, 252],
     outline:
@@ -24,7 +24,7 @@ export const BUILDINGS = [
     offset: [517.75, 192.5],
   },
   {
-    id: "nichols",
+    id: "NICHOLLS",
     name: "니콜스관",
     label: [524, 351],
     outline:
@@ -36,7 +36,7 @@ export const BUILDINGS = [
     },
   },
   {
-    id: "maria",
+    id: "MARIA",
     name: "마리아관",
     label: [719, 393],
     outline:
@@ -44,7 +44,7 @@ export const BUILDINGS = [
     offset: [567, 312],
   },
   {
-    id: "kim-sou-hwan",
+    id: "KIM-SOU-HWAN",
     name: "김수환관",
     label: [438, 476],
     outline:

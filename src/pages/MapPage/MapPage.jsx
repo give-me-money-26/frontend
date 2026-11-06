@@ -10,6 +10,7 @@ import useViewportSize from "../../hooks/useViewportSize";
 import CampusMap from "../../components/map/CampusMap";
 import LoadingScreen from "../../components/map/LoadingScreen";
 import { CAMPUS } from "../../data/campus";
+import { useSim } from "../../state/simulatorStore";
 import styles from "./MapPage.module.css";
 
 const DESIGN_WIDTH = 1440;
@@ -31,13 +32,11 @@ function MapPage() {
   );
 
   const handleLoaded = useCallback(() => {
+    useSim.getState().set({ buildingId: loadingBuilding.id });
     navigate(
       {
         pathname: "/simulator",
-        search: createSearchParams({
-          location,
-          building: loadingBuilding.name,
-        }).toString(),
+        search: createSearchParams({ location }).toString(),
       },
       { state },
     );

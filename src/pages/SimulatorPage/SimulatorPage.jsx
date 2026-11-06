@@ -4,6 +4,7 @@ import DataCard from "../../components/simulator/DataCard";
 import LiveSimulatorCard from "../../components/simulator/LiveSimulatorCard";
 import SimulatorPanel from "../../components/simulator/SimulatorPanel";
 import SummaryCard from "../../components/simulator/SummaryCard";
+import { BUILDINGS } from "../../data/campus";
 import { useSim } from "../../state/simulatorStore";
 import styles from "./SimulatorPage.module.css";
 
@@ -13,8 +14,10 @@ const Simulator3D = lazy(
 
 function SimulatorPage() {
   const mode = useSim((s) => s.mode);
+  const buildingId = useSim((s) => s.buildingId);
   const setSim = useSim((s) => s.set);
   const isControlMode = mode === "control";
+  const building = BUILDINGS.find(({ id }) => id === buildingId);
 
   return (
     <div className={styles.page}>
@@ -63,7 +66,7 @@ function SimulatorPage() {
         />
       </div>
 
-      <DataCard />
+      <DataCard building={building?.name} />
     </div>
   );
 }
