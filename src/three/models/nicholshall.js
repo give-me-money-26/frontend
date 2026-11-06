@@ -7,7 +7,7 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
     glass: 0xa8d6f6,
     roof: 0xfef7f0,
   };
-  const { root, solidMat, tint, pushEdges, seg, add, B, ext, finish } =
+  const { root, solidMat, tint, pushEdges, seg, add, addBox, ext, finish } =
     createKit("니콜스관", {
       wall: COL.wall,
       shade: [0.06, 0.08, 0.12, 0.2, 0.18],
@@ -22,11 +22,11 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
     y1,
     { cols = 1, rows = 1, hex = COL.glass, out = 0.15 } = {},
   ) {
-    const s = face[0] === "+" ? 1 : -1,
-      p0 = Math.min(plane - 0.05 * s, plane + out * s),
-      p1 = Math.max(plane - 0.05 * s, plane + out * s);
+    const s = face[0] === "+" ? 1 : -1;
+    const p0 = Math.min(plane - 0.05 * s, plane + out * s);
+    const p1 = Math.max(plane - 0.05 * s, plane + out * s);
     if (face[1] === "z") {
-      B(a0, a1, y0, y1, p0, p1, hex, "frame");
+      addBox(a0, a1, y0, y1, p0, p1, hex, "frame");
       const z = plane + (out + 0.02) * s;
       for (let i = 1; i < cols; i++) {
         const x = a0 + ((a1 - a0) * i) / cols;
@@ -37,7 +37,7 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
         seg("mull", [a0, y, z], [a1, y, z]);
       }
     } else {
-      B(p0, p1, y0, y1, a0, a1, hex, "frame");
+      addBox(p0, p1, y0, y1, a0, a1, hex, "frame");
       const x = plane + (out + 0.02) * s;
       for (let i = 1; i < cols; i++) {
         const z = a0 + ((a1 - a0) * i) / cols;
@@ -50,13 +50,13 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
     }
   }
 
-  const W = 64,
-    D = 13,
-    F = 3.2,
-    H = 4 * F,
-    zf = D / 2,
-    zb = -D / 2,
-    CH = 3;
+  const W = 64;
+  const D = 13;
+  const F = 3.2;
+  const H = 4 * F;
+  const zf = D / 2;
+  const zb = -D / 2;
+  const CH = 3;
   // 정면도: 건물 1087px = 64m, 4층 210px = 12.8m
   const fx = (px) => ((px - 48) / 1087) * W;
   const fy = (py) => ((313 - py) / 210) * H;
@@ -114,27 +114,28 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
   FRONT.forEach(([a, b], ci) =>
     ROWS.forEach((r, ri) => {
       if (ri === 3 && ci === 1) return;
-      const x0 = fx(a),
-        x1 = fx(b),
-        y = fy(r);
+      const x0 = fx(a);
+      const x1 = fx(b);
+      const y = fy(r);
       const half = x1 - x0 > 3 ? 2 : 1;
       for (let h = 0; h < half; h++) {
-        const a0 = x0 + ((x1 - x0) * h) / half + (h ? 0.12 : 0),
-          a1 = x0 + ((x1 - x0) * (h + 1)) / half - (h < half - 1 ? 0.12 : 0);
+        const a0 = x0 + ((x1 - x0) * h) / half + (h ? 0.12 : 0);
+        const a1 =
+          x0 + ((x1 - x0) * (h + 1)) / half - (h < half - 1 ? 0.12 : 0);
         win("+z", zf, a0, a1, y - 0.62, y + 0.62, { cols: 2 });
       }
     }),
   );
 
   function gradGlass(geo, w, h) {
-    const p = geo.attributes.position,
-      cols = new Float32Array(p.count * 3),
-      a = new THREE.Color(0x6fb0e6),
-      b = new THREE.Color(0xd3ecfd),
-      c = new THREE.Color();
+    const p = geo.attributes.position;
+    const cols = new Float32Array(p.count * 3);
+    const a = new THREE.Color(0x6fb0e6);
+    const b = new THREE.Color(0xd3ecfd);
+    const c = new THREE.Color();
     for (let i = 0; i < p.count; i++) {
-      const u = p.getX(i) / w + 0.5,
-        v = p.getY(i) / h + 0.5;
+      const u = p.getX(i) / w + 0.5;
+      const v = p.getY(i) / h + 0.5;
       const t = Math.min(
         1,
         Math.max(
@@ -148,8 +149,8 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
     geo.setAttribute("color", new THREE.BufferAttribute(cols, 3));
     return geo;
   }
-  const FRAME = 0x56708c,
-    HANDLE = 0x3f5266;
+  const FRAME = 0x56708c;
+  const HANDLE = 0x3f5266;
   function door(
     face,
     plane,
@@ -188,9 +189,9 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
     g.add(
       new THREE.Mesh(gl, new THREE.MeshBasicMaterial({ vertexColors: true })),
     );
-    const t = 0.13,
-      d = 0.16,
-      z = 0.1;
+    const t = 0.13;
+    const d = 0.16;
+    const z = 0.1;
     box(w + t, t, d, 0, h, z, FRAME);
     box(w + t, t * 0.8, d, 0, 0, z, FRAME);
     box(t, h, d, -w / 2, h / 2, z, FRAME);
@@ -209,8 +210,8 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
       } else box(t * 0.75, h, d, x, h / 2, z, FRAME);
     }
     pair.forEach((k) => {
-      const x0 = -w / 2 + k * pw,
-        x1 = x0 + pw;
+      const x0 = -w / 2 + k * pw;
+      const x1 = x0 + pw;
       box(
         pw - 0.05,
         t * 0.7,
@@ -231,14 +232,14 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
   }
 
   function entrance(x0, x1) {
-    const dz = 3.2,
-      top = fy(230),
-      slab = 1.0,
-      pl = 0.7;
-    B(x0 - 0.25, x1 + 0.25, top - slab, top, zf, zf + dz, COL.roof);
-    B(x0, x0 + 1.0, 0, top - slab, zf, zf + 1.3);
-    B(x1 - 1.0, x1, 0, top - slab, zf, zf + 1.3);
-    B(
+    const dz = 3.2;
+    const top = fy(230);
+    const slab = 1.0;
+    const pl = 0.7;
+    addBox(x0 - 0.25, x1 + 0.25, top - slab, top, zf, zf + dz, COL.roof);
+    addBox(x0, x0 + 1.0, 0, top - slab, zf, zf + 1.3);
+    addBox(x1 - 1.0, x1, 0, top - slab, zf, zf + 1.3);
+    addBox(
       x0 + 1.0,
       x1 - 1.0,
       top - slab - 0.35,
@@ -252,9 +253,9 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
       panels: 6,
     });
     const mid = (x0 + x1) / 2 - 0.3;
-    B(x0 + 1.0, x1 - 1.0, 0, pl, zf, zf + 1.5, COL.roof, "minor");
+    addBox(x0 + 1.0, x1 - 1.0, 0, pl, zf, zf + 1.5, COL.roof, "minor");
     for (let i = 0; i < 4; i++)
-      B(
+      addBox(
         mid,
         x1 - 0.25,
         0,
@@ -264,10 +265,10 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
         COL.roof,
         "light",
       );
-    B(x1 - 0.25, x1 + 1.0, 0, 0.95, zf + 1.3, zf + 3.8, COL.roof);
-    const rl = 4.6,
-      ang = Math.atan2(pl, rl),
-      g = new THREE.BoxGeometry(mid - (x0 + 0.3), 0.25, Math.hypot(rl, pl));
+    addBox(x1 - 0.25, x1 + 1.0, 0, 0.95, zf + 1.3, zf + 3.8, COL.roof);
+    const rl = 4.6;
+    const ang = Math.atan2(pl, rl);
+    const g = new THREE.BoxGeometry(mid - (x0 + 0.3), 0.25, Math.hypot(rl, pl));
     g.rotateX(ang);
     g.translate((x0 + 0.3 + mid) / 2, 0.35, zf + 1.5 + rl / 2);
     add(g, COL.roof, "minor");
@@ -275,8 +276,8 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
       seg("frame", [x, 1.75, zf + 1.4], [x, 1.05, zf + 1.5 + rl]);
       seg("frame", [x, 1.45, zf + 1.4], [x, 0.75, zf + 1.5 + rl]);
       for (let k = 0; k <= 4; k++) {
-        const z = zf + 1.45 + (k * rl) / 4,
-          y = pl - (pl * k) / 4;
+        const z = zf + 1.45 + (k * rl) / 4;
+        const y = pl - (pl * k) / 4;
         seg("frame", [x, y, z], [x, y + 1.05, z]);
       }
     });
@@ -284,16 +285,16 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
   entrance(fx(180), fx(337));
   entrance(fx(911), fx(1065));
 
-  for (let f = 0; f < 4; f++) {
-    const y = f * F + 1.1;
+  for (let floor = 0; floor < 4; floor++) {
+    const y = floor * F + 1.1;
     win("-x", 0, -1.3, 1.3, y, y + 1.5, { cols: 2 });
     win("+x", W, -2.2, 0.4, y, y + 1.5, { cols: 2 });
   }
 
   const WG = { x0: 48.5, x1: 59.5, z0: zb - 22, z1: zb + 0.5 };
-  B(WG.x0, WG.x1, 0, H, WG.z0, WG.z1);
-  B(WG.x0 - 0.35, WG.x1 + 0.35, H, H + 0.9, WG.z0 - 0.35, zb, COL.roof);
-  B(
+  addBox(WG.x0, WG.x1, 0, H, WG.z0, WG.z1);
+  addBox(WG.x0 - 0.35, WG.x1 + 0.35, H, H + 0.9, WG.z0 - 0.35, zb, COL.roof);
+  addBox(
     WG.x0 + 0.25,
     WG.x1 - 0.25,
     H + 0.9,
@@ -303,8 +304,8 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
     COL.roof,
     "minor",
   );
-  for (let f = 0; f < 4; f++) {
-    const y = f * F + 1.1;
+  for (let floor = 0; floor < 4; floor++) {
+    const y = floor * F + 1.1;
     for (let z = WG.z0 + 2; z < zb - 1.5; z += 3.6) {
       win("-x", WG.x0, z, z + 1.3, y, y + 1.6, { cols: 1, rows: 2 });
       win("+x", WG.x1, z, z + 1.3, y, y + 1.6, { cols: 1, rows: 2 });
@@ -313,7 +314,7 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
   const ww = (WG.x1 - WG.x0) / 3;
   for (let i = 0; i <= 3; i++) {
     const x = WG.x0 + i * ww;
-    B(
+    addBox(
       x - 0.35,
       x + 0.35,
       0,
@@ -325,9 +326,9 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
     );
   }
   for (let i = 0; i < 3; i++)
-    for (let f = 0; f < 4; f++) {
-      const x0 = WG.x0 + i * ww + 0.75,
-        y = f * F + 1.0;
+    for (let floor = 0; floor < 4; floor++) {
+      const x0 = WG.x0 + i * ww + 0.75;
+      const y = floor * F + 1.0;
       win("-z", WG.z0, x0, x0 + ww - 1.5, y, y + 1.25, { cols: 3 });
     }
 
@@ -342,11 +343,11 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
     [641, 658],
   ];
   PIL.forEach(([a, b]) => {
-    const x0 = bx(a),
-      x1 = bx(b);
+    const x0 = bx(a);
+    const x1 = bx(b);
     if (x1 > WG.x0 - 0.5 && x0 < WG.x1 + 0.5) return;
-    B(x0, x1, 0, H + 0.9, zb - 0.55, zb + 0.1, COL.wall, "minor");
-    B(
+    addBox(x0, x1, 0, H + 0.9, zb - 0.55, zb + 0.1, COL.wall, "minor");
+    addBox(
       x0 - 0.12,
       x1 + 0.12,
       H + 0.9,
@@ -370,8 +371,8 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
   const BROWS = [78, 104, 130, 175];
   BWIN.forEach(([a, b], ci) =>
     BROWS.forEach((r, ri) => {
-      const x0 = bx(a),
-        x1 = bx(b);
+      const x0 = bx(a);
+      const x1 = bx(b);
       if (x1 > WG.x0 - 0.5 && x0 < WG.x1 + 0.5) return;
       if (ri === 3 && ci === 5) return;
       const y = by(r);
@@ -379,15 +380,15 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
     }),
   );
   (() => {
-    const x0 = bx(408),
-      x1 = bx(490),
-      top = by(153);
-    B(x0, x1, top - 0.7, top, zb - 2.6, zb, COL.roof);
+    const x0 = bx(408);
+    const x1 = bx(490);
+    const top = by(153);
+    addBox(x0, x1, top - 0.7, top, zb - 2.6, zb, COL.roof);
     door("-z", zb, (x0 + x1) / 2, x1 - x0 - 1.6, 0.6, top - 1.05, {
       panels: 4,
     });
     for (let i = 0; i < 3; i++)
-      B(
+      addBox(
         x0 + 0.3,
         x1 - 0.3,
         0,
@@ -397,8 +398,8 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
         COL.roof,
         "light",
       );
-    B(x0 - 0.6, x0 + 0.2, 0, 0.8, zb - 2.4, zb, COL.roof, "minor");
-    B(x1 - 0.2, x1 + 0.6, 0, 0.8, zb - 2.4, zb, COL.roof, "minor");
+    addBox(x0 - 0.6, x0 + 0.2, 0, 0.8, zb - 2.4, zb, COL.roof, "minor");
+    addBox(x1 - 0.2, x1 + 0.6, 0, 0.8, zb - 2.4, zb, COL.roof, "minor");
   })();
 
   return finish({

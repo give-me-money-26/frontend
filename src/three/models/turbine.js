@@ -5,7 +5,7 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
   group.name = "터빈";
   const body = new THREE.Group();
   group.add(body);
-  const C = {
+  const COLORS = {
     body: 0x48a49a,
     bodyDark: 0x358f86,
     hub: 0x338c83,
@@ -13,24 +13,24 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
     line: 0x15403b,
     bladeLine: 0x2a625b,
   };
-  const M = {
+  const MATS = {
     body: new THREE.MeshStandardMaterial({
-      color: C.body,
+      color: COLORS.body,
       roughness: 0.38,
       metalness: 0.08,
     }),
     dark: new THREE.MeshStandardMaterial({
-      color: C.bodyDark,
+      color: COLORS.bodyDark,
       roughness: 0.42,
       metalness: 0.08,
     }),
     hub: new THREE.MeshStandardMaterial({
-      color: C.hub,
+      color: COLORS.hub,
       roughness: 0.3,
       metalness: 0.1,
     }),
     blade: new THREE.MeshStandardMaterial({
-      color: C.blade,
+      color: COLORS.blade,
       roughness: 0.5,
       metalness: 0,
       emissive: 0x8fcfc2,
@@ -39,12 +39,12 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
     }),
   };
   const lineMat = new THREE.LineBasicMaterial({
-    color: C.line,
+    color: COLORS.line,
     transparent: true,
     opacity: 0.95,
   });
   const bladeLineMat = new THREE.LineBasicMaterial({
-    color: C.bladeLine,
+    color: COLORS.bladeLine,
     transparent: true,
     opacity: 0.95,
   });
@@ -59,8 +59,8 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
     };
     return m;
   };
-  const hullBody = hullMat(C.line, 0.05),
-    hullBlade = hullMat(C.bladeLine, 0.035);
+  const hullBody = hullMat(COLORS.line, 0.05);
+  const hullBlade = hullMat(COLORS.bladeLine, 0.035);
   const geos = [];
   function mesh(geo, mat, parent = body, edge = 40, lm = lineMat) {
     geos.push(geo);
@@ -93,7 +93,7 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
       [1.0, 0.9],
       [0, 0.9],
     ]),
-    M.body,
+    MATS.body,
   );
   mesh(
     lathe(
@@ -109,7 +109,7 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
       ],
       48,
     ),
-    M.body,
+    MATS.body,
   );
   const nac = new THREE.Group();
   nac.position.y = NC.y;
@@ -131,7 +131,7 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
       ],
       56,
     ),
-    M.body,
+    MATS.body,
     nac,
   );
   mesh(
@@ -145,7 +145,7 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
       ],
       40,
     ),
-    M.dark,
+    MATS.dark,
     nac,
   );
   mesh(
@@ -158,7 +158,7 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
       ],
       32,
     ),
-    M.body,
+    MATS.body,
     nac,
   );
 
@@ -175,7 +175,7 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
     Math.PI / 2,
   );
   hubGeo.rotateZ(Math.PI / 2);
-  mesh(hubGeo, M.hub, rotor, 60);
+  mesh(hubGeo, MATS.hub, rotor, 60);
   mesh(
     lathe(
       [
@@ -188,24 +188,24 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
     )
       .rotateZ(Math.PI / 2)
       .translate(0.18, 0, 0),
-    M.hub,
+    MATS.hub,
     rotor,
     60,
   );
   const s = new THREE.Shape();
-  const hw = 0.85,
-    root = 0.56,
-    tipR = 0.4,
-    R = 6.7,
-    taper = 2.55;
+  const hw = 0.85;
+  const root = 0.56;
+  const tipR = 0.4;
+  const rotorRadius = 6.7;
+  const taper = 2.55;
   s.moveTo(-root, 0.5);
   s.lineTo(-root, 1.15);
   s.lineTo(-hw * 0.97, taper - 0.15);
   s.quadraticCurveTo(-hw, taper, -hw, taper + 0.25);
-  s.lineTo(-hw, R - tipR);
-  s.quadraticCurveTo(-hw, R, -hw + tipR, R);
-  s.lineTo(hw - tipR, R);
-  s.quadraticCurveTo(hw, R, hw, R - tipR);
+  s.lineTo(-hw, rotorRadius - tipR);
+  s.quadraticCurveTo(-hw, rotorRadius, -hw + tipR, rotorRadius);
+  s.lineTo(hw - tipR, rotorRadius);
+  s.quadraticCurveTo(hw, rotorRadius, hw, rotorRadius - tipR);
   s.lineTo(hw, taper + 0.25);
   s.quadraticCurveTo(hw, taper, hw * 0.97, taper - 0.15);
   s.lineTo(root, 1.15);
@@ -223,7 +223,10 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
   {
     const p = bladeGeo.attributes.position;
     for (let i = 0; i < p.count; i++) {
-      const t = Math.min(1, Math.max(0, (p.getY(i) - 1.2) / (R - 1.2)));
+      const t = Math.min(
+        1,
+        Math.max(0, (p.getY(i) - 1.2) / (rotorRadius - 1.2)),
+      );
       p.setZ(i, p.getZ(i) * (1 - 0.5 * t));
     }
     bladeGeo.computeVertexNormals();
@@ -233,7 +236,7 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
     const arm = new THREE.Group();
     arm.rotation.x = (i * Math.PI * 2) / 3;
     rotor.add(arm);
-    const b = mesh(bladeGeo, M.blade, arm, 55, bladeLineMat);
+    const b = mesh(bladeGeo, MATS.blade, arm, 55, bladeLineMat);
     b.position.x = 0.06;
   }
 
@@ -247,7 +250,7 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
     size,
     dispose() {
       geos.forEach((g) => g.dispose());
-      Object.values(M).forEach((m) => m.dispose());
+      Object.values(MATS).forEach((m) => m.dispose());
       lineMat.dispose();
       bladeLineMat.dispose();
       hullBody.dispose();

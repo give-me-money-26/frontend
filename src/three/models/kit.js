@@ -6,14 +6,14 @@ import { LineMaterial } from "three/addons/lines/LineMaterial.js";
 const WHITE = new THREE.Color(1, 1, 1);
 
 export function gradY(geo, top, bottom) {
-  const p = geo.attributes.position,
-    cols = new Float32Array(p.count * 3),
-    a = new THREE.Color(bottom),
-    b = new THREE.Color(top),
-    c = new THREE.Color();
+  const p = geo.attributes.position;
+  const cols = new Float32Array(p.count * 3);
+  const a = new THREE.Color(bottom);
+  const b = new THREE.Color(top);
+  const c = new THREE.Color();
   geo.computeBoundingBox();
-  const y0 = geo.boundingBox.min.y,
-    y1 = geo.boundingBox.max.y;
+  const y0 = geo.boundingBox.min.y;
+  const y1 = geo.boundingBox.max.y;
   for (let i = 0; i < p.count; i++) {
     c.copy(a).lerp(b, (p.getY(i) - y0) / Math.max(1e-6, y1 - y0));
     c.toArray(cols, i * 3);
@@ -28,7 +28,6 @@ export function boxGeo(x0, x1, y0, y1, z0, z1) {
   return g;
 }
 
-// 평면 [x, z] 좌표 → Shape (z는 -y로)
 export function toShape(pts, holes = []) {
   const s = new THREE.Shape(pts.map(([x, z]) => new THREE.Vector2(x, -z)));
   holes.forEach((hp) =>
@@ -55,21 +54,21 @@ export function createKit(
 
   const [left, right, back, bottom, top] = shade;
   function tint(geo, hex) {
-    const base = new THREE.Color(hex),
-      n = geo.attributes.normal,
-      cols = new Float32Array(n.count * 3),
-      c = new THREE.Color();
+    const base = new THREE.Color(hex);
+    const n = geo.attributes.normal;
+    const cols = new Float32Array(n.count * 3);
+    const c = new THREE.Color();
     for (let i = 0; i < n.count; i++) {
-      const nx = n.getX(i),
-        ny = n.getY(i),
-        nz = n.getZ(i);
-      const f =
+      const nx = n.getX(i);
+      const ny = n.getY(i);
+      const nz = n.getZ(i);
+      const factor =
         1 -
         left * Math.max(0, -nx) -
         right * Math.max(0, nx) -
         back * Math.max(0, -nz) -
         bottom * Math.max(0, -ny);
-      c.copy(base).multiplyScalar(f);
+      c.copy(base).multiplyScalar(factor);
       if (ny > 0.5) c.lerp(WHITE, top * ny);
       c.toArray(cols, i * 3);
     }
@@ -85,19 +84,19 @@ export function createKit(
     polygonOffsetUnits: 1,
   });
 
-  const L = { major: [], minor: [], frame: [], mull: [], light: [] };
+  const edges = { major: [], minor: [], frame: [], mull: [], light: [] };
   const tmpV = new THREE.Vector3();
   function pushEdges(mesh, set, angle = 25) {
     mesh.updateMatrixWorld(true);
-    const e = new THREE.EdgesGeometry(mesh.geometry, angle),
-      p = e.attributes.position;
+    const e = new THREE.EdgesGeometry(mesh.geometry, angle);
+    const p = e.attributes.position;
     for (let i = 0; i < p.count; i++) {
       tmpV.fromBufferAttribute(p, i).applyMatrix4(mesh.matrixWorld);
-      L[set].push(tmpV.x, tmpV.y, tmpV.z);
+      edges[set].push(tmpV.x, tmpV.y, tmpV.z);
     }
     e.dispose();
   }
-  const seg = (set, a, b) => L[set].push(...a, ...b);
+  const seg = (set, a, b) => edges[set].push(...a, ...b);
 
   // hex가 null이면 이미 색이 칠해진 geo
   function add(geo, hex, line = "major", { angle, mat = solidMat } = {}) {
@@ -108,7 +107,7 @@ export function createKit(
     return m;
   }
 
-  function B(x0, x1, y0, y1, z0, z1, hex = wall, line = "major") {
+  function addBox(x0, x1, y0, y1, z0, z1, hex = wall, line = "major") {
     return add(boxGeo(x0, x1, y0, y1, z0, z1), hex, line);
   }
 
@@ -124,7 +123,6 @@ export function createKit(
     return add(g, hex, line, { angle: 30 });
   }
 
-  // 벽 위 (cx, cz)에서 u = 벽을 따라, w = 바깥쪽
   function boxOn(cx, cz, ang, u0, u1, y0, y1, w0, w1, hex, line, colorFn) {
     const g = boxGeo(u0, u1, y0, y1, w0, w1);
     if (colorFn) colorFn(g);
@@ -142,14 +140,14 @@ export function createKit(
   }) {
     const lineMats = Object.entries(lines).map(([set, [color, linewidth]]) => {
       const g = new LineSegmentsGeometry();
-      g.setPositions(L[set]);
+      g.setPositions(edges[set]);
       const m = new LineMaterial({ color, linewidth });
       root.add(new LineSegments2(g, m));
       return m;
     });
 
-    const bb = new THREE.Box3().setFromObject(root),
-      c = bb.getCenter(new THREE.Vector3());
+    const bb = new THREE.Box3().setFromObject(root);
+    const c = bb.getCenter(new THREE.Vector3());
     root.position.set(-c.x, 0, -c.z);
     group.scale.setScalar(scale);
     root.traverse((o) => {
@@ -185,7 +183,7 @@ export function createKit(
     pushEdges,
     seg,
     add,
-    B,
+    addBox,
     ext,
     boxOn,
     finish,
