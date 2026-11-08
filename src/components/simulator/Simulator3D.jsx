@@ -14,7 +14,6 @@ function pickSceneState(s) {
 }
 
 // 부모를 꽉 채우므로 부모에 position: relative 필요
-// store 변경은 subscribe로 장면에 바로 넘겨서 React 리렌더 없이 움직임
 function Simulator3D({ className }) {
   const hostRef = useRef(null);
   const mode = useSim((s) => s.mode);
