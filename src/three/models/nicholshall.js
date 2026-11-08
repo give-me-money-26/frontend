@@ -288,11 +288,27 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
   for (let floor = 0; floor < 4; floor++) {
     const y = floor * F + 1.1;
     win("-x", 0, -1.3, 1.3, y, y + 1.5, { cols: 2 });
-    win("+x", W, -2.2, 0.4, y, y + 1.5, { cols: 2 });
+    if (floor > 0) win("+x", W, -2.2, 0.4, y, y + 1.5, { cols: 2 });
   }
+  door("+x", W, -0.9, 2.4, 0.3, 2.6, { panels: 2 });
+  addBox(W, W + 1.4, 3.05, 3.35, -2.6, 0.8, COL.roof);
+  addBox(W, W + 1.6, 0, 0.3, -2.4, 0.6, COL.roof, "light");
 
   const WG = { x0: 48.5, x1: 59.5, z0: zb - 22, z1: zb + 0.5 };
-  addBox(WG.x0, WG.x1, 0, H, WG.z0, WG.z1);
+  const passage = { z0: -14.0, z1: -9.4, h: 3.0 };
+  addBox(WG.x0, WG.x1, 0, H, WG.z0, passage.z0);
+  addBox(WG.x0, WG.x1, 0, H, passage.z1, WG.z1);
+  addBox(WG.x0, WG.x1, passage.h, H, passage.z0, passage.z1);
+  addBox(
+    WG.x0 - 0.05,
+    WG.x1 + 0.05,
+    passage.h - 0.35,
+    passage.h,
+    passage.z0,
+    passage.z1,
+    COL.roof,
+    "minor",
+  );
   addBox(WG.x0 - 0.35, WG.x1 + 0.35, H, H + 0.9, WG.z0 - 0.35, zb, COL.roof);
   addBox(
     WG.x0 + 0.25,
@@ -307,6 +323,8 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
   for (let floor = 0; floor < 4; floor++) {
     const y = floor * F + 1.1;
     for (let z = WG.z0 + 2; z < zb - 1.5; z += 3.6) {
+      if (floor === 0 && z + 1.3 > passage.z0 - 0.3 && z < passage.z1 + 0.3)
+        continue;
       win("-x", WG.x0, z, z + 1.3, y, y + 1.6, { cols: 1, rows: 2 });
       win("+x", WG.x1, z, z + 1.3, y, y + 1.6, { cols: 1, rows: 2 });
     }
@@ -325,12 +343,30 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
       "minor",
     );
   }
-  for (let i = 0; i < 3; i++)
-    for (let floor = 0; floor < 4; floor++) {
-      const x0 = WG.x0 + i * ww + 0.75;
-      const y = floor * F + 1.0;
-      win("-z", WG.z0, x0, x0 + ww - 1.5, y, y + 1.25, { cols: 3 });
-    }
+  {
+    const cx = (WG.x0 + WG.x1) / 2;
+    const y0 = 3 * F;
+    door("-z", WG.z0, cx, 2.6, y0 + 0.1, 2.5, { panels: 2 });
+    addBox(
+      cx - 1.9,
+      cx + 1.9,
+      y0 + 2.75,
+      y0 + 3.05,
+      WG.z0 - 1.5,
+      WG.z0,
+      COL.roof,
+    );
+    addBox(
+      cx - 2.2,
+      cx + 2.2,
+      y0 - 0.25,
+      y0 + 0.1,
+      WG.z0 - 2.2,
+      WG.z0,
+      COL.roof,
+      "light",
+    );
+  }
 
   const PIL = [
     [20, 38],
@@ -374,14 +410,15 @@ export function buildNicholsHall({ scale = 1, castShadow = true } = {}) {
       const x0 = bx(a);
       const x1 = bx(b);
       if (x1 > WG.x0 - 0.5 && x0 < WG.x1 + 0.5) return;
-      if (ri === 3 && ci === 5) return;
+      if (ri === 3 && ci === 1) return;
       const y = by(r);
       win("-z", zb, x0, x1, y - 0.6, y + 0.6, { cols: 3 });
     }),
   );
   (() => {
-    const x0 = bx(408);
-    const x1 = bx(490);
+    const cx = (fx(180) + fx(337)) / 2;
+    const x0 = cx - 2.8;
+    const x1 = cx + 2.8;
     const top = by(153);
     addBox(x0, x1, top - 0.7, top, zb - 2.6, zb, COL.roof);
     door("-z", zb, (x0 + x1) / 2, x1 - x0 - 1.6, 0.6, top - 1.05, {

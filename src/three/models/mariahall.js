@@ -227,53 +227,6 @@ export function buildMariaHall({ scale = 1, castShadow = true } = {}) {
   addBox(IX0, IX1, gy0, gy1, TW.zi, IZ, 0x6f9fb8, "minor");
   const FL = [224, 180, 136, 94].map((v) => py(v));
   const LD = [245, 204, 160, 116].map((v) => py(v));
-  const sz0 = IZ + 0.15;
-  const sz1 = TW.zf - 0.45;
-  const stw = (sz1 - sz0) / 2;
-  const stair = (xa, ya, xb, yb, za, zb2) => {
-    const n = 9;
-    for (let i = 0; i < n; i++) {
-      const xs = xa + ((xb - xa) * i) / n;
-      const xe = xa + ((xb - xa) * (i + 1)) / n;
-      const y = ya + ((yb - ya) * (i + 1)) / n;
-      addBox(
-        Math.min(xs, xe),
-        Math.max(xs, xe),
-        y - 0.18,
-        y,
-        za,
-        zb2,
-        0xe9eef1,
-        "light",
-      );
-    }
-    const len = Math.hypot(xb - xa, yb - ya);
-    const g = new THREE.BoxGeometry(len, 0.22, zb2 - za);
-    g.rotateZ(Math.atan2(yb - ya, xb - xa));
-    g.translate((xa + xb) / 2, (ya + yb) / 2 - 0.25, (za + zb2) / 2);
-    add(g, 0xdfe6ea, "light");
-  };
-  const rail = (xa, ya, xb, yb, z) => {
-    seg("frame", [xa, ya + 1.0, z], [xb, yb + 1.0, z]);
-    seg("frame", [xa, ya + 0.15, z], [xb, yb + 0.15, z]);
-    for (let t = 0; t <= 10; t++) {
-      const x = xa + ((xb - xa) * t) / 10;
-      const y = ya + ((yb - ya) * t) / 10;
-      seg("mull", [x, y + 0.15, z], [x, y + 1.0, z]);
-    }
-  };
-  const yFloors = [gy0, ...FL.slice(0, 3)];
-  const landW = 1.25;
-  yFloors.forEach((yf, k) => {
-    const yl = LD[k] ?? yf + 1.65;
-    const yn = FL[k] ?? yf + 3.3;
-    addBox(IX0, IX1, yf - 0.2, yf, IZ, TW.zf - 0.3, 0xdfe6ea, "light");
-    addBox(IX0, IX0 + landW, yl - 0.2, yl, IZ, TW.zf - 0.3, 0xdfe6ea, "light");
-    stair(IX1, yf, IX0 + landW, yl, sz0 + stw, sz1);
-    rail(IX1 - 0.1, yf, IX0 + landW, yl, sz1 + 0.05);
-    stair(IX0 + landW, yl, IX1, yn, sz0, sz0 + stw);
-  });
-  addBox(IX0, IX1, FL[3] - 0.2, FL[3], IZ, TW.zf - 0.3, 0xdfe6ea, "light");
   {
     const g = boxGeo(IX0, IX1, gy0, gy1, TW.zf - 0.1, TW.zf - 0.04);
     gradY(g, 0x4f8aa8, 0x9ac6d8);

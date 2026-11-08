@@ -354,26 +354,63 @@ export function buildStudentHall({ scale = 1, castShadow = true } = {}) {
       rows: 7,
       sill: false,
     });
+    addBox(
+      x0 + 0.35,
+      x0 + 0.55,
+      0.6,
+      h - 1.4,
+      zf,
+      zf + 0.35,
+      COL.pier,
+      "minor",
+    );
+    addBox(
+      x0 + 2.55,
+      x0 + 2.75,
+      0.6,
+      h - 1.4,
+      zf,
+      zf + 0.35,
+      COL.pier,
+      "minor",
+    );
+    addBox(
+      x0 + 0.35,
+      x0 + 2.75,
+      h - 1.6,
+      h - 1.4,
+      zf,
+      zf + 0.35,
+      COL.pier,
+      "minor",
+    );
+    win(x0 + 1.95, zf + 0.02, 0, 0.8, 0.8, h - 1.7, {
+      cols: 1,
+      rows: 7,
+      sill: false,
+    });
   }
-  addBox(-5.0, 0, 0, H + 0.25, -5, -0.6);
-  win(-2.5, -0.6, 0, 3.6, 6.4, 9.6, { cols: 2, rows: 2 });
-  addBox(-5.6, 0, 4.2, 6.0, -0.6, 2.6, COL.roof, "major");
-  addBox(-5.7, 0.1, 6.0, 6.2, -0.6, 2.75, COL.cap, "minor");
+  addBox(-5.0, 0, 0, TOP + 0.9, -5, -0.6);
+  addBox(-5.15, 0.15, TOP + 0.9, TOP + 1.25, -5.15, -0.45, COL.roof, "minor");
+  win(-1.15, -0.6, 0, 3.9, 6.6, 9.9, { cols: 2, rows: 2 });
+  addBox(-4.6, 1.7, 4.6, 5.9, -0.6, 2.6, COL.roof, "major");
+  addBox(-4.8, 1.9, 5.9, 6.25, -0.6, 2.8, COL.cap, "minor");
   [
-    [-5.3, -4.55],
-    [-0.8, -0.05],
-  ].forEach(([a, b]) => addBox(a, b, 0.45, 4.2, 1.85, 2.5, COL.pier, "major"));
-  win(-2.5, -0.6, 0, 2.9, 0.45, 3.9, {
-    cols: 2,
-    rows: 2,
+    [-4.4, -3.75],
+    [0.85, 1.5],
+  ].forEach(([a, b]) => addBox(a, b, 0.45, 4.6, 1.85, 2.5, COL.pier, "major"));
+  win(-1.15, -0.6, 0, 3.8, 0.45, 4.3, {
+    cols: 4,
+    rows: 1,
     top: 0x86bfe9,
     bottom: 0xb8ddf6,
     sill: false,
   });
+  addBox(-3.05, 0.75, 3.55, 3.65, -0.6, -0.42, 0x3a5872, null);
   [-1, 1].forEach((s) =>
     addBox(
-      -2.5 + s * 0.25 - 0.04,
-      -2.5 + s * 0.25 + 0.04,
+      -1.15 + s * 0.25 - 0.04,
+      -1.15 + s * 0.25 + 0.04,
       1.5,
       2.5,
       -0.42,
@@ -382,21 +419,34 @@ export function buildStudentHall({ scale = 1, castShadow = true } = {}) {
       null,
     ),
   );
-  addBox(-4.9, -0.1, 0, 0.45, -0.6, 2.9, COL.step, "light");
-  addBox(-4.6, -0.4, 0, 0.22, 2.9, 3.6, COL.step, "light");
-  [8.55, 5.2, 1.85].forEach((y) => ribbonZ(1.8, 14.3, 0, y, 1.45, 0, 10));
+  addBox(-4.4, 1.5, 0, 0.45, -0.6, 2.9, COL.step, "light");
+  addBox(-4.1, 1.2, 0, 0.22, 2.9, 3.6, COL.step, "light");
+  [8.55, 5.2, 1.85].forEach((y) => ribbonZ(3.6, 14.3, 0, y, 1.45, 0, 8));
+  addBox(15.6, 18.2, 0, TOP + 1.0, -3.2, -0.4);
+  addBox(15.45, 18.35, TOP + 1.0, TOP + 1.35, -3.35, -0.25, COL.roof, "minor");
   addBox(14.75, 19.5, 0, 5.0, -1.0, 2.2);
   addBox(14.6, 19.7, 5.0, 5.4, -1.2, 2.4, COL.roof);
   {
     const bx = (v) => 18.2 - (v - 55) * 0.02803;
     const zb = -12;
-    // 앞에서 볼 때 지붕 위로 튀어나오지 않게 파라펫보다 낮게
     [
       [55, 85],
       [155, 185],
       [450, 487],
       [737, 772],
-    ].forEach(([a, b]) => addBox(bx(b), bx(a), 0, TOP - 0.45, zb - 0.8, zb));
+    ].forEach(([a, b]) => {
+      addBox(bx(b), bx(a), 0, TOP + 0.9, zb - 0.8, zb);
+      addBox(
+        bx(b) - 0.15,
+        bx(a) + 0.15,
+        TOP + 0.9,
+        TOP + 1.25,
+        zb - 0.95,
+        zb + 0.1,
+        COL.roof,
+        "minor",
+      );
+    });
     [
       [200, 260],
       [355, 437],
@@ -428,6 +478,7 @@ export function buildStudentHall({ scale = 1, castShadow = true } = {}) {
     scale,
     castShadow,
     vent: [8, TOP, -6],
+    scaleY: 0.68, // 입면도 비율에 맞춰 높이만 줄임
     lines: {
       major: [0x50575e, 1],
       minor: [0x8e959b, 1],

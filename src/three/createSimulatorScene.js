@@ -6,10 +6,10 @@ import {
   DEFAULT_BUILDING_ID,
 } from "./buildings.js";
 import { buildTurbine } from "./models/turbine.js";
+import { buildVent, createWindParticles } from "./models/vent.js";
 
 const DEFAULT_WIND_SPEED = 3;
-const WIND_COUNT = 140;
-const WIND_LENGTH = 12;
+const VENT_SCALE = 1.4;
 
 export function createSimulatorScene(container) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -50,49 +50,21 @@ export function createSimulatorScene(container) {
   grid.position.y = 0.01;
   scene.add(grid);
 
-  const vent = new THREE.Group();
-  const ventMat = new THREE.MeshStandardMaterial({
-    color: 0x2f8a91,
-    roughness: 0.45,
-    metalness: 0.15,
-  });
-  const louverMat = new THREE.MeshStandardMaterial({ color: 0xd8eef0 });
-  const ventBox = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.5, 1.9), ventMat);
-  ventBox.position.set(-1.1, 0.75, 0);
-  ventBox.castShadow = true;
-  vent.add(ventBox);
-  for (let i = 0; i < 4; i++) {
-    const louver = new THREE.Mesh(
-      new THREE.BoxGeometry(0.06, 0.07, 1.6),
-      louverMat,
-    );
-    louver.position.set(0.03, 0.35 + i * 0.3, 0);
-    vent.add(louver);
-  }
+  const ventModel = buildVent({ scale: VENT_SCALE });
+  const vent = ventModel.group;
   scene.add(vent);
+  const windFx = createWindParticles(ventModel, {
+    count: 110,
+    length: 9,
+    thickness: 0.09,
+  });
+  vent.add(windFx.mesh);
 
   const turbine = buildTurbine({ scale: 0.26 });
   const turbineHolder = new THREE.Group();
   turbineHolder.add(turbine.group);
   turbineHolder.visible = false;
   scene.add(turbineHolder);
-
-  const windPos = new Float32Array(WIND_COUNT * 6);
-  const windGeo = new THREE.BufferGeometry();
-  windGeo.setAttribute("position", new THREE.BufferAttribute(windPos, 3));
-  const windMat = new THREE.LineBasicMaterial({
-    color: 0x2aa3ae,
-    transparent: true,
-    opacity: 0.75,
-  });
-  const wind = new THREE.LineSegments(windGeo, windMat);
-  wind.frustumCulled = false;
-  scene.add(wind);
-  const seeds = Array.from({ length: WIND_COUNT }, () => ({
-    p: Math.random(),
-    y: Math.random() * 1.6 - 0.4,
-    z: (Math.random() - 0.5) * 2.4,
-  }));
 
   const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 600);
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -193,6 +165,7 @@ export function createSimulatorScene(container) {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     building?.setResolution(w, h);
+    ventModel.setResolution(w, h);
   }
   const observer = new ResizeObserver(resize);
   observer.observe(container);
@@ -200,7 +173,6 @@ export function createSimulatorScene(container) {
   const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   ).matches;
-  let t = 0;
   let prev = performance.now();
   let frame = 0;
   function loop(now) {
@@ -208,24 +180,9 @@ export function createSimulatorScene(container) {
     const dt = Math.min(0.05, (now - prev) / 1000);
     prev = now;
     const speed = state.windSpeedMS;
-    if (!reduceMotion) {
-      t += dt;
-      if (turbineHolder.visible) turbine.rotor.rotation.x += dt * speed * 1.6;
-    }
-    seeds.forEach((s, i) => {
-      const d = (t * speed * 1.4 + s.p * WIND_LENGTH) % WIND_LENGTH;
-      const x = ventPos.x + 0.2 + d;
-      const y = ventPos.y + 0.8 + s.y + Math.sin(d * 0.6 + i) * 0.12;
-      const z = ventPos.z + s.z * (1 + d * 0.06);
-      const k = i * 6;
-      windPos[k] = x;
-      windPos[k + 1] = y;
-      windPos[k + 2] = z;
-      windPos[k + 3] = x - 0.5 - speed * 0.06;
-      windPos[k + 4] = y;
-      windPos[k + 5] = z;
-    });
-    windGeo.attributes.position.needsUpdate = true;
+    if (!reduceMotion && turbineHolder.visible)
+      turbine.rotor.rotation.x += dt * speed * 1.6;
+    windFx.update(reduceMotion ? 0 : dt, camera, 0.6 + speed * 0.35);
     controls.update();
     renderer.render(scene, camera);
   }
@@ -237,6 +194,8 @@ export function createSimulatorScene(container) {
     controls.dispose();
     building?.dispose();
     turbine.dispose();
+    windFx.dispose();
+    ventModel.dispose();
     scene.traverse((o) => {
       if (o.isMesh || o.isLineSegments) {
         o.geometry?.dispose();

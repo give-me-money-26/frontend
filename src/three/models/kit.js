@@ -137,6 +137,7 @@ export function createKit(
     vent,
     lines,
     solidShadowsOnly = false,
+    scaleY = 1,
   }) {
     const lineMats = Object.entries(lines).map(([set, [color, linewidth]]) => {
       const g = new LineSegmentsGeometry();
@@ -146,6 +147,7 @@ export function createKit(
       return m;
     });
 
+    root.scale.y = scaleY;
     const bb = new THREE.Box3().setFromObject(root);
     const c = bb.getCenter(new THREE.Vector3());
     root.position.set(-c.x, 0, -c.z);
@@ -160,7 +162,7 @@ export function createKit(
       group,
       vent: new THREE.Vector3(
         (vx - c.x) * scale,
-        vy * scale,
+        vy * scaleY * scale,
         (vz - c.z) * scale,
       ),
       size: bb.getSize(new THREE.Vector3()).multiplyScalar(scale),
