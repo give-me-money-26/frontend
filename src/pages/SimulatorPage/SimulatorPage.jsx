@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import BackButton from "../../components/common/BackButton";
+import ControlBar from "../../components/simulator/ControlBar";
 import DataCard from "../../components/simulator/DataCard";
 import LiveSimulatorCard from "../../components/simulator/LiveSimulatorCard";
 import SimulatorPanel from "../../components/simulator/SimulatorPanel";
@@ -31,6 +32,7 @@ function SimulatorPage() {
           <Suspense fallback={null}>
             <Simulator3D />
           </Suspense>
+          {isControlMode && <ControlBar />}
         </SimulatorPanel>
 
         <div className={styles.summaryRow}>
