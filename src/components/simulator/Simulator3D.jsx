@@ -1,12 +1,25 @@
 import { useEffect, useRef } from "react";
+import handIcon from "../../assets/icons/hand.svg";
+import rotateIcon from "../../assets/icons/rotate.svg";
+import zoomIcon from "../../assets/icons/zoom.svg";
 import { useSim } from "../../state/simulatorStore";
 import { createSimulatorScene } from "../../three/createSimulatorScene";
 import styles from "./Simulator3D.module.css";
 
 const GUIDES = [
-  { label: "건물 회전", action: "마우스 왼쪽 누른 상태로 조작" },
-  { label: "화면 이동", action: "마우스 오른쪽 누른 상태로 조작" },
-  { label: "확대·축소", action: "휠 조작" },
+  {
+    icon: rotateIcon,
+    size: 12,
+    label: "건물 회전",
+    action: "마우스 왼쪽 누른 상태로 조작",
+  },
+  {
+    icon: handIcon,
+    size: 13,
+    label: "화면 이동",
+    action: "마우스 오른쪽 누른 상태로 조작",
+  },
+  { icon: zoomIcon, size: 11, label: "확대·축소", action: "휠 조작" },
 ];
 
 function pickSceneState(s) {
@@ -63,8 +76,9 @@ function Simulator3D() {
       </div>
 
       <ul className={styles.guide}>
-        {GUIDES.map(({ label, action }) => (
-          <li key={label}>
+        {GUIDES.map(({ icon, size, label, action }) => (
+          <li key={label} className={styles.guideItem}>
+            <img src={icon} alt="" width={size} height={size} />
             {label}: {action}
           </li>
         ))}
