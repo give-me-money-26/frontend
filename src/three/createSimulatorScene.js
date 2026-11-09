@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { DISTANCE_RANGE } from "../data/turbine.js";
 import {
   BUILDING_FIT_SIZE,
   BUILDING_MODELS,
@@ -10,6 +11,15 @@ import { buildVent, createWindParticles } from "./models/vent.js";
 
 const DEFAULT_WIND_SPEED = 3;
 const VENT_SCALE = 1.4;
+const TURBINE_SCALE = 0.15;
+const MIN_GAP = 0.2;
+const EDGE_MARGIN = 0.15;
+const ROOF_STEP = 0.1;
+const VIEW_DIR = new THREE.Vector3(-0.78, 0.68, 1.05).normalize();
+const VIEW_FILL = 0.92;
+const CONTROL_DIR = new THREE.Vector3(5, 8.9, 19).normalize();
+const CONTROL_FILL = 0.7;
+const CONTROL_LIFT = 0.25;
 
 export function createSimulatorScene(container) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -53,6 +63,8 @@ export function createSimulatorScene(container) {
   const ventModel = buildVent({ scale: VENT_SCALE });
   const vent = ventModel.group;
   scene.add(vent);
+  const ventBox = new THREE.Box3().setFromObject(vent);
+  const ventCenterX = (ventBox.min.x + ventBox.max.x) / 2;
   const windFx = createWindParticles(ventModel, {
     count: 110,
     length: 9,
@@ -60,11 +72,15 @@ export function createSimulatorScene(container) {
   });
   vent.add(windFx.mesh);
 
-  const turbine = buildTurbine({ scale: 0.26 });
+  const turbine = buildTurbine({ scale: TURBINE_SCALE });
   const turbineHolder = new THREE.Group();
   turbineHolder.add(turbine.group);
   turbineHolder.visible = false;
   scene.add(turbineHolder);
+  const turbineBox = new THREE.Box3().setFromObject(turbine.group);
+  // 거리는 배기구 앞면에서 날개 앞까지
+  const turbineOffset = ventBox.max.x - turbineBox.min.x;
+  const turbineDepth = turbineBox.max.x - turbineBox.min.x;
 
   const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 600);
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -81,9 +97,37 @@ export function createSimulatorScene(container) {
     windSpeedMS: DEFAULT_WIND_SPEED,
   };
   let building = null;
+  let roofMeshes = [];
+  let maxGap = MIN_GAP;
   // 배기구 위치. 바람은 여기서 +x로 흐르고 터빈은 -x(배기구)를 바라봄
   const ventPos = new THREE.Vector3();
-  const center = new THREE.Vector3();
+  const viewBox = new THREE.Box3();
+  const raycaster = new THREE.Raycaster();
+  const down = new THREE.Vector3(0, -1, 0);
+  const probe = new THREE.Vector3();
+
+  function roofHeightAt(x) {
+    probe.set(x, ventPos.y + BUILDING_FIT_SIZE, ventPos.z);
+    raycaster.set(probe, down);
+    return raycaster.intersectObjects(roofMeshes, false)[0]?.point.y;
+  }
+
+  // 배기구 앞으로 같은 높이의 옥상이 이어지는 만큼만 터빈을 보냄
+  function measureMaxGap() {
+    const front = ventPos.x + ventBox.max.x;
+    const limit = DISTANCE_RANGE[1] + turbineDepth + EDGE_MARGIN;
+    let reach = 0;
+    for (let s = 0; s <= limit; s += ROOF_STEP) {
+      const y = roofHeightAt(front + s);
+      if (y === undefined || Math.abs(y - ventPos.y) > ROOF_STEP / 2) break;
+      reach = s;
+    }
+    return THREE.MathUtils.clamp(
+      reach - turbineDepth - EDGE_MARGIN,
+      MIN_GAP,
+      DISTANCE_RANGE[1],
+    );
+  }
 
   function setBuilding(buildingId) {
     const id = Object.hasOwn(BUILDING_MODELS, buildingId)
@@ -98,12 +142,18 @@ export function createSimulatorScene(container) {
     const size = building.size;
     const k = BUILDING_FIT_SIZE / Math.max(size.x, size.z);
     building.group.scale.multiplyScalar(k);
+    roofMeshes = [];
     building.group.traverse((o) => {
-      if (o.isMesh) o.receiveShadow = true;
+      if (!o.isMesh) return;
+      o.receiveShadow = true;
+      if (!o.isLineSegments2) roofMeshes.push(o);
     });
     scene.add(building.group);
+    building.group.updateMatrixWorld(true);
     ventPos.copy(building.vent).multiplyScalar(k);
-    center.set(0, size.y * k * 0.3, 0);
+    ventPos.y = roofHeightAt(ventPos.x + ventCenterX) ?? ventPos.y;
+    maxGap = measureMaxGap();
+    viewBox.setFromObject(building.group).expandByPoint(ventPos);
     state.buildingId = id;
 
     vent.position.copy(ventPos);
@@ -116,28 +166,67 @@ export function createSimulatorScene(container) {
   }
 
   function placeTurbine() {
-    turbineHolder.position.set(
-      ventPos.x + state.distanceM,
-      ventPos.y,
-      ventPos.z,
+    const gap = THREE.MathUtils.mapLinear(
+      THREE.MathUtils.clamp(state.distanceM, ...DISTANCE_RANGE),
+      ...DISTANCE_RANGE,
+      MIN_GAP,
+      maxGap,
     );
+    const x = ventPos.x + turbineOffset + gap;
+    turbineHolder.position.set(x, roofHeightAt(x) ?? ventPos.y, ventPos.z);
     turbineHolder.rotation.y = (-state.angleDegrees * Math.PI) / 180;
   }
 
   function resetCamera() {
     if (state.mode === "control") {
-      controls.target.set(ventPos.x + 3, ventPos.y + 0.6, ventPos.z);
-      camera.position.set(ventPos.x + 8, ventPos.y + 9.5, ventPos.z + 19);
-    } else {
-      const r = BUILDING_FIT_SIZE;
-      controls.target.copy(center);
-      camera.position.set(
-        center.x - r * 0.78,
-        center.y + r * 0.68,
-        center.z + r * 1.05,
+      const turbineAtMax = turbineBox
+        .clone()
+        .translate(
+          new THREE.Vector3(
+            ventPos.x + turbineOffset + maxGap,
+            ventPos.y,
+            ventPos.z,
+          ),
+        );
+      fitCamera(
+        ventBox.clone().translate(ventPos).union(turbineAtMax),
+        CONTROL_DIR,
+        CONTROL_FILL,
+        CONTROL_LIFT,
       );
+    } else {
+      fitCamera(viewBox, VIEW_DIR, VIEW_FILL, 0);
     }
     controls.update();
+  }
+
+  // box가 화면의 fill 비율 안에 들어오도록 맞추고, lift만큼 화면 위로 올림
+  function fitCamera(box, dir, fill, lift) {
+    const right = new THREE.Vector3().crossVectors(camera.up, dir).normalize();
+    const up = new THREE.Vector3().crossVectors(dir, right);
+    const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * fill;
+    const tanH = tanV * camera.aspect;
+    const center = box.getCenter(new THREE.Vector3());
+    const corner = new THREE.Vector3();
+    let distance = 0;
+    for (let i = 0; i < 8; i++) {
+      corner
+        .set(
+          i & 1 ? box.max.x : box.min.x,
+          i & 2 ? box.max.y : box.min.y,
+          i & 4 ? box.max.z : box.min.z,
+        )
+        .sub(center);
+      const depth = corner.dot(dir);
+      distance = Math.max(
+        distance,
+        depth + Math.abs(corner.dot(right)) / tanH,
+        depth + Math.abs(corner.dot(up)) / tanV,
+      );
+    }
+    center.addScaledVector(up, -lift * distance * tanV);
+    controls.target.copy(center);
+    camera.position.copy(center).addScaledVector(dir, distance);
   }
 
   function update(next) {
