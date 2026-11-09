@@ -28,7 +28,7 @@ function pickSceneState(s) {
     mode: s.mode,
     distanceM: s.distanceM,
     angleDegrees: s.angleDegrees,
-    windSpeedMS: s.result?.windSpeedMS,
+    windSpeedMS: s.windSpeedMS,
   };
 }
 

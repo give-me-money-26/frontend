@@ -245,10 +245,12 @@ export function createWindParticles(
   const s = new THREE.Vector3();
   const t = new THREE.Vector3();
   const euler = new THREE.Euler();
-  function update(dt, camera, speed = 1) {
+  function update(dt, camera, speed = 1, amount = 1) {
     const inv = new THREE.Matrix4().copy(vent.group.matrixWorld).invert();
     const cam = camera.position.clone().applyMatrix4(inv);
+    mesh.count = Math.round(count * Math.min(1, amount));
     particles.forEach((p, i) => {
+      if (i >= mesh.count) return;
       p.x += dt * p.v * speed;
       const d = p.x - origin.x;
       if (d > p.life) spawn(p, false);
