@@ -10,7 +10,7 @@ import graphMarkerLine from "../../assets/icons/graph-marker-line.svg";
 import graphMarkerMiddle from "../../assets/icons/graph-marker-middle.svg";
 import graphMarkerOuter from "../../assets/icons/graph-marker-outer.svg";
 import ventDivider from "../../assets/icons/vent-divider.svg";
-import { WIND_RANGE } from "../../data/wind";
+import { HOUR_RANGE, WIND_RANGE } from "../../data/wind";
 import { useSim } from "../../state/simulatorStore";
 import Slider from "../common/Slider";
 import styles from "./DataCard.module.css";
@@ -281,8 +281,8 @@ function DataCard({
               className={styles.control}
               label="기준 시간"
               value={hour}
-              min={10}
-              max={22}
+              min={HOUR_RANGE[0]}
+              max={HOUR_RANGE[1]}
               onChange={(next) => setSim({ hour: next })}
               onCommit={onCommit}
             />

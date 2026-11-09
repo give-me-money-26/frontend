@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import handIcon from "../../assets/icons/hand.svg";
 import rotateIcon from "../../assets/icons/rotate.svg";
 import zoomIcon from "../../assets/icons/zoom.svg";
+import { hourlyStrength } from "../../data/wind";
 import { useSim } from "../../state/simulatorStore";
 import { createSimulatorScene } from "../../three/createSimulatorScene";
 import styles from "./Simulator3D.module.css";
@@ -29,6 +30,7 @@ function pickSceneState(s) {
     distanceM: s.distanceM,
     angleDegrees: s.angleDegrees,
     windSpeedMS: s.windSpeedMS,
+    hourStrength: hourlyStrength(s.buildingDetail?.hourlySeries, s.hour),
   };
 }
 
