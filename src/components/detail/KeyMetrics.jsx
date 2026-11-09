@@ -1,5 +1,4 @@
 import detailDownArrow from "../../assets/icons/detail-down-arrow.svg";
-import detailScrollbar from "../../assets/icons/detail-scrollbar.svg";
 import InfoTip from "./InfoTip";
 import styles from "./KeyMetrics.module.css";
 
@@ -46,7 +45,6 @@ function KeyMetrics({ building, highlight, generation, interpretation, infoItems
           <div className={styles.resultBox}>
             <p className={styles.resultText}>{interpretation}</p>
           </div>
-          <img src={detailScrollbar} alt="" className={styles.scrollbar} />
         </div>
       </div>
     </div>
