@@ -161,57 +161,8 @@
   position: absolute;
   bottom: 9px;
   left: 50%;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
   width: 373px;
   transform: translateX(-50%);
-}
-
-.controlLabel {
-  margin: 0;
-  padding: 0 6px;
-  font-size: 12px;
-  line-height: normal;
-  letter-spacing: -0.04em;
-  color: var(--color-accent);
-}
-
-.slider {
-  position: relative;
-  height: 20px;
-}
-
-.sliderTrack {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.sliderFill {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  height: 8px;
-  background: var(--color-accent-2);
-  border-radius: 4px;
-}
-
-.sliderThumb {
-  position: absolute;
-  top: 2px;
-  pointer-events: none;
-  clip-path: circle(8px at 62px 8px);
-}
-
-.sliderInput {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
 }
 
 .statusItem {

@@ -10,13 +10,9 @@ import graphMarkerInner from "../../assets/icons/graph-marker-inner.svg";
 import graphMarkerLine from "../../assets/icons/graph-marker-line.svg";
 import graphMarkerMiddle from "../../assets/icons/graph-marker-middle.svg";
 import graphMarkerOuter from "../../assets/icons/graph-marker-outer.svg";
-import sliderThumb from "../../assets/icons/slider-thumb.svg";
-import sliderTrack from "../../assets/icons/slider-track.svg";
 import ventDivider from "../../assets/icons/vent-divider.svg";
+import Slider from "../common/Slider";
 import styles from "./DataCard.module.css";
-
-const SLIDER_START = 10;
-const SLIDER_END = 363;
 
 const HOUR_ANCHORS = [
   [10, 82],
@@ -102,37 +98,6 @@ const curveCardYAt = (cardX) => curveYAt(cardX - CURVE_OFFSET_X) + CURVE_OFFSET_
 const curveValueAt = (cardX) =>
   Math.max(0, (GRID_ZERO_Y - curveCardYAt(cardX)) / GRID_PX_PER_UNIT).toFixed(1);
 
-function ControlSlider({ label, value, min, max, step = 1, onChange }) {
-  const ratio = (value - min) / (max - min);
-  const knobX = SLIDER_START + ratio * (SLIDER_END - SLIDER_START);
-
-  return (
-    <div className={styles.control}>
-      <p className={styles.controlLabel}>{label}</p>
-      <div className={styles.slider}>
-        <img src={sliderTrack} alt="" className={styles.sliderTrack} />
-        <div className={styles.sliderFill} style={{ width: knobX - 6 }} />
-        <img
-          src={sliderThumb}
-          alt=""
-          className={styles.sliderThumb}
-          style={{ left: knobX - 62 }}
-        />
-        <input
-          type="range"
-          className={styles.sliderInput}
-          aria-label={label}
-          min={min}
-          max={max}
-          step={step}
-          value={value}
-          onChange={(e) => onChange(Number(e.target.value))}
-        />
-      </div>
-    </div>
-  );
-}
-
 function StatBox({ label, value, unit, tall = false }) {
   return (
     <div className={`${styles.statBox} ${tall ? styles.statBoxTall : ""}`}>
@@ -203,7 +168,8 @@ function DataCard({
               <StatBox label="추정 풍속" value={windSpeed} unit="m/s" />
               <StatBox label="발전량" value={power} unit="W" />
             </div>
-            <ControlSlider
+            <Slider
+              className={styles.control}
               label="풍속 조절"
               value={windLevel}
               min={0}
@@ -253,7 +219,8 @@ function DataCard({
               <img src={graphMarkerInner} alt="" className={styles.markerInner} />
               <span className={styles.markerValue}>{displayValue}</span>
             </div>
-            <ControlSlider
+            <Slider
+              className={styles.control}
               label="기준 시간"
               value={baseHour}
               min={10}

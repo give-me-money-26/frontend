@@ -51,7 +51,7 @@
   position: absolute;
   z-index: 1;
   top: 22px;
-  right: 32px;
+  left: 32px;
   display: flex;
   align-items: center;
   gap: 8px;

@@ -208,5 +208,5 @@ export function createSimulatorScene(container) {
   }
 
   resize();
-  return { update, dispose };
+  return { update, resetCamera, dispose };
 }
