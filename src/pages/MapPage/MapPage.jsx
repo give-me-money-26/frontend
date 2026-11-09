@@ -1,15 +1,9 @@
 import { useCallback, useState } from "react";
-import {
-  createSearchParams,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router";
+import { useNavigate } from "react-router";
 import ArrowLeftIcon from "../../assets/icons/arrow-left.svg?react";
 import useViewportSize from "../../hooks/useViewportSize";
 import CampusMap from "../../components/map/CampusMap";
 import LoadingScreen from "../../components/map/LoadingScreen";
-import { CAMPUS } from "../../data/campus";
 import { useSim } from "../../state/simulatorStore";
 import styles from "./MapPage.module.css";
 
@@ -19,9 +13,6 @@ const HEADER_HEIGHT = 64;
 
 function MapPage() {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const [searchParams] = useSearchParams();
-  const location = searchParams.get("location") ?? CAMPUS.name;
   const [loadingBuilding, setLoadingBuilding] = useState(null);
   const viewport = useViewportSize();
   const availableHeight = viewport.height - HEADER_HEIGHT;
@@ -33,14 +24,8 @@ function MapPage() {
 
   const handleLoaded = useCallback(() => {
     useSim.getState().set({ buildingId: loadingBuilding.id });
-    navigate(
-      {
-        pathname: "/simulator",
-        search: createSearchParams({ location }).toString(),
-      },
-      { state },
-    );
-  }, [navigate, location, loadingBuilding, state]);
+    navigate("/simulator");
+  }, [navigate, loadingBuilding]);
 
   return (
     <div className={styles.page}>
