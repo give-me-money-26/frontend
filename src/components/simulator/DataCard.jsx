@@ -167,6 +167,7 @@ function DataCard({
   const displayValue =
     graphValue ?? (point ? point.densityWM2.toFixed(1) : curveValueAt(markerX));
   const linePath = series && seriesPath(series);
+  const peak = series?.reduce((a, b) => (b.densityWM2 > a.densityWM2 ? b : a));
 
   useEffect(() => {
     if (series)
@@ -221,11 +222,15 @@ function DataCard({
             <div className={styles.statRow}>
               <StatBox
                 label="최대 에너지 밀도"
-                value={maxEnergyDensity}
+                value={peak ? peak.densityWM2.toFixed(1) : maxEnergyDensity}
                 unit="W/m²"
                 tall
               />
-              <StatBox label="최대 발생 시각" value={maxTime} tall />
+              <StatBox
+                label="최대 발생 시각"
+                value={peak ? `${peak.hour}:00` : maxTime}
+                tall
+              />
             </div>
           </div>
 
