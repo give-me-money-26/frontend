@@ -570,7 +570,7 @@ export function buildDasolHall({ scale = 1, castShadow = true } = {}) {
   return finish({
     scale,
     castShadow,
-    vent: [27, H + 0.95, -12],
+    vent: [25, H + 0.95, 15.5],
     lines: {
       major: [0x5f666d, 1],
       minor: [0x8e959b, 1],
