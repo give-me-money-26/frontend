@@ -1,11 +1,29 @@
 .card {
-  display: flex;
-  align-items: center;
-  height: 99px;
   padding: 0 24px 0 15px;
   background: var(--color-card-3);
   border: 0.8px solid var(--color-frame-stroke);
   border-radius: var(--radius-card);
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  height: 99px;
+}
+
+.baseline {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 0 9px;
+  padding: 16px 12px 20px;
+  border-top: 0.8px solid var(--color-frame-stroke);
+  font-size: 14px;
+  letter-spacing: -0.04em;
+  color: var(--color-primary);
+}
+
+.baselineValue {
+  color: var(--color-accent);
 }
 
 .text {
