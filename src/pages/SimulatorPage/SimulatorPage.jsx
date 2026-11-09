@@ -22,9 +22,17 @@ function SimulatorPage() {
   const building = BUILDINGS.find(({ id }) => id === buildingId);
 
   const setBaseline = () => {
-    const { hour, distanceM, angleDegrees, conditions } = useSim.getState();
+    const { hour, windSpeedMS, distanceM, angleDegrees, conditions } =
+      useSim.getState();
     setSim({
-      baseline: { buildingId, hour, distanceM, angleDegrees, conditions },
+      baseline: {
+        buildingId,
+        hour,
+        windSpeedMS,
+        distanceM,
+        angleDegrees,
+        conditions,
+      },
     });
   };
 

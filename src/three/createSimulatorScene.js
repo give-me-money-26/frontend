@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { DISTANCE_RANGE } from "../data/turbine.js";
+import { WIND_RANGE } from "../data/wind.js";
 import {
   BUILDING_FIT_SIZE,
   BUILDING_MODELS,
@@ -66,7 +67,7 @@ export function createSimulatorScene(container) {
   const ventBox = new THREE.Box3().setFromObject(vent);
   const ventCenterX = (ventBox.min.x + ventBox.max.x) / 2;
   const windFx = createWindParticles(ventModel, {
-    count: 110,
+    count: 220,
     length: 9,
     thickness: 0.09,
   });
@@ -236,10 +237,7 @@ export function createSimulatorScene(container) {
     if (next.angleDegrees !== undefined)
       state.angleDegrees = Number(next.angleDegrees);
     if (next.windSpeedMS !== undefined)
-      state.windSpeedMS =
-        Number(next.windSpeedMS) > 0
-          ? Number(next.windSpeedMS)
-          : DEFAULT_WIND_SPEED;
+      state.windSpeedMS = Math.max(0, Number(next.windSpeedMS) || 0);
     if (next.buildingId !== undefined) setBuilding(next.buildingId);
     turbineHolder.visible = state.mode === "control";
     placeTurbine();
@@ -271,7 +269,12 @@ export function createSimulatorScene(container) {
     const speed = state.windSpeedMS;
     if (!reduceMotion && turbineHolder.visible)
       turbine.rotor.rotation.x += dt * speed * 1.6;
-    windFx.update(reduceMotion ? 0 : dt, camera, 0.6 + speed * 0.35);
+    windFx.update(
+      reduceMotion ? 0 : dt,
+      camera,
+      0.6 + speed * 0.35,
+      Math.sqrt(speed / WIND_RANGE[1]),
+    );
     controls.update();
     renderer.render(scene, camera);
   }

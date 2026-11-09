@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import dataDivider from "../../assets/icons/data-divider.svg";
 import graphCurve from "../../assets/icons/graph-curve.svg";
 import graphCurveSource from "../../assets/icons/graph-curve.svg?raw";
@@ -11,6 +11,8 @@ import graphMarkerLine from "../../assets/icons/graph-marker-line.svg";
 import graphMarkerMiddle from "../../assets/icons/graph-marker-middle.svg";
 import graphMarkerOuter from "../../assets/icons/graph-marker-outer.svg";
 import ventDivider from "../../assets/icons/vent-divider.svg";
+import { WIND_RANGE, windFromDensity } from "../../data/wind";
+import { useSim } from "../../state/simulatorStore";
 import Slider from "../common/Slider";
 import styles from "./DataCard.module.css";
 
@@ -98,6 +100,33 @@ const curveCardYAt = (cardX) => curveYAt(cardX - CURVE_OFFSET_X) + CURVE_OFFSET_
 const curveValueAt = (cardX) =>
   Math.max(0, (GRID_ZERO_Y - curveCardYAt(cardX)) / GRID_PX_PER_UNIT).toFixed(1);
 
+const densityY = (density) => GRID_ZERO_Y - density * GRID_PX_PER_UNIT;
+
+function seriesPath(series) {
+  const points = series.map(({ hour, densityWM2 }) => [
+    hourToX(hour),
+    densityY(densityWM2),
+  ]);
+  const at = (i) => points[Math.max(0, Math.min(points.length - 1, i))];
+  return points
+    .map(([x, y], i) => {
+      if (!i) return `M${x} ${y}`;
+      const [x0, y0] = at(i - 2);
+      const [x1, y1] = at(i - 1);
+      const [x3, y3] = at(i + 1);
+      return `C${x1 + (x - x0) / 6} ${y1 + (y - y0) / 6} ${x - (x3 - x1) / 6} ${y - (y3 - y1) / 6} ${x} ${y}`;
+    })
+    .join("");
+}
+
+function windAtHour(series, hour) {
+  const point = series?.find((p) => p.hour === hour);
+  const speed = point
+    ? point.inferredWindSpeedMS
+    : windFromDensity(curveValueAt(hourToX(hour)));
+  return Math.round(speed * 10) / 10;
+}
+
 function StatBox({ label, value, unit, tall = false }) {
   return (
     <div className={`${styles.statBox} ${tall ? styles.statBoxTall : ""}`}>
@@ -113,7 +142,6 @@ function StatBox({ label, value, unit, tall = false }) {
 function DataCard({
   building = "니콜스관",
   priority = "1순위",
-  windSpeed = "123",
   power = "123",
   maxEnergyDensity = "17.1",
   maxTime = "15:00",
@@ -125,24 +153,28 @@ function DataCard({
   ventAngle = "40 º",
   efficiencyNote = "변환 효율 25% · 일 8시간 운전",
   optimization = "건물 사이 통로와 주변 흐름을 함께 살펴 배기구와 터빈의 거리를 조절하세요.",
-  onWindLevelChange,
-  onBaseHourChange,
+  onCommit,
 }) {
-  const [windLevel, setWindLevel] = useState(16);
-  const [baseHour, setBaseHour] = useState(15);
-  const markerX = hourToX(baseHour);
-  const markerY = curveCardYAt(markerX) - MARKER_ABOVE_CURVE;
-  const displayValue = graphValue ?? curveValueAt(markerX);
+  const hour = useSim((s) => s.hour);
+  const windSpeedMS = useSim((s) => s.windSpeedMS);
+  const series = useSim((s) => s.buildingDetail?.hourlySeries);
+  const setSim = useSim((s) => s.set);
+  const point = series?.find((p) => p.hour === hour);
+  const markerX = hourToX(hour);
+  const markerY =
+    (point ? densityY(point.densityWM2) : curveCardYAt(markerX)) -
+    MARKER_ABOVE_CURVE;
+  const displayValue =
+    graphValue ?? (point ? point.densityWM2.toFixed(1) : curveValueAt(markerX));
+  const linePath = series && seriesPath(series);
 
-  const handleWindLevelChange = (next) => {
-    setWindLevel(next);
-    onWindLevelChange?.(next);
-  };
+  useEffect(() => {
+    if (series)
+      setSim({ windSpeedMS: windAtHour(series, useSim.getState().hour) });
+  }, [series, setSim]);
 
-  const handleBaseHourChange = (next) => {
-    setBaseHour(next);
-    onBaseHourChange?.(next);
-  };
+  const changeHour = (next) =>
+    setSim({ hour: next, windSpeedMS: windAtHour(series, next) });
 
   return (
     <section className={styles.container}>
@@ -165,16 +197,22 @@ function DataCard({
           <div className={`${styles.item} ${styles.statusItem}`}>
             <h3 className={styles.itemTitle}>현재 상태</h3>
             <div className={styles.statRow}>
-              <StatBox label="추정 풍속" value={windSpeed} unit="m/s" />
+              <StatBox
+                label="추정 풍속"
+                value={windSpeedMS.toFixed(1)}
+                unit="m/s"
+              />
               <StatBox label="발전량" value={power} unit="W" />
             </div>
             <Slider
               className={styles.control}
               label="풍속 조절"
-              value={windLevel}
-              min={0}
-              max={100}
-              onChange={handleWindLevelChange}
+              value={windSpeedMS}
+              min={WIND_RANGE[0]}
+              max={WIND_RANGE[1]}
+              step={0.1}
+              onChange={(next) => setSim({ windSpeedMS: next })}
+              onCommit={onCommit}
             />
           </div>
 
@@ -205,7 +243,39 @@ function DataCard({
               <span className={`${styles.hourLabel} ${styles.hour10}`}>10시</span>
               <span className={`${styles.hourLabel} ${styles.hour15}`}>15시</span>
               <span className={`${styles.hourLabel} ${styles.hour22}`}>22시</span>
-              <img src={graphCurve} alt="" className={styles.graphCurve} />
+              {linePath ? (
+                <svg className={styles.series} aria-hidden="true">
+                  <defs>
+                    <linearGradient
+                      id="seriesFill"
+                      x1="0"
+                      y1={densityY(20)}
+                      x2="0"
+                      y2={GRID_ZERO_Y}
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="var(--color-accent)" />
+                      <stop
+                        offset="0.75"
+                        stopColor="var(--color-accent)"
+                        stopOpacity="0.3"
+                      />
+                      <stop
+                        offset="1"
+                        stopColor="var(--color-accent)"
+                        stopOpacity="0"
+                      />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d={`${linePath}V${GRID_ZERO_Y}H${hourToX(series[0].hour)}Z`}
+                    fill="url(#seriesFill)"
+                  />
+                  <path d={linePath} className={styles.seriesLine} />
+                </svg>
+              ) : (
+                <img src={graphCurve} alt="" className={styles.graphCurve} />
+              )}
             </div>
             <div className={styles.marker} style={{ left: markerX, top: markerY }}>
               <div
@@ -222,10 +292,11 @@ function DataCard({
             <Slider
               className={styles.control}
               label="기준 시간"
-              value={baseHour}
+              value={hour}
               min={10}
               max={22}
-              onChange={handleBaseHourChange}
+              onChange={changeHour}
+              onCommit={onCommit}
             />
           </div>
 

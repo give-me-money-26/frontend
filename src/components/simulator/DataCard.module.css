@@ -284,6 +284,21 @@
   left: -32px;
 }
 
+.series {
+  position: absolute;
+  top: -41px;
+  left: -18px;
+  overflow: visible;
+}
+
+.seriesLine {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .marker {
   position: absolute;
   width: 0;
