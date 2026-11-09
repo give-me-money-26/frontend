@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import dataDivider from "../../assets/icons/data-divider.svg";
 import graphCurve from "../../assets/icons/graph-curve.svg";
 import graphCurveSource from "../../assets/icons/graph-curve.svg?raw";
@@ -11,7 +10,7 @@ import graphMarkerLine from "../../assets/icons/graph-marker-line.svg";
 import graphMarkerMiddle from "../../assets/icons/graph-marker-middle.svg";
 import graphMarkerOuter from "../../assets/icons/graph-marker-outer.svg";
 import ventDivider from "../../assets/icons/vent-divider.svg";
-import { WIND_RANGE, windFromDensity } from "../../data/wind";
+import { WIND_RANGE } from "../../data/wind";
 import { useSim } from "../../state/simulatorStore";
 import Slider from "../common/Slider";
 import styles from "./DataCard.module.css";
@@ -119,14 +118,6 @@ function seriesPath(series) {
     .join("");
 }
 
-function windAtHour(series, hour) {
-  const point = series?.find((p) => p.hour === hour);
-  const speed = point
-    ? point.inferredWindSpeedMS
-    : windFromDensity(curveValueAt(hourToX(hour)));
-  return Math.round(speed * 10) / 10;
-}
-
 function StatBox({ label, value, unit, tall = false }) {
   return (
     <div className={`${styles.statBox} ${tall ? styles.statBoxTall : ""}`}>
@@ -168,14 +159,6 @@ function DataCard({
     graphValue ?? (point ? point.densityWM2.toFixed(1) : curveValueAt(markerX));
   const linePath = series && seriesPath(series);
   const peak = series?.reduce((a, b) => (b.densityWM2 > a.densityWM2 ? b : a));
-
-  useEffect(() => {
-    if (series)
-      setSim({ windSpeedMS: windAtHour(series, useSim.getState().hour) });
-  }, [series, setSim]);
-
-  const changeHour = (next) =>
-    setSim({ hour: next, windSpeedMS: windAtHour(series, next) });
 
   return (
     <section className={styles.container}>
@@ -300,7 +283,7 @@ function DataCard({
               value={hour}
               min={10}
               max={22}
-              onChange={changeHour}
+              onChange={(next) => setSim({ hour: next })}
               onCommit={onCommit}
             />
           </div>

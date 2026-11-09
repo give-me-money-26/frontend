@@ -7,7 +7,7 @@ export const useSim = create(
       buildingId: "NICHOLLS", // KIM-SOU-HWAN | DASOL | NICHOLLS | MARIA | STUDENT-HALL
       mode: "view", // 'view' 보기 모드 | 'control' 조작 모드
       hour: 15, // 기준 시간 10~22
-      windSpeedMS: 3.1, // 풍속 0~12 m/s
+      windSpeedMS: 3.1, // 풍속 1.1~3.2 m/s
       distanceM: 2, // 배기구로부터 거리 1~8 m
       angleDegrees: 0, // 터빈 각도 -80~80°
       conditions: null,

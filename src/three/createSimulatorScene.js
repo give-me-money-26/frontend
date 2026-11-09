@@ -67,7 +67,7 @@ export function createSimulatorScene(container) {
   const ventBox = new THREE.Box3().setFromObject(vent);
   const ventCenterX = (ventBox.min.x + ventBox.max.x) / 2;
   const windFx = createWindParticles(ventModel, {
-    count: 130,
+    count: 70,
     length: 9,
     thickness: 0.09,
   });
@@ -273,7 +273,7 @@ export function createSimulatorScene(container) {
       reduceMotion ? 0 : dt,
       camera,
       0.6 + speed * 0.35,
-      Math.sqrt(speed / WIND_RANGE[1]),
+      speed / WIND_RANGE[1],
     );
     controls.update();
     renderer.render(scene, camera);
