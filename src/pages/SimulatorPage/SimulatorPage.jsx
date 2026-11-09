@@ -16,9 +16,17 @@ const Simulator3D = lazy(
 function SimulatorPage() {
   const mode = useSim((s) => s.mode);
   const buildingId = useSim((s) => s.buildingId);
+  const baseline = useSim((s) => s.baseline);
   const setSim = useSim((s) => s.set);
   const isControlMode = mode === "control";
   const building = BUILDINGS.find(({ id }) => id === buildingId);
+
+  const setBaseline = () => {
+    const { hour, distanceM, angleDegrees, conditions } = useSim.getState();
+    setSim({
+      baseline: { buildingId, hour, distanceM, angleDegrees, conditions },
+    });
+  };
 
   return (
     <div className={styles.page}>
@@ -62,6 +70,9 @@ function SimulatorPage() {
 
         <LiveSimulatorCard
           isControlMode={isControlMode}
+          baseline={baseline}
+          onSetBaseline={setBaseline}
+          onClearBaseline={() => setSim({ baseline: null, compare: null })}
           onToggleMode={() =>
             setSim({ mode: isControlMode ? "view" : "control" })
           }
