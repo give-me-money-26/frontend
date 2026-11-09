@@ -137,14 +137,36 @@
 .resultBox {
   display: flex;
   flex: 1 0 0;
-  align-items: center;
+  align-items: safe center;
   justify-content: center;
   min-height: 0;
   padding: 6px 16px;
-  overflow: hidden;
+  overflow-y: auto;
   background: var(--color-card-2);
   border: 0.8px solid var(--color-frame-stroke);
   border-radius: 22px;
+}
+
+.resultBox::-webkit-scrollbar {
+  width: 8px;
+}
+
+.resultBox::-webkit-scrollbar-track {
+  margin: 12px 0;
+  background: var(--color-frame-stroke);
+  border-radius: 4px;
+}
+
+.resultBox::-webkit-scrollbar-thumb {
+  background: var(--color-dropdown-text);
+  border-radius: 4px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .resultBox {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-dropdown-text) var(--color-frame-stroke);
+  }
 }
 
 .resultText {
@@ -154,10 +176,4 @@
   font-size: 17px;
   line-height: 1.4;
   letter-spacing: -0.04em;
-}
-
-.scrollbar {
-  position: absolute;
-  top: 45px;
-  left: 699px;
 }
