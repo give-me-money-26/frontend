@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import locationIcon from "../../assets/icons/location.svg";
-import mapImage from "../../assets/images/map.svg";
+import mapImage from "../../assets/images/map.webp";
 import BuildingPopup from "./BuildingPopup";
 import { BUILDINGS, CAMPUS, MAP_HEIGHT, MAP_WIDTH } from "../../data/campus";
 import styles from "./CampusMap.module.css";
