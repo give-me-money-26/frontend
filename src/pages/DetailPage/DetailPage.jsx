@@ -65,7 +65,10 @@ function DetailPage({ initialView = "revenue" }) {
       <div className={styles.content}>
         <div className={styles.purpose}>
           <span className={styles.purposeLabel}>시뮬레이션 목적</span>
-          <span className={styles.purposeText}>이 계산을 하는 이유</span>
+          <span className={styles.purposeText}>
+            배기 바람의 에너지 회수 가능성을 수익과 탄소 절감 효과로 시각화해,
+            누구나 쉽게 비교하고 판단할 수 있게 합니다.
+          </span>
         </div>
 
         <div className={styles.analysis}>
