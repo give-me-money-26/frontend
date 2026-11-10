@@ -36,7 +36,11 @@ function InfoTip({ label, items, className, popoverClassName, iconSize = 20 }) {
         aria-controls={popoverId}
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <img src={information} alt="" style={{ width: iconSize, height: iconSize }} />
+        <img
+          src={information}
+          alt=""
+          style={{ width: iconSize, height: iconSize }}
+        />
       </button>
 
       {isOpen && (

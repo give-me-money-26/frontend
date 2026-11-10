@@ -1,6 +1,10 @@
 import { useRef, useState } from "react";
 import tableLine from "../../assets/icons/table-line.svg";
-import { MEASUREMENT_BUILDINGS, MEASUREMENTS, REFERENCES } from "./measurementData";
+import {
+  MEASUREMENT_BUILDINGS,
+  MEASUREMENTS,
+  REFERENCES,
+} from "./measurementData";
 import styles from "./MeasurementPanel.module.css";
 
 function MeasurementPanel() {
@@ -32,7 +36,10 @@ function MeasurementPanel() {
                       ))}
                     </tr>
                     <tr aria-hidden="true">
-                      <td colSpan={MEASUREMENT_BUILDINGS.length + 1} className={styles.lineCell}>
+                      <td
+                        colSpan={MEASUREMENT_BUILDINGS.length + 1}
+                        className={styles.lineCell}
+                      >
                         <img src={tableLine} alt="" />
                       </td>
                     </tr>
@@ -53,7 +60,8 @@ function MeasurementPanel() {
                 ** 성심교정 5개 건물의 10~22시 예비 측정 자료입니다.
                 <br />
                 <span className={styles.noteIndent}>
-                  표시값은 풍력 에너지 밀도(W/m²)이며 실제 발전 전력(W)과 구분됩니다.
+                  표시값은 풍력 에너지 밀도(W/m²)이며 실제 발전 전력(W)과
+                  구분됩니다.
                 </span>
               </p>
             </div>
@@ -74,11 +82,12 @@ function MeasurementPanel() {
                 ))}
               </ol>
               <p className={styles.note}>
-                ** 배기 흐름을 활용한 에너지 회수의 가능성과 실험 설계를 참고했습니다.
+                ** 배기 흐름을 활용한 에너지 회수의 가능성과 실험 설계를
+                참고했습니다.
                 <br />
                 <span className={styles.noteIndent}>
-                  논문의 설비·유동 조건은 교내 배기구와 다르므로, 논문의 발전 성능을 교내
-                  건물에 그대로 적용하지 않습니다
+                  논문의 설비·유동 조건은 교내 배기구와 다르므로, 논문의 발전
+                  성능을 교내 건물에 그대로 적용하지 않습니다
                 </span>
               </p>
             </div>

@@ -70,10 +70,15 @@ function parseCurveSegments(svg) {
 const CURVE_SEGMENTS = parseCurveSegments(graphCurveSource);
 
 const bezier = (t, p0, p1, p2, p3) =>
-  (1 - t) ** 3 * p0 + 3 * (1 - t) ** 2 * t * p1 + 3 * (1 - t) * t ** 2 * p2 + t ** 3 * p3;
+  (1 - t) ** 3 * p0 +
+  3 * (1 - t) ** 2 * t * p1 +
+  3 * (1 - t) * t ** 2 * p2 +
+  t ** 3 * p3;
 
 function curveYAt(x) {
-  const segment = CURVE_SEGMENTS.find(([x0, , , , , , x1]) => x >= x0 && x <= x1);
+  const segment = CURVE_SEGMENTS.find(
+    ([x0, , , , , , x1]) => x >= x0 && x <= x1,
+  );
   if (!segment) return CURVE_BASELINE;
 
   const [x0, y0, cx1, cy1, cx2, cy2, x1, y1] = segment;
@@ -96,10 +101,13 @@ function hourToX(hour) {
   return HOUR_ANCHORS[HOUR_ANCHORS.length - 1][1];
 }
 
-const curveCardYAt = (cardX) => curveYAt(cardX - CURVE_OFFSET_X) + CURVE_OFFSET_Y;
+const curveCardYAt = (cardX) =>
+  curveYAt(cardX - CURVE_OFFSET_X) + CURVE_OFFSET_Y;
 
 const curveValueAt = (cardX) =>
-  Math.max(0, (GRID_ZERO_Y - curveCardYAt(cardX)) / GRID_PX_PER_UNIT).toFixed(1);
+  Math.max(0, (GRID_ZERO_Y - curveCardYAt(cardX)) / GRID_PX_PER_UNIT).toFixed(
+    1,
+  );
 
 const densityY = (density) => GRID_ZERO_Y - density * GRID_PX_PER_UNIT;
 
@@ -223,15 +231,24 @@ function DataCard({
             <div className={styles.graph}>
               <div className={styles.gridRows}>
                 {GRID_ROWS.map((row) => (
-                  <div key={row.label} className={`${styles.gridRow} ${row.className}`}>
+                  <div
+                    key={row.label}
+                    className={`${styles.gridRow} ${row.className}`}
+                  >
                     <span className={styles.gridLabel}>{row.label}</span>
                     <img src={row.line} alt="" className={styles.gridLine} />
                   </div>
                 ))}
               </div>
-              <span className={`${styles.hourLabel} ${styles.hour10}`}>10시</span>
-              <span className={`${styles.hourLabel} ${styles.hour15}`}>15시</span>
-              <span className={`${styles.hourLabel} ${styles.hour22}`}>22시</span>
+              <span className={`${styles.hourLabel} ${styles.hour10}`}>
+                10시
+              </span>
+              <span className={`${styles.hourLabel} ${styles.hour15}`}>
+                15시
+              </span>
+              <span className={`${styles.hourLabel} ${styles.hour22}`}>
+                22시
+              </span>
               {linePath ? (
                 <svg className={styles.series} aria-hidden="true">
                   <defs>
@@ -266,16 +283,35 @@ function DataCard({
                 <img src={graphCurve} alt="" className={styles.graphCurve} />
               )}
             </div>
-            <div className={styles.marker} style={{ left: markerX, top: markerY }}>
+            <div
+              className={styles.marker}
+              style={{ left: markerX, top: markerY }}
+            >
               <div
                 className={styles.markerLineClip}
                 style={{ height: Math.max(0, MARKER_LINE_BOTTOM - markerY) }}
               >
-                <img src={graphMarkerLine} alt="" className={styles.markerLine} />
+                <img
+                  src={graphMarkerLine}
+                  alt=""
+                  className={styles.markerLine}
+                />
               </div>
-              <img src={graphMarkerOuter} alt="" className={styles.markerOuter} />
-              <img src={graphMarkerMiddle} alt="" className={styles.markerMiddle} />
-              <img src={graphMarkerInner} alt="" className={styles.markerInner} />
+              <img
+                src={graphMarkerOuter}
+                alt=""
+                className={styles.markerOuter}
+              />
+              <img
+                src={graphMarkerMiddle}
+                alt=""
+                className={styles.markerMiddle}
+              />
+              <img
+                src={graphMarkerInner}
+                alt=""
+                className={styles.markerInner}
+              />
               <span className={styles.markerValue}>{displayValue}</span>
             </div>
             <Slider

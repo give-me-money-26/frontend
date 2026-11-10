@@ -1,4 +1,10 @@
-export const MEASUREMENT_BUILDINGS = ["김수환관", "니콜스관", "다솔관", "마리아관", "학생회관"];
+export const MEASUREMENT_BUILDINGS = [
+  "김수환관",
+  "니콜스관",
+  "다솔관",
+  "마리아관",
+  "학생회관",
+];
 
 export const MEASUREMENTS = [
   { hour: "10시", values: ["3.0", "4.2", "3.8", "3.9", "2.2"] },

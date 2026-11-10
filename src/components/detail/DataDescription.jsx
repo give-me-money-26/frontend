@@ -18,7 +18,10 @@ function DataDescription({ calculation, assumption }) {
 
   const handlePointerDown = (e) => {
     e.currentTarget.setPointerCapture(e.pointerId);
-    dragRef.current = { startX: e.clientX, startProgress: Math.round(progress) };
+    dragRef.current = {
+      startX: e.clientX,
+      startProgress: Math.round(progress),
+    };
     setIsDragging(true);
   };
 
@@ -88,13 +91,19 @@ function DataDescription({ calculation, assumption }) {
         className={styles.sideButton}
         style={{ transition }}
         tabIndex={-1}
-        aria-label={isMeasurementPage ? "계산 방법 보기" : "건물·시간대별 측정값 보기"}
+        aria-label={
+          isMeasurementPage ? "계산 방법 보기" : "건물·시간대별 측정값 보기"
+        }
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
       >
-        <img src={isMeasurementPage ? sideButtonBack : sideButton} alt="" draggable={false} />
+        <img
+          src={isMeasurementPage ? sideButtonBack : sideButton}
+          alt=""
+          draggable={false}
+        />
       </button>
     </div>
   );

@@ -5,7 +5,9 @@ import dropdownTriangle from "../../assets/icons/dropdown-triangle.svg";
 import InfoTip from "./InfoTip";
 import styles from "./CostAnalysis.module.css";
 
-const PAYBACK_INFO = [{ title: "단순 투자 회수 기간", description: "= 설치비 / 연간 절감액" }];
+const PAYBACK_INFO = [
+  { title: "단순 투자 회수 기간", description: "= 설치비 / 연간 절감액" },
+];
 
 function CostAnalysis({ turbines, payback }) {
   const [isOpen, setIsOpen] = useState(false);

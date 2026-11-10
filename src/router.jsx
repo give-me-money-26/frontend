@@ -14,7 +14,10 @@ const router = createBrowserRouter([
       { path: "map", element: <MapPage /> },
       { path: "simulator", element: <SimulatorPage /> },
       { path: "revenue", element: <DetailPage key="revenue" /> },
-      { path: "environment", element: <DetailPage key="environment" initialView="environment" /> },
+      {
+        path: "environment",
+        element: <DetailPage key="environment" initialView="environment" />,
+      },
       { path: "*", element: <NotFoundPage /> },
     ],
   },

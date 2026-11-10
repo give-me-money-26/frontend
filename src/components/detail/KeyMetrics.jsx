@@ -2,7 +2,13 @@ import detailDownArrow from "../../assets/icons/detail-down-arrow.svg";
 import InfoTip from "./InfoTip";
 import styles from "./KeyMetrics.module.css";
 
-function KeyMetrics({ building, highlight, generation, interpretation, infoItems }) {
+function KeyMetrics({
+  building,
+  highlight,
+  generation,
+  interpretation,
+  infoItems,
+}) {
   return (
     <div className={styles.container}>
       <div className={styles.summary}>
