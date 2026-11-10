@@ -184,11 +184,7 @@ export function createWindParticles(vent, { count, length, thickness }) {
   const origin = vent.outlet.clone().divideScalar(groupScale);
   const w = vent.outletSize.w / groupScale;
   const h = vent.outletSize.h / groupScale;
-  const streaks = createStreaks(count, [
-    "64,160,160",
-    "90,175,175",
-    "120,190,190",
-  ]);
+  const streaks = createStreaks(count);
 
   const particles = [];
   const spawn = (p, initial) => {

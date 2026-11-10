@@ -17,12 +17,14 @@ const TURBINE_SCALE = 0.15;
 const MIN_GAP = 0.2;
 const EDGE_MARGIN = 0.15;
 const ROOF_STEP = 0.1;
-const VIEW_DIR = new THREE.Vector3(-0.78, 0.68, 1.05).normalize();
+const VIEW_DIR = new THREE.Vector3(0.78, 0.68, 1.05).normalize();
 const VIEW_FILL = 0.92;
 const CONTROL_DIR = new THREE.Vector3(5, 8.9, 19).normalize();
 const CONTROL_FILL = 0.7;
 const CONTROL_LIFT = 0.25;
-const AMBIENT_COUNT = 160;
+const AMBIENT_COUNT = 180;
+const PROBE_HEIGHT = 200;
+const WIND_STREAK = { length: 9, thickness: 0.09 };
 
 export function createSimulatorScene(container) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -68,13 +70,12 @@ export function createSimulatorScene(container) {
   scene.add(vent);
   const ventBox = new THREE.Box3().setFromObject(vent);
   const ventCenterX = (ventBox.min.x + ventBox.max.x) / 2;
-  const windFx = createWindParticles(ventModel, {
-    count: 70,
-    length: 9,
-    thickness: 0.09,
-  });
+  const windFx = createWindParticles(ventModel, { count: 70, ...WIND_STREAK });
   vent.add(windFx.mesh);
-  const ambient = createAmbientWind(AMBIENT_COUNT);
+  const ambient = createAmbientWind(AMBIENT_COUNT, {
+    ...WIND_STREAK,
+    scale: VENT_SCALE,
+  });
   scene.add(ambient.mesh);
 
   const turbine = buildTurbine({ scale: TURBINE_SCALE });
@@ -112,8 +113,8 @@ export function createSimulatorScene(container) {
   const down = new THREE.Vector3(0, -1, 0);
   const probe = new THREE.Vector3();
 
-  function roofHeightAt(x) {
-    probe.set(x, ventPos.y + BUILDING_FIT_SIZE, ventPos.z);
+  function roofHeightAt(x, z = ventPos.z) {
+    probe.set(x, PROBE_HEIGHT, z);
     raycaster.set(probe, down);
     return raycaster.intersectObjects(roofMeshes, false)[0]?.point.y;
   }
@@ -162,7 +163,14 @@ export function createSimulatorScene(container) {
     viewBox.setFromObject(building.group).expandByPoint(ventPos);
     const air = viewBox.clone().expandByScalar(BUILDING_FIT_SIZE * 0.3);
     air.min.y = 0.3;
-    ambient.setBounds(air);
+    ambient.setBounds(air, (x, z) =>
+      x < viewBox.min.x ||
+      x > viewBox.max.x ||
+      z < viewBox.min.z ||
+      z > viewBox.max.z
+        ? undefined
+        : roofHeightAt(x, z),
+    );
     state.buildingId = id;
 
     vent.position.copy(ventPos);
@@ -276,18 +284,14 @@ export function createSimulatorScene(container) {
     const dt = Math.min(0.05, (now - prev) / 1000);
     prev = now;
     const speed = state.windSpeedMS;
+    const flow = 0.6 + speed * 0.35;
     if (!reduceMotion && turbineHolder.visible)
       turbine.rotor.rotation.x += dt * speed * 1.6;
-    windFx.update(
-      reduceMotion ? 0 : dt,
-      camera,
-      0.6 + speed * 0.35,
-      speed / WIND_RANGE[1],
-    );
+    windFx.update(reduceMotion ? 0 : dt, camera, flow, speed / WIND_RANGE[1]);
     ambient.update(
       reduceMotion ? 0 : dt,
       camera,
-      1.5 + speed * 0.9,
+      flow,
       (speed / WIND_RANGE[1]) * (0.3 + 0.7 * state.hourStrength),
     );
     controls.update();
