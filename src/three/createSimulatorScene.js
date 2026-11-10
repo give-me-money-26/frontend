@@ -9,6 +9,7 @@ import {
 } from "./buildings.js";
 import { buildTurbine } from "./models/turbine.js";
 import { buildVent, createWindParticles } from "./models/vent.js";
+import { createAmbientWind } from "./streaks.js";
 
 const DEFAULT_WIND_SPEED = 3;
 const VENT_SCALE = 1.4;
@@ -21,6 +22,7 @@ const VIEW_FILL = 0.92;
 const CONTROL_DIR = new THREE.Vector3(5, 8.9, 19).normalize();
 const CONTROL_FILL = 0.7;
 const CONTROL_LIFT = 0.25;
+const AMBIENT_COUNT = 160;
 
 export function createSimulatorScene(container) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -72,6 +74,8 @@ export function createSimulatorScene(container) {
     thickness: 0.09,
   });
   vent.add(windFx.mesh);
+  const ambient = createAmbientWind(AMBIENT_COUNT);
+  scene.add(ambient.mesh);
 
   const turbine = buildTurbine({ scale: TURBINE_SCALE });
   const turbineHolder = new THREE.Group();
@@ -96,6 +100,7 @@ export function createSimulatorScene(container) {
     distanceM: 2,
     angleDegrees: 0,
     windSpeedMS: DEFAULT_WIND_SPEED,
+    hourStrength: 1,
   };
   let building = null;
   let roofMeshes = [];
@@ -155,6 +160,9 @@ export function createSimulatorScene(container) {
     ventPos.y = roofHeightAt(ventPos.x + ventCenterX) ?? ventPos.y;
     maxGap = measureMaxGap();
     viewBox.setFromObject(building.group).expandByPoint(ventPos);
+    const air = viewBox.clone().expandByScalar(BUILDING_FIT_SIZE * 0.3);
+    air.min.y = 0.3;
+    ambient.setBounds(air);
     state.buildingId = id;
 
     vent.position.copy(ventPos);
@@ -238,6 +246,7 @@ export function createSimulatorScene(container) {
       state.angleDegrees = Number(next.angleDegrees);
     if (next.windSpeedMS !== undefined)
       state.windSpeedMS = Math.max(0, Number(next.windSpeedMS) || 0);
+    if (next.hourStrength !== undefined) state.hourStrength = next.hourStrength;
     if (next.buildingId !== undefined) setBuilding(next.buildingId);
     turbineHolder.visible = state.mode === "control";
     placeTurbine();
@@ -275,6 +284,12 @@ export function createSimulatorScene(container) {
       0.6 + speed * 0.35,
       speed / WIND_RANGE[1],
     );
+    ambient.update(
+      reduceMotion ? 0 : dt,
+      camera,
+      1.5 + speed * 0.9,
+      (speed / WIND_RANGE[1]) * (0.3 + 0.7 * state.hourStrength),
+    );
     controls.update();
     renderer.render(scene, camera);
   }
@@ -287,6 +302,7 @@ export function createSimulatorScene(container) {
     building?.dispose();
     turbine.dispose();
     windFx.dispose();
+    ambient.dispose();
     ventModel.dispose();
     scene.traverse((o) => {
       if (o.isMesh || o.isLineSegments) {

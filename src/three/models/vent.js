@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { LineSegments2 } from "three/addons/lines/LineSegments2.js";
 import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js";
 import { LineMaterial } from "three/addons/lines/LineMaterial.js";
+import { createStreaks } from "../streaks.js";
 import { boxGeo } from "./kit.js";
 
 // 원점: 루버 면 바닥 가운데, 바람은 +x로 나가고 몸통은 -x 쪽
@@ -177,54 +178,17 @@ export function buildVent({ scale = 1, castShadow = true } = {}) {
   };
 }
 
-export function createWindParticles(
-  vent,
-  { count = 90, length = 6, thickness = 0.05 } = {},
-) {
+export function createWindParticles(vent, { count, length, thickness }) {
   // 파티클은 vent.group 안에 들어가므로 scale을 뺀 로컬 좌표
-  const groupScale = vent.group.scale.x || 1;
+  const groupScale = vent.group.scale.x;
   const origin = vent.outlet.clone().divideScalar(groupScale);
   const w = vent.outletSize.w / groupScale;
   const h = vent.outletSize.h / groupScale;
-
-  const canvas = document.createElement("canvas");
-  canvas.width = 256;
-  canvas.height = 16;
-  const ctx = canvas.getContext("2d");
-  const gradient = ctx.createLinearGradient(0, 0, 256, 0);
-  gradient.addColorStop(0, "rgba(64,160,160,0)");
-  gradient.addColorStop(0.25, "rgba(64,160,160,0.95)");
-  gradient.addColorStop(0.7, "rgba(90,175,175,0.7)");
-  gradient.addColorStop(1, "rgba(120,190,190,0)");
-  ctx.fillStyle = gradient;
-  ctx.beginPath();
-  ctx.moveTo(0, 8);
-  ctx.quadraticCurveTo(60, 2, 256, 7);
-  ctx.lineTo(256, 9);
-  ctx.quadraticCurveTo(60, 14, 0, 8);
-  ctx.fill();
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-
-  const geo = new THREE.PlaneGeometry(1, 1);
-  const mat = new THREE.MeshBasicMaterial({
-    map: tex,
-    transparent: true,
-    depthWrite: false,
-    side: THREE.DoubleSide,
-  });
-  // 인스턴스 색의 r 값을 투명도로 사용
-  mat.onBeforeCompile = (sh) => {
-    sh.fragmentShader = sh.fragmentShader.replace(
-      "#include <color_fragment>",
-      "#ifdef USE_INSTANCING_COLOR\n diffuseColor.a *= vColor.r;\n#endif",
-    );
-  };
-  const mesh = new THREE.InstancedMesh(geo, mat, count);
-  mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-  mesh.frustumCulled = false;
-  const colors = new Float32Array(count * 3);
-  mesh.instanceColor = new THREE.InstancedBufferAttribute(colors, 3);
+  const streaks = createStreaks(count, [
+    "64,160,160",
+    "90,175,175",
+    "120,190,190",
+  ]);
 
   const particles = [];
   const spawn = (p, initial) => {
@@ -240,45 +204,32 @@ export function createWindParticles(
     spawn(p, true);
     particles.push(p);
   }
-  const m4 = new THREE.Matrix4();
-  const quat = new THREE.Quaternion();
-  const s = new THREE.Vector3();
-  const t = new THREE.Vector3();
-  const euler = new THREE.Euler();
-  function update(dt, camera, speed = 1, amount = 1) {
-    const inv = new THREE.Matrix4().copy(vent.group.matrixWorld).invert();
-    const cam = camera.position.clone().applyMatrix4(inv);
-    mesh.count = Math.round(count * Math.min(1, amount));
-    particles.forEach((p, i) => {
-      if (i >= mesh.count) return;
+
+  const inv = new THREE.Matrix4();
+  const eye = new THREE.Vector3();
+  function update(dt, camera, speed, amount) {
+    inv.copy(vent.group.matrixWorld).invert();
+    eye.copy(camera.position).applyMatrix4(inv);
+    const visible = Math.round(count * Math.min(1, amount));
+    for (let i = 0; i < visible; i++) {
+      const p = particles[i];
       p.x += dt * p.v * speed;
       const d = p.x - origin.x;
       if (d > p.life) spawn(p, false);
       const k = Math.min(1, d / p.life);
-      euler.set(Math.atan2(-(cam.y - p.y), cam.z - p.z), 0, 0);
-      quat.setFromEuler(euler);
-      const ln = p.len * (1 - 0.3 * k);
-      t.set(
-        p.x + ln / 2,
+      streaks.set(
+        i,
+        p.x,
         p.y + Math.sin(d * 1.4 + i) * 0.02,
         p.z * (1 + d * 0.04),
+        p.len * (1 - 0.3 * k),
+        thickness,
+        1 - k * k,
+        eye,
       );
-      s.set(ln, thickness, 1);
-      m4.compose(t, quat, s);
-      mesh.setMatrixAt(i, m4);
-      const fade = 1 - k * k;
-      colors[i * 3] = colors[i * 3 + 1] = colors[i * 3 + 2] = fade;
-    });
-    mesh.instanceMatrix.needsUpdate = true;
-    mesh.instanceColor.needsUpdate = true;
+    }
+    streaks.commit(visible);
   }
-  return {
-    mesh,
-    update,
-    dispose() {
-      geo.dispose();
-      mat.dispose();
-      tex.dispose();
-    },
-  };
+
+  return { mesh: streaks.mesh, update, dispose: streaks.dispose };
 }
