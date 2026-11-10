@@ -97,6 +97,28 @@
   }
 }
 
+@media (max-width: 767px) {
+  .content {
+    padding: 0 24px;
+  }
+
+  .logo {
+    width: 72px;
+    height: 70px;
+  }
+
+  .message {
+    margin-top: 28px;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+  }
+
+  .track {
+    width: 240px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .logo {
     animation-duration: 6s;

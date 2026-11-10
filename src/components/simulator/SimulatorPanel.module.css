@@ -81,3 +81,27 @@
   top: -7px;
   left: -7px;
 }
+
+@media (max-width: 1023px) {
+  .card {
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (max-width: 767px) {
+  .titleRow {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    padding: 0 4px 0 56px;
+  }
+
+  .card {
+    aspect-ratio: 4 / 5;
+  }
+
+  .mode {
+    top: 20px;
+    left: 20px;
+  }
+}

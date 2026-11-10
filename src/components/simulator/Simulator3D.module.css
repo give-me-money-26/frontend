@@ -66,3 +66,15 @@
 .reset:hover {
   background: var(--color-button-2);
 }
+
+@media (max-width: 767px) {
+  .guide {
+    display: none;
+  }
+
+  .reset {
+    top: 12px;
+    right: 14px;
+    padding: 8px 12px;
+  }
+}

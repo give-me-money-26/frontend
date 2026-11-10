@@ -10,6 +10,7 @@ import styles from "./MapPage.module.css";
 const DESIGN_WIDTH = 1440;
 const DESIGN_HEIGHT = 836;
 const HEADER_HEIGHT = 64;
+const RESPONSIVE_WIDTH = 1024;
 
 function MapPage() {
   const navigate = useNavigate();
@@ -21,6 +22,14 @@ function MapPage() {
     viewport.width / DESIGN_WIDTH,
     availableHeight / DESIGN_HEIGHT,
   );
+  const stageStyle =
+    viewport.width < RESPONSIVE_WIDTH
+      ? undefined
+      : {
+          zoom: scale,
+          width: viewport.contentWidth / scale,
+          height: availableHeight / scale,
+        };
 
   const handleLoaded = useCallback(() => {
     useSim.getState().set({ buildingId: loadingBuilding.id });
@@ -29,14 +38,7 @@ function MapPage() {
 
   return (
     <div className={styles.page}>
-      <div
-        className={styles.stage}
-        style={{
-          zoom: scale,
-          width: viewport.contentWidth / scale,
-          height: availableHeight / scale,
-        }}
-      >
+      <div className={styles.stage} style={stageStyle}>
         <button
           type="button"
           className={styles.back}

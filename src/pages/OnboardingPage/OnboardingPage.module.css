@@ -86,6 +86,30 @@
   vertical-align: 1px;
 }
 
+@media (max-width: 767px) {
+  .content {
+    width: 100%;
+    padding: 0 16px;
+  }
+
+  .brand {
+    gap: 8px;
+  }
+
+  .brand .symbol {
+    width: 46px;
+    height: 45px;
+  }
+
+  .logo {
+    font-size: 38px;
+  }
+
+  .guide {
+    margin: 18px 0 48px;
+  }
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;

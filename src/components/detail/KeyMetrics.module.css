@@ -177,3 +177,42 @@
   line-height: 1.4;
   letter-spacing: -0.04em;
 }
+
+@media (max-width: 1023px) {
+  .container {
+    width: 100%;
+  }
+
+  .interpretation {
+    height: auto;
+  }
+
+  .resultBox {
+    flex: none;
+  }
+
+  .resultText {
+    width: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .infoPopover {
+    left: -100px;
+  }
+
+  .box {
+    height: auto;
+    padding: 16px;
+  }
+
+  .list {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .metric {
+    flex: 1 1 130px;
+    padding: 16px 0;
+  }
+}

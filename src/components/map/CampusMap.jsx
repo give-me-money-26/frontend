@@ -6,8 +6,8 @@ import { BUILDINGS, CAMPUS, MAP_HEIGHT, MAP_WIDTH } from "../../data/campus";
 import styles from "./CampusMap.module.css";
 
 const toPosition = ([x, y]) => ({
-  left: `${(x / MAP_WIDTH) * 100}%`,
-  top: `${(y / MAP_HEIGHT) * 100}%`,
+  "--x": `${(x / MAP_WIDTH) * 100}%`,
+  "--y": `${(y / MAP_HEIGHT) * 100}%`,
 });
 
 function CampusMap({ onNavigate }) {

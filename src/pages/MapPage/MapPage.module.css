@@ -64,3 +64,57 @@
   content: "|";
   margin-right: 6px;
 }
+
+@media (max-width: 1023px) {
+  .page {
+    height: auto;
+    min-height: calc(100dvh - 64px);
+  }
+
+  .stage {
+    padding: 72px 24px 40px;
+  }
+
+  .content {
+    width: auto;
+    margin: 0;
+  }
+
+  .heading {
+    flex-direction: column;
+    gap: 6px;
+    margin: 0 0 16px 8px;
+  }
+
+  .description {
+    word-break: keep-all;
+  }
+
+  .description::before {
+    content: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .stage {
+    padding: 68px 12px 32px;
+  }
+
+  .back {
+    top: 16px;
+    left: 12px;
+  }
+
+  .heading {
+    margin-left: 4px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .description {
+    font-size: 14px;
+    line-height: 18px;
+  }
+}

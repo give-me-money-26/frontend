@@ -18,3 +18,20 @@
   gap: 11px;
   margin: 17px 0 13px;
 }
+
+@media (max-width: 1023px) {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .page {
+    padding: 24px 16px 32px;
+  }
+
+  .summaryRow {
+    display: grid;
+  }
+}

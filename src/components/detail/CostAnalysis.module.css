@@ -246,3 +246,75 @@
   top: -108px;
   left: -174.9px;
 }
+
+@media (max-width: 1023px) {
+  .list {
+    height: auto;
+  }
+
+  .costCard {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .costBody {
+    position: static;
+  }
+
+  .costContent {
+    position: static;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    padding: 24px;
+  }
+
+  .costPrice {
+    display: contents;
+  }
+
+  .costPrice img {
+    display: none;
+  }
+
+  .costItem {
+    justify-content: space-between;
+  }
+
+  .costHeader {
+    position: relative;
+    inset: auto;
+    order: -1;
+  }
+
+  .payback {
+    position: static;
+    width: auto;
+    padding: 32px 0 24px;
+    transform: none;
+  }
+
+  .info {
+    left: auto;
+    right: 2px;
+  }
+
+  .infoPopover {
+    left: auto;
+    right: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding: 16px;
+  }
+
+  .list {
+    flex-direction: column;
+  }
+
+  .paybackCard {
+    width: auto;
+  }
+}
