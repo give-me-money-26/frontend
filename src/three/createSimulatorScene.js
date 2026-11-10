@@ -81,7 +81,6 @@ export function createSimulatorScene(container) {
   const turbine = buildTurbine({ scale: TURBINE_SCALE });
   const turbineHolder = new THREE.Group();
   turbineHolder.add(turbine.group);
-  turbineHolder.visible = false;
   scene.add(turbineHolder);
   const turbineBox = new THREE.Box3().setFromObject(turbine.group);
   // 거리는 배기구 앞면에서 날개 앞까지
@@ -256,7 +255,6 @@ export function createSimulatorScene(container) {
       state.windSpeedMS = Math.max(0, Number(next.windSpeedMS) || 0);
     if (next.hourStrength !== undefined) state.hourStrength = next.hourStrength;
     if (next.buildingId !== undefined) setBuilding(next.buildingId);
-    turbineHolder.visible = state.mode === "control";
     placeTurbine();
     if (prevMode !== state.mode) resetCamera();
   }
@@ -285,8 +283,7 @@ export function createSimulatorScene(container) {
     prev = now;
     const speed = state.windSpeedMS;
     const flow = 0.6 + speed * 0.35;
-    if (!reduceMotion && turbineHolder.visible)
-      turbine.rotor.rotation.x += dt * speed * 1.6;
+    if (!reduceMotion) turbine.rotor.rotation.x += dt * speed * 1.6;
     windFx.update(reduceMotion ? 0 : dt, camera, flow, speed / WIND_RANGE[1]);
     ambient.update(
       reduceMotion ? 0 : dt,
