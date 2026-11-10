@@ -77,7 +77,10 @@ export function createSimulatorScene(container) {
     ...WIND_STREAK,
     scale: VENT_SCALE,
   });
-  scene.add(ambient.mesh);
+  // 전체 바람도 건물의 배기구 방향으로 흐르도록 회전된 좌표에서 움직임
+  const airFrame = new THREE.Group();
+  airFrame.add(ambient.mesh);
+  scene.add(airFrame);
 
   const turbine = buildTurbine({ scale: TURBINE_SCALE });
   const turbineHolder = new THREE.Group();
@@ -172,16 +175,24 @@ export function createSimulatorScene(container) {
     ventPos.y = roofHeightAlong(ventCenter) ?? ventPos.y;
     maxGap = measureMaxGap();
     viewBox.setFromObject(building.group).expandByPoint(ventPos);
-    const air = viewBox.clone().expandByScalar(BUILDING_FIT_SIZE * 0.3);
+    airFrame.rotation.y = ventAngle;
+    airFrame.updateMatrixWorld();
+    const footprint = viewBox
+      .clone()
+      .applyMatrix4(new THREE.Matrix4().makeRotationY(-ventAngle));
+    const air = footprint.clone().expandByScalar(BUILDING_FIT_SIZE * 0.3);
     air.min.y = 0.3;
-    ambient.setBounds(air, (x, z) =>
-      x < viewBox.min.x ||
-      x > viewBox.max.x ||
-      z < viewBox.min.z ||
-      z > viewBox.max.z
-        ? undefined
-        : roofHeightAt(x, z),
-    );
+    ambient.setBounds(air, (x, z) => {
+      if (
+        x < footprint.min.x ||
+        x > footprint.max.x ||
+        z < footprint.min.z ||
+        z > footprint.max.z
+      )
+        return undefined;
+      const p = probe.set(x, 0, z).applyAxisAngle(UP, ventAngle);
+      return roofHeightAt(p.x, p.z);
+    });
     state.buildingId = id;
 
     vent.position.copy(ventPos);

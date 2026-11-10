@@ -93,6 +93,8 @@ export function createAmbientWind(count, { length, thickness, scale }) {
   let cols = 0;
   let rows = 0;
   let ceiling = new Float32Array(0);
+  const inv = new THREE.Matrix4();
+  const eye = new THREE.Vector3();
 
   const ceilingAt = (x, z) => {
     const c = THREE.MathUtils.clamp(
@@ -138,6 +140,8 @@ export function createAmbientWind(count, { length, thickness, scale }) {
   }
 
   function update(dt, camera, speed, amount) {
+    inv.copy(streaks.mesh.matrixWorld).invert();
+    eye.copy(camera.position).applyMatrix4(inv);
     const visible = Math.round(count * THREE.MathUtils.clamp(amount, 0, 1));
     for (let i = 0; i < visible; i++) {
       const p = particles[i];
@@ -155,7 +159,7 @@ export function createAmbientWind(count, { length, thickness, scale }) {
         p.len * (1 - 0.3 * k),
         thickness * scale,
         Math.sin(Math.PI * k) * 0.55,
-        camera.position,
+        eye,
       );
     }
     streaks.commit(visible);
