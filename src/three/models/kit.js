@@ -135,6 +135,7 @@ export function createKit(
     scale,
     castShadow,
     vent,
+    ventAngle = 0,
     lines,
     solidShadowsOnly = false,
     scaleY = 1,
@@ -165,6 +166,7 @@ export function createKit(
         vy * scaleY * scale,
         (vz - c.z) * scale,
       ),
+      ventAngle,
       size: bb.getSize(new THREE.Vector3()).multiplyScalar(scale),
       setResolution(w, h) {
         lineMats.forEach((m) => m.resolution.set(w, h));

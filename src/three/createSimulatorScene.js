@@ -20,6 +20,7 @@ const ROOF_STEP = 0.1;
 const VIEW_DIR = new THREE.Vector3(0.78, 0.68, 1.05).normalize();
 const VIEW_FILL = 0.92;
 const CONTROL_DIR = new THREE.Vector3(5, 8.9, 19).normalize();
+const UP = new THREE.Vector3(0, 1, 0);
 const CONTROL_FILL = 0.7;
 const CONTROL_LIFT = 0.25;
 const AMBIENT_COUNT = 180;
@@ -69,14 +70,17 @@ export function createSimulatorScene(container) {
   const vent = ventModel.group;
   scene.add(vent);
   const ventBox = new THREE.Box3().setFromObject(vent);
-  const ventCenterX = (ventBox.min.x + ventBox.max.x) / 2;
+  const ventCenter = (ventBox.min.x + ventBox.max.x) / 2;
   const windFx = createWindParticles(ventModel, { count: 70, ...WIND_STREAK });
   vent.add(windFx.mesh);
   const ambient = createAmbientWind(AMBIENT_COUNT, {
     ...WIND_STREAK,
     scale: VENT_SCALE,
   });
-  scene.add(ambient.mesh);
+  // 전체 바람도 건물의 배기구 방향으로 흐르도록 회전된 좌표에서 움직임
+  const airFrame = new THREE.Group();
+  airFrame.add(ambient.mesh);
+  scene.add(airFrame);
 
   const turbine = buildTurbine({ scale: TURBINE_SCALE });
   const turbineHolder = new THREE.Group();
@@ -105,26 +109,35 @@ export function createSimulatorScene(container) {
   let building = null;
   let roofMeshes = [];
   let maxGap = MIN_GAP;
-  // 배기구 위치. 바람은 여기서 +x로 흐르고 터빈은 -x(배기구)를 바라봄
+  // 바람은 배기구에서 ventDir 방향으로 흐르고 터빈은 배기구를 바라봄
   const ventPos = new THREE.Vector3();
+  const ventDir = new THREE.Vector3(1, 0, 0);
+  let ventAngle = 0;
   const viewBox = new THREE.Box3();
   const raycaster = new THREE.Raycaster();
   const down = new THREE.Vector3(0, -1, 0);
   const probe = new THREE.Vector3();
+  const ahead = new THREE.Vector3();
 
-  function roofHeightAt(x, z = ventPos.z) {
+  function roofHeightAt(x, z) {
     probe.set(x, PROBE_HEIGHT, z);
     raycaster.set(probe, down);
     return raycaster.intersectObjects(roofMeshes, false)[0]?.point.y;
   }
 
+  const alongVent = (d) => ahead.copy(ventPos).addScaledVector(ventDir, d);
+
+  function roofHeightAlong(d) {
+    const { x, z } = alongVent(d);
+    return roofHeightAt(x, z);
+  }
+
   // 배기구 앞으로 같은 높이의 옥상이 이어지는 만큼만 터빈을 보냄
   function measureMaxGap() {
-    const front = ventPos.x + ventBox.max.x;
     const limit = DISTANCE_RANGE[1] + turbineDepth + EDGE_MARGIN;
     let reach = 0;
     for (let s = 0; s <= limit; s += ROOF_STEP) {
-      const y = roofHeightAt(front + s);
+      const y = roofHeightAlong(ventBox.max.x + s);
       if (y === undefined || Math.abs(y - ventPos.y) > ROOF_STEP / 2) break;
       reach = s;
     }
@@ -157,22 +170,33 @@ export function createSimulatorScene(container) {
     scene.add(building.group);
     building.group.updateMatrixWorld(true);
     ventPos.copy(building.vent).multiplyScalar(k);
-    ventPos.y = roofHeightAt(ventPos.x + ventCenterX) ?? ventPos.y;
+    ventAngle = building.ventAngle;
+    ventDir.set(1, 0, 0).applyAxisAngle(UP, ventAngle);
+    ventPos.y = roofHeightAlong(ventCenter) ?? ventPos.y;
     maxGap = measureMaxGap();
     viewBox.setFromObject(building.group).expandByPoint(ventPos);
-    const air = viewBox.clone().expandByScalar(BUILDING_FIT_SIZE * 0.3);
+    airFrame.rotation.y = ventAngle;
+    airFrame.updateMatrixWorld();
+    const footprint = viewBox
+      .clone()
+      .applyMatrix4(new THREE.Matrix4().makeRotationY(-ventAngle));
+    const air = footprint.clone().expandByScalar(BUILDING_FIT_SIZE * 0.3);
     air.min.y = 0.3;
-    ambient.setBounds(air, (x, z) =>
-      x < viewBox.min.x ||
-      x > viewBox.max.x ||
-      z < viewBox.min.z ||
-      z > viewBox.max.z
-        ? undefined
-        : roofHeightAt(x, z),
-    );
+    ambient.setBounds(air, (x, z) => {
+      if (
+        x < footprint.min.x ||
+        x > footprint.max.x ||
+        z < footprint.min.z ||
+        z > footprint.max.z
+      )
+        return undefined;
+      const p = probe.set(x, 0, z).applyAxisAngle(UP, ventAngle);
+      return roofHeightAt(p.x, p.z);
+    });
     state.buildingId = id;
 
     vent.position.copy(ventPos);
+    vent.rotation.y = ventAngle;
     const r = BUILDING_FIT_SIZE;
     sun.position.set(ventPos.x - r * 0.7, r * 1.4, ventPos.z + r * 0.9);
     sun.target.position.copy(ventPos);
@@ -188,25 +212,24 @@ export function createSimulatorScene(container) {
       MIN_GAP,
       maxGap,
     );
-    const x = ventPos.x + turbineOffset + gap;
-    turbineHolder.position.set(x, roofHeightAt(x) ?? ventPos.y, ventPos.z);
-    turbineHolder.rotation.y = (-state.angleDegrees * Math.PI) / 180;
+    const { x, z } = alongVent(turbineOffset + gap);
+    turbineHolder.position.set(x, roofHeightAt(x, z) ?? ventPos.y, z);
+    turbineHolder.rotation.y =
+      ventAngle - THREE.MathUtils.degToRad(state.angleDegrees);
   }
 
   function resetCamera() {
     if (state.mode === "control") {
-      const turbineAtMax = turbineBox
+      const focus = turbineBox
         .clone()
-        .translate(
-          new THREE.Vector3(
-            ventPos.x + turbineOffset + maxGap,
-            ventPos.y,
-            ventPos.z,
-          ),
+        .translate(new THREE.Vector3(turbineOffset + maxGap, 0, 0))
+        .union(ventBox)
+        .applyMatrix4(
+          new THREE.Matrix4().makeRotationY(ventAngle).setPosition(ventPos),
         );
       fitCamera(
-        ventBox.clone().translate(ventPos).union(turbineAtMax),
-        CONTROL_DIR,
+        focus,
+        CONTROL_DIR.clone().applyAxisAngle(UP, ventAngle),
         CONTROL_FILL,
         CONTROL_LIFT,
       );
