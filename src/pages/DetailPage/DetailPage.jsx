@@ -11,7 +11,10 @@ import styles from "./DetailPage.module.css";
 
 const COMMON_INFO_ITEMS = [
   { title: "연간 발전량", description: "= 회수 전력 * 일 운전 시간 / 1,000" },
-  { title: "회수 전력", description: "= 풍력 에너지 밀도 * 회수 면적 * 가정한 전체 변환계수" },
+  {
+    title: "회수 전력",
+    description: "= 풍력 에너지 밀도 * 회수 면적 * 가정한 전체 변환계수",
+  },
 ];
 
 const VIEWS = {

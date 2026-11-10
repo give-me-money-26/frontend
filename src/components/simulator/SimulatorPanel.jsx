@@ -14,7 +14,9 @@ function SimulatorPanel({ campus, isControlMode = false, children }) {
         </p>
       </div>
 
-      <div className={`${styles.card} ${isControlMode ? styles.controlMode : ""}`}>
+      <div
+        className={`${styles.card} ${isControlMode ? styles.controlMode : ""}`}
+      >
         <div className={styles.mode}>
           <span className={styles.modeDot}>
             <img src={isControlMode ? modeDotControl : modeDot} alt="" />

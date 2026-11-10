@@ -14,7 +14,6 @@
   font-weight: 400;
   letter-spacing: -0.03em;
   color: var(--color-primary);
-  -webkit-text-stroke-width: 0.2px currentColor;
 }
 
 .card {
