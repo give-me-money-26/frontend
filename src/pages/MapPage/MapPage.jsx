@@ -4,7 +4,7 @@ import ArrowLeftIcon from "../../assets/icons/arrow-left.svg?react";
 import useViewportSize from "../../hooks/useViewportSize";
 import CampusMap from "../../components/map/CampusMap";
 import LoadingScreen from "../../components/map/LoadingScreen";
-import { useSim } from "../../state/simulatorStore";
+import { enterBuilding, useSim } from "../../state/simulatorStore";
 import styles from "./MapPage.module.css";
 
 const DESIGN_WIDTH = 1440;
@@ -32,7 +32,7 @@ function MapPage() {
         };
 
   const handleLoaded = useCallback(() => {
-    useSim.getState().set({ buildingId: loadingBuilding.id });
+    useSim.getState().set(enterBuilding(loadingBuilding.id));
     navigate("/simulator");
   }, [navigate, loadingBuilding]);
 

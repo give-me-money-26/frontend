@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import DropDownIcon from "../../assets/icons/drop-down.svg?react";
 import { BUILDINGS } from "../../data/campus";
-import { useSim } from "../../state/simulatorStore";
+import { enterBuilding, useSim } from "../../state/simulatorStore";
 import styles from "./BuildingSelect.module.css";
 
 const OPTIONS = [...BUILDINGS].sort((a, b) =>
@@ -33,7 +33,7 @@ function BuildingSelect() {
   }, [isOpen]);
 
   const handleSelect = (id) => {
-    if (id !== buildingId) setSim({ buildingId: id, buildingDetail: null });
+    if (id !== buildingId) setSim(enterBuilding(id));
     setIsOpen(false);
   };
 
