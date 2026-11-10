@@ -48,7 +48,7 @@ function DataDescription({ calculation, assumption }) {
   const transition = isDragging ? "none" : undefined;
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ "--progress": progress }}>
       <div className={styles.viewport}>
         <div className={styles.panel} inert={isMeasurementPage}>
           <div className={styles.content}>
@@ -76,7 +76,7 @@ function DataDescription({ calculation, assumption }) {
         </div>
         <div
           className={styles.cover}
-          style={{ transform: `translateX(${(1 - progress) * PAGE_WIDTH}px)`, transition }}
+          style={{ transition }}
           inert={!isMeasurementPage}
         >
           <MeasurementPanel />
@@ -86,7 +86,7 @@ function DataDescription({ calculation, assumption }) {
       <button
         type="button"
         className={styles.sideButton}
-        style={{ left: 451.5 - progress * (PAGE_WIDTH + 1), transition }}
+        style={{ transition }}
         tabIndex={-1}
         aria-label={isMeasurementPage ? "계산 방법 보기" : "건물·시간대별 측정값 보기"}
         onPointerDown={handlePointerDown}

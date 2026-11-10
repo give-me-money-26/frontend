@@ -49,3 +49,22 @@
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+@media (max-width: 767px) {
+  .page {
+    padding: 0 16px;
+  }
+
+  .code {
+    font-size: 72px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .description {
+    font-size: 14px;
+    word-break: keep-all;
+  }
+}

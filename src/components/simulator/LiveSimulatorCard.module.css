@@ -75,3 +75,35 @@
   background: var(--color-accent);
   color: var(--color-white);
 }
+
+@media (max-width: 767px) {
+  .card {
+    padding: 0 16px;
+  }
+
+  .main {
+    flex-wrap: wrap;
+    gap: 12px 0;
+    height: auto;
+    padding: 16px 0;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .secondaryButton,
+  .primaryButton {
+    flex: 1 1 auto;
+    padding-block: 12px;
+  }
+
+  .baseline {
+    flex-direction: column;
+    gap: 4px;
+    margin-left: 0;
+    padding-inline: 0;
+  }
+}

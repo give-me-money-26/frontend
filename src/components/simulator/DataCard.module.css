@@ -451,3 +451,69 @@
   line-height: 1.3;
   letter-spacing: -0.03em;
 }
+
+@media (max-width: 1023px) {
+  .statRow,
+  .ventBox {
+    right: 17px;
+  }
+
+  .statBox {
+    flex: 1;
+  }
+
+  .statusItem .control {
+    width: calc(100% - 34px);
+  }
+
+  .graph,
+  .marker {
+    margin-left: calc(50% - 204px);
+  }
+
+  .ventBox {
+    width: auto;
+  }
+
+  .optimizeText {
+    right: 19px;
+    width: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .card {
+    padding: 10px;
+  }
+
+  .buildingItem {
+    padding-left: 20px;
+  }
+
+  .buildingPriority {
+    margin-left: 20px;
+  }
+
+  .control {
+    width: calc(100% - 34px);
+  }
+
+  .graph,
+  .marker {
+    zoom: 0.85;
+    margin-top: 8px;
+  }
+
+  .ventBox {
+    padding-left: 14px;
+  }
+
+  .ventLocation {
+    width: 72px;
+  }
+
+  .ventGrid {
+    column-gap: 6px;
+    margin-left: 12px;
+  }
+}

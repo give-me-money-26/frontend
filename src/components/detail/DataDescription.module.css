@@ -16,6 +16,7 @@
   position: absolute;
   top: 0;
   left: 0;
+  transform: translateX(calc((1 - var(--progress)) * 100%));
   transition: transform 0.3s ease;
 }
 
@@ -84,6 +85,7 @@
 .sideButton {
   position: absolute;
   top: 110.5px;
+  left: calc(100% - 26.5px - var(--progress) * (100% + 1px));
   display: flex;
   padding: 0;
   background: none;
@@ -96,4 +98,36 @@
 
 .sideButton:active {
   cursor: grabbing;
+}
+
+@media (max-width: 1023px) {
+  .container,
+  .viewport {
+    width: 100%;
+    height: auto;
+  }
+
+  .cover {
+    width: 100%;
+    height: 100%;
+  }
+
+  .panel {
+    width: 100%;
+    height: auto;
+    min-height: 321px;
+  }
+
+  .content {
+    width: auto;
+  }
+
+  .calculation,
+  .assumption {
+    white-space: normal;
+  }
+
+  .sideButton {
+    top: calc(50% - 57.5px);
+  }
 }

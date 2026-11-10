@@ -52,11 +52,48 @@
   white-space: pre-line;
 }
 
+@media (max-width: 1023px) {
+  .panel {
+    position: fixed;
+    right: 0;
+    z-index: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .panel {
+    width: 100%;
+    border-left: 0;
+    border-radius: 0;
+    animation-name: panel-slide;
+  }
+
+  .inner {
+    width: auto;
+    padding: 72px 20px 0;
+  }
+
+  .close {
+    top: 28px;
+    right: 20px;
+  }
+
+  .header {
+    margin-left: 8px;
+  }
+}
+
 @keyframes panel-open {
   from {
     width: 0;
   }
   to {
     width: 404px;
+  }
+}
+
+@keyframes panel-slide {
+  from {
+    transform: translateX(100%);
   }
 }

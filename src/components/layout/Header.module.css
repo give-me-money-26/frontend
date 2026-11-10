@@ -37,3 +37,9 @@
   letter-spacing: -0.04em;
   -webkit-text-stroke: 0.45px currentColor;
 }
+
+@media (max-width: 767px) {
+  .inner {
+    padding: 11px 12px 0;
+  }
+}

@@ -3,8 +3,6 @@ import tableLine from "../../assets/icons/table-line.svg";
 import { MEASUREMENT_BUILDINGS, MEASUREMENTS, REFERENCES } from "./measurementData";
 import styles from "./MeasurementPanel.module.css";
 
-const THUMB_TRAVEL = 270 - 35;
-
 function MeasurementPanel() {
   const scrollRef = useRef(null);
   const [scrollRatio, setScrollRatio] = useState(0);
@@ -91,7 +89,7 @@ function MeasurementPanel() {
       <div className={styles.scrollbar} aria-hidden="true">
         <span
           className={styles.scrollThumb}
-          style={{ top: scrollRatio * THUMB_TRAVEL }}
+          style={{ "--scroll-ratio": scrollRatio }}
         />
       </div>
     </div>

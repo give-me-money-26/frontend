@@ -54,6 +54,8 @@
 
 .label {
   position: absolute;
+  top: var(--y);
+  left: var(--x);
   transform: translate(-50%, -50%);
   padding: 8px 18px;
   border: 2px solid var(--color-logo-typo);
@@ -96,4 +98,49 @@
   font-weight: 500;
   line-height: 100%;
   letter-spacing: -0.04em;
+}
+
+@media (max-width: 1023px) {
+  .map {
+    border-radius: 32px;
+  }
+
+  .label {
+    padding: 6px 12px;
+    font-size: 13px;
+    line-height: 16px;
+  }
+
+  .campus {
+    top: 16px;
+    right: 16px;
+    padding: 6px 16px 6px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 767px) {
+  .map {
+    border-radius: var(--radius-card);
+  }
+
+  .label {
+    padding: 3px 7px;
+    border-width: 1px;
+    font-size: 10px;
+    line-height: 12px;
+  }
+
+  .campus {
+    top: 8px;
+    right: 8px;
+    gap: 3px;
+    padding: 4px 9px 4px 6px;
+    font-size: 10px;
+  }
+
+  .campus img {
+    width: 12px;
+    height: 12px;
+  }
 }
