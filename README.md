@@ -32,11 +32,19 @@ VS Code를 쓴다면 Prettier 확장을 설치하고 Format On Save를 켜 두�
 | -------------- | -------------- | ------------------------------------------------------------------- |
 | `/`            | OnboardingPage | 로고 스플래시 → 위치 선택, 이용 안내 · 서비스 기획 · 계산 조건 패널 |
 | `/map`         | MapPage        | 캠퍼스 지도에서 건물 선택 → 로딩 화면                               |
-| `/simulator`   | SimulatorPage  | 3D 시뮬레이터 (보기 / 조작 모드), 데이터 카드                       |
+| `/simulator`   | SimulatorPage  | 3D 시뮬레이터 (보기 / 조작 모드), 데이터 카드 · 건물 선택 드롭다운  |
 | `/revenue`     | DetailPage     | 수익 분석 상세                                                      |
 | `/environment` | DetailPage     | 환경 영향 상세                                                      |
+| 그 외 경로     | NotFoundPage   | 없는 주소 안내 · 처음으로 버튼                                      |
 
 라우트는 `src/router.jsx`에서 관리합니다. `/` 외의 페이지는 헤더가 있는 `Layout` 안에 있습니다.
+
+## 화면 크기
+
+디자인 기준은 1440px 데스크톱입니다.
+
+- **1024px 이상:** 화면 너비에 맞춰 페이지 전체를 비율대로 축소합니다. 지도는 `MapPage`, 시뮬레이터 · 상세는 `useDesignScale` 훅을 씁니다.
+- **1023px 이하:** 반응형 레이아웃으로 바뀝니다. 태블릿은 `@media (max-width: 1023px)`, 휴대폰은 `@media (max-width: 767px)` 기준이며, 모든 파일에서 같은 값을 씁니다.
 
 ## 폴더 구조
 
@@ -50,9 +58,9 @@ src/
 │  ├─ map/           # 캠퍼스 지도, 건물 팝업, 로딩 화면
 │  ├─ simulator/     # 시뮬레이터 화면, 3D 화면, 데이터 카드
 │  └─ detail/        # 상세 분석 화면
-├─ three/            # three.js 장면과 건물 · 터빈 3D 모델
+├─ three/            # three.js 장면, 건물 · 터빈 · 배기구 3D 모델, 바람 표현
 ├─ state/            # 공유 상태 (simulatorStore.js)
-├─ data/             # 정적 데이터 (캠퍼스 건물, 계산 조건 기본값)
+├─ data/             # 정적 데이터 (캠퍼스 건물 · 등가 풍속, 계산 조건, 슬라이더 범위)
 ├─ hooks/            # 커스텀 훅
 ├─ assets/           # 아이콘(icons), 이미지(images)
 ├─ index.css         # 디자인 토큰(색 · 폰트 · 반경)과 전역 스타일
@@ -68,10 +76,29 @@ src/
 
 화면 간에 주고받는 값은 `src/state/simulatorStore.js` 하나로 관리합니다.
 
-- 화면에서 채우는 값: `buildingId`, `mode`, `hour`, `distanceM`, `angleDegrees`, `conditions`
-- API 응답으로 채우는 값: `result`, `loading`, `error`, `baseline`, `compare`
+| 구분                   | 필드                                                                                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 화면에서 채우는 값     | `buildingId`, `mode`, `hour`, `windSpeedMS`, `distanceM`, `angleDegrees`, `conditions`, `baseline`                                    |
+| API 응답으로 채우는 값 | `buildingDetail` (`GET /buildings/{id}`), `result` (`POST /simulations`), `compare` (`POST /simulations/compare`), `loading`, `error` |
 
 건물 id는 API 명세와 같은 값을 씁니다 (`NICHOLLS`, `DASOL`, `MARIA`, `KIM-SOU-HWAN`, `STUDENT-HALL`). 필드를 추가하거나 이름을 바꿀 때는 팀원과 먼저 공유합니다.
+
+### 건물 선택
+
+지도와 데이터 카드 드롭다운은 모두 `enterBuilding(id)`로 건물을 바꿉니다.
+
+```js
+useSim.getState().set(enterBuilding("DASOL"));
+```
+
+건물이 바뀌면 기준 시간(15시) · 배기구 거리(2m) · 터빈 각도(0°)가 초기화되고, 풍속은 그 건물의 기획안 등가 풍속(`src/data/campus.js`)으로 맞춰집니다. 이전 건물의 `buildingDetail` · `result` · `baseline` · `compare`도 비워집니다.
+
+### API 연결 지점
+
+- **건물 상세:** `buildingId`가 바뀔 때마다 `GET /buildings/{id}` 응답을 `buildingDetail`에 넣습니다. 데이터 카드의 시간대별 그래프, 최대 에너지 밀도 · 발생 시각, 설치 우선순위(`priorityRank`), 최적화 방향(`advice`)과 3D 전체 바람 세기가 이 값을 씁니다. 값이 없으면 기본 그래프와 고정값을 보여줍니다.
+- **계산 요청:** 슬라이더는 움직이는 동안 화면만 바꾸고, 손을 뗄 때 `onCommit`을 한 번 호출합니다. 계산 요청은 여기에 연결합니다.
+  - `ControlBar`: 배기구 거리, 터빈 각도
+  - `DataCard`: 풍속 조절, 기준 시간
 
 ## 코드 규칙
 
