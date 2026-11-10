@@ -13,6 +13,7 @@ import ventDivider from "../../assets/icons/vent-divider.svg";
 import { HOUR_RANGE, WIND_RANGE } from "../../data/wind";
 import { useSim } from "../../state/simulatorStore";
 import Slider from "../common/Slider";
+import BuildingSelect from "./BuildingSelect";
 import styles from "./DataCard.module.css";
 
 const HOUR_ANCHORS = [
@@ -131,7 +132,6 @@ function StatBox({ label, value, unit, tall = false }) {
 }
 
 function DataCard({
-  building = "니콜스관",
   priority = "1순위",
   power = "123",
   maxEnergyDensity = "17.1",
@@ -148,7 +148,8 @@ function DataCard({
 }) {
   const hour = useSim((s) => s.hour);
   const windSpeedMS = useSim((s) => s.windSpeedMS);
-  const series = useSim((s) => s.buildingDetail?.hourlySeries);
+  const detail = useSim((s) => s.buildingDetail);
+  const series = detail?.hourlySeries;
   const setSim = useSim((s) => s.set);
   const point = series?.find((p) => p.hour === hour);
   const markerX = hourToX(hour);
@@ -167,14 +168,16 @@ function DataCard({
       <div className={styles.card}>
         <div className={styles.list}>
           <div className={`${styles.item} ${styles.buildingItem}`}>
-            <div className={`${styles.buildingInfo} ${styles.buildingName}`}>
+            <div className={styles.buildingInfo}>
               <span className={styles.buildingLabel}>건물</span>
-              <span className={styles.buildingValue}>{building}</span>
+              <BuildingSelect />
             </div>
             <img src={dataDivider} alt="" className={styles.buildingDivider} />
-            <div className={`${styles.buildingInfo} ${styles.buildingPriority}`}>
+            <div className={styles.buildingInfo}>
               <span className={styles.buildingLabel}>설치 우선순위</span>
-              <span className={styles.buildingValue}>{priority}</span>
+              <span className={styles.buildingValue}>
+                {detail ? `${detail.priorityRank}순위` : priority}
+              </span>
             </div>
           </div>
 
@@ -317,7 +320,9 @@ function DataCard({
 
           <div className={`${styles.item} ${styles.optimizeItem}`}>
             <h3 className={styles.itemTitle}>최적화 방향</h3>
-            <p className={styles.optimizeText}>{optimization}</p>
+            <p className={styles.optimizeText}>
+              {detail?.advice ?? optimization}
+            </p>
           </div>
         </div>
       </div>
