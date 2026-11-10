@@ -6,6 +6,7 @@ import BackButton from "../../components/common/BackButton";
 import CostAnalysis from "../../components/detail/CostAnalysis";
 import DataDescription from "../../components/detail/DataDescription";
 import KeyMetrics from "../../components/detail/KeyMetrics";
+import useDesignScale from "../../hooks/useDesignScale";
 import styles from "./DetailPage.module.css";
 
 const COMMON_INFO_ITEMS = [
@@ -51,13 +52,14 @@ const TURBINES = [
 function DetailPage({ initialView = "revenue" }) {
   const [view, setView] = useState(initialView);
   const { title, toggleLabel, highlight, infoItems } = VIEWS[view];
+  const scale = useDesignScale();
 
   const toggleView = () => {
     setView((prev) => (prev === "revenue" ? "environment" : "revenue"));
   };
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} style={{ zoom: scale }}>
       <BackButton />
 
       <h2 className={styles.title}>{title}</h2>
