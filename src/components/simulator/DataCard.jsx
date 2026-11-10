@@ -10,6 +10,7 @@ import graphMarkerLine from "../../assets/icons/graph-marker-line.svg";
 import graphMarkerMiddle from "../../assets/icons/graph-marker-middle.svg";
 import graphMarkerOuter from "../../assets/icons/graph-marker-outer.svg";
 import ventDivider from "../../assets/icons/vent-divider.svg";
+import { BUILDINGS } from "../../data/campus";
 import { HOUR_RANGE, WIND_RANGE } from "../../data/wind";
 import { useSim } from "../../state/simulatorStore";
 import Slider from "../common/Slider";
@@ -137,11 +138,6 @@ function DataCard({
   maxEnergyDensity = "17.1",
   maxTime = "15:00",
   graphValue,
-  ventLocation = "옥상 측면",
-  ventDistance = "0.6 m",
-  ventArea = "0.25 ㎡",
-  ventHeight = "1.5 m",
-  ventAngle = "40 º",
   efficiencyNote = "변환 효율 25% · 일 8시간 운전",
   optimization = "건물 사이 통로와 주변 흐름을 함께 살펴 배기구와 터빈의 거리를 조절하세요.",
   onCommit,
@@ -149,6 +145,8 @@ function DataCard({
   const hour = useSim((s) => s.hour);
   const windSpeedMS = useSim((s) => s.windSpeedMS);
   const detail = useSim((s) => s.buildingDetail);
+  const buildingId = useSim((s) => s.buildingId);
+  const { vent } = BUILDINGS.find(({ id }) => id === buildingId);
   const series = detail?.hourlySeries;
   const setSim = useSim((s) => s.set);
   const point = series?.find((p) => p.hour === hour);
@@ -295,27 +293,30 @@ function DataCard({
             <h3 className={styles.itemTitle}>배기구 위치 및 정보</h3>
             <p className={styles.ventNote}>{efficiencyNote}</p>
             <div className={styles.ventBox}>
-              <p className={styles.ventLocation}>{ventLocation}</p>
+              <p className={styles.ventLocation}>{vent.location}</p>
               <img src={ventDivider} alt="" className={styles.ventDivider} />
               <dl className={styles.ventGrid}>
                 <div className={styles.ventCell}>
                   <dt>이격거리</dt>
-                  <dd>{ventDistance}</dd>
+                  <dd>{vent.distanceM.toFixed(1)} m</dd>
                 </div>
                 <div className={styles.ventCell}>
                   <dt>개구면적</dt>
-                  <dd>{ventArea}</dd>
+                  <dd>{vent.areaM2.toFixed(2)} ㎡</dd>
                 </div>
                 <div className={styles.ventCell}>
                   <dt>설치높이</dt>
-                  <dd>{ventHeight}</dd>
+                  <dd>{vent.heightM.toFixed(1)} m</dd>
                 </div>
                 <div className={`${styles.ventCell} ${styles.ventCellSpread}`}>
                   <dt>배출각</dt>
-                  <dd>{ventAngle}</dd>
+                  <dd>{vent.angleDegrees} º</dd>
                 </div>
               </dl>
             </div>
+            <p className={styles.ventFootnote}>
+              * 시뮬레이션 가정값 · 현장 실측 전 임시값
+            </p>
           </div>
 
           <div className={`${styles.item} ${styles.optimizeItem}`}>
