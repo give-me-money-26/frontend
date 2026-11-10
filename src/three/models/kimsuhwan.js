@@ -61,7 +61,8 @@ export function buildKimSuHwan({ scale = 1, castShadow = true } = {}) {
       cols: Math.max(1, Math.round((a1 - a0) / pane)),
     });
 
-  const tower = { x0: -13, x1: 13, z0: -9, z1: 9, h: 64.6 };
+  const tower = { x0: -13, x1: 13, z0: -37.5, z1: 9, h: 64.6 };
+  const court = { x0: -36, x1: tower.x0, z0: -26, z1: -6 };
   addBox(tower.x0, tower.x1, 0, tower.h, tower.z0, tower.z1);
   addBox(
     tower.x0 - 0.4,
@@ -113,76 +114,57 @@ export function buildKimSuHwan({ scale = 1, castShadow = true } = {}) {
   for (let y = 27; y < 62; y += 3) {
     win("-x", tower.x0, 6, 7.1, y - 0.2, y + 1.6);
     win("-x", tower.x0, -3.6, -2.5, y - 0.2, y + 1.6);
+    if (y > 40)
+      for (let z = -12.6; z > tower.z0 + 1; z -= 5.6)
+        win("-x", tower.x0, z - 0.55, z + 0.55, y - 0.2, y + 1.6);
   }
   for (let y = 6; y < 62; y += 3) {
     ribbon("+x", tower.x1, -2, 7.6, y);
+    if (y > 12) ribbon("+x", tower.x1, tower.z0 + 6.8, -2.8, y);
   }
-  const GC = { x0: 11, x1: 22, z0: -9.5, z1: -4.5, h: tower.h + 1.6 };
-  const bridgeY = 10.3;
-  const glassStep = 58.4;
-  addBox(GC.x0, 18.9, bridgeY, GC.h, GC.z0, GC.z1, COL.glass);
-  addBox(18.9, GC.x1, bridgeY, glassStep, GC.z0, GC.z1, COL.glass);
-  addBox(
-    GC.x0 - 0.2,
-    19.1,
-    GC.h,
-    GC.h + 0.5,
-    GC.z0 - 0.2,
-    GC.z1 + 0.2,
-    COL.roof,
-    "minor",
-  );
-  addBox(
-    18.9,
-    GC.x1 + 0.2,
-    glassStep,
-    glassStep + 0.5,
-    GC.z0 - 0.2,
-    GC.z1 + 0.2,
-    COL.roof,
-    "minor",
-  );
-  for (let y = bridgeY + 3; y < GC.h; y += 3) {
-    seg(
-      "mull",
-      [tower.x1, y, GC.z1 + 0.02],
-      [y < glassStep ? GC.x1 : 18.9, y, GC.z1 + 0.02],
-    );
-    if (y < glassStep)
-      seg("mull", [GC.x1 + 0.02, y, GC.z0], [GC.x1 + 0.02, y, GC.z1]);
-  }
-  seg("mull", [15.5, bridgeY, GC.z1 + 0.02], [15.5, GC.h, GC.z1 + 0.02]);
-  seg("mull", [18.8, bridgeY, GC.z1 + 0.02], [18.8, glassStep, GC.z1 + 0.02]);
-  seg("mull", [GC.x1 + 0.02, bridgeY, -7], [GC.x1 + 0.02, glassStep, -7]);
-
   const wingH = 38.2;
-  for (let y = 24.4; y < wingH - 1; y += 3)
+  for (let y = 32.4; y < wingH - 1; y += 3)
     ribbon("+z", -2, -32.5, -14, y, 1.2);
+  for (let y = 4.4; y < wingH - 1; y += 3) {
+    ribbon("-x", tower.x0, court.z0 + 0.6, court.z1 - 0.6, y, 1.2);
+    ribbon("+z", court.z0, court.x0 + 0.8, court.x1 - 0.8, y, 1.2);
+    ribbon("-z", court.z1, court.x0 + 0.8, court.x1 - 0.8, y, 1.2);
+    ribbon("+x", court.x0, court.z0 + 0.6, court.z1 - 0.6, y, 1.2);
+  }
   {
     const outline = [
-      [-41, -12],
-      [-13, -12],
-      [-13, -2],
+      [-44.5, tower.z0],
+      [tower.x0, tower.z0],
+      [tower.x0, court.z0],
+      [court.x0, court.z0],
+      [court.x0, court.z1],
+      [tower.x0, court.z1],
+      [tower.x0, -2],
       [-33, -2],
       [-33, 4],
-      [-41, 4],
+      [-44.5, 4],
     ];
     const rim = 0.5;
     const inner = [
-      [-41 + rim, -12 + rim],
-      [-13 - rim, -12 + rim],
-      [-13 - rim, -2 - rim],
+      [-44.5 + rim, tower.z0 + rim],
+      [tower.x0 - rim, tower.z0 + rim],
+      [tower.x0 - rim, court.z0 - rim],
+      [court.x0 - rim, court.z0 - rim],
+      [court.x0 - rim, court.z1 + rim],
+      [tower.x0 - rim, court.z1 + rim],
+      [tower.x0 - rim, -2 - rim],
       [-33 - rim, -2 - rim],
       [-33 - rim, 4 - rim],
-      [-41 + rim, 4 - rim],
+      [-44.5 + rim, 4 - rim],
     ];
     ext(outline, 0, wingH, COL.wall);
     ext(outline, wingH, 0.6, COL.roof, "minor", [inner]);
   }
-  for (let y = 6; y < wingH - 1; y += 3) ribbon("-x", -41, -10, 2, y, 1.2);
+  for (let y = 6; y < wingH - 1; y += 3)
+    ribbon("-x", -44.5, tower.z0 + 1, 2, y, 1.2);
 
-  addBox(-40, -17, 0, 31, -3, 6);
-  parapet(-40, -17, -3, 6, 31);
+  addBox(-40, -13, 0, 31, -3, 6);
+  parapet(-40, -13, -3, 6, 31);
   win("+z", 6, -39.6, -32.4, 12, 25.8, { cols: 3, rows: 5, out: 0.3 });
   for (let r = 0; r < 5; r++)
     for (let c = 0; c < 6; c++) {
@@ -190,13 +172,11 @@ export function buildKimSuHwan({ scale = 1, castShadow = true } = {}) {
       const y = 12.4 + r * 3.1;
       win("+z", 6, x, x + 1.5, y, y + 1.9);
     }
-  addBox(-17, -13, 0, 29.5, -3, 4.5);
-  parapet(-17, -13, -3, 4.5, 29.5, 0.4, 0.5);
-  addBox(-44.5, -38, 0, 28, -1.5, 9.4);
-  parapet(-44.5, -38, -1.5, 9.4, 28);
+  addBox(-44.5, -38, 0, 28, -1.5, 11);
+  parapet(-44.5, -38, -1.5, 11, 28);
   for (let y = 4; y < 27; y += 3.6) {
-    win("-x", -44.5, 7.2, 8.4, y, y + 1.9);
-    win("-x", -44.5, 1.2, 2.4, y, y + 1.9);
+    win("-x", -44.5, 8.6, 9.8, y, y + 1.9);
+    win("-x", -44.5, 5.2, 6.4, y, y + 1.9);
   }
 
   {
@@ -251,7 +231,7 @@ export function buildKimSuHwan({ scale = 1, castShadow = true } = {}) {
       "minor",
     );
   }
-  const podium = { x0: -40, x1: 15.8, z0: 11, z1: 15, h: 10.3 };
+  const podium = { x0: -44.5, x1: 13, z0: 11, z1: 15, h: 10.3 };
   addBox(podium.x0, podium.x1, 0, podium.h, podium.z0, podium.z1);
   parapet(podium.x0, podium.x1, podium.z0, podium.z1, podium.h, 0.5, 0.6);
   win("+z", podium.z1, -37.4, -35.8, 0.4, 7.5);
@@ -430,47 +410,61 @@ export function buildKimSuHwan({ scale = 1, castShadow = true } = {}) {
   }
 
   const rearY = 10.3;
-  addBox(-41, 13, 0, rearY, -15.5, -9);
-  addBox(-41, 13.3, rearY, rearY + 0.5, -15.8, -15.2, COL.roof, "minor");
-  addBox(-41, -40.4, rearY, rearY + 0.5, -15.2, -12, COL.roof, "minor");
-  addBox(12.7, 13.3, rearY, rearY + 0.5, -15.2, -9, COL.roof, "minor");
+  addBox(-44.5, 9, 0, rearY, tower.z0 - 3, tower.z0);
+  addBox(
+    -44.7,
+    9.2,
+    rearY,
+    rearY + 0.5,
+    tower.z0 - 3.2,
+    tower.z0,
+    COL.roof,
+    "minor",
+  );
   {
-    const z = GC.z0 - 0.3;
-    addBox(GC.x0, GC.x1, bridgeY, glassStep, z, GC.z0 + 0.01);
-    addBox(GC.x0, 18.9, glassStep, 54.5, z, GC.z0 + 0.01);
-    win("-z", z, 10.7, 18.9, 54.5, 66, { cols: 4, rows: 3, out: 0.25 });
-    addBox(9, 23.2, 34.2, 39.7, -11.1, z, COL.glass, "minor");
-    addBox(8.8, 23.4, 39.7, 40.3, -11.3, z, COL.roof, "minor");
-    addBox(8.8, 23.4, 33.7, 34.2, -11.3, z, COL.roof, "minor");
-    for (let x = 10.8; x < 23; x += 1.8)
-      seg("mull", [x, 34.2, -11.12], [x, 39.7, -11.12]);
-    win("-z", z, 12.8, 18.9, rearY + 2.5, rearY + 5.8, { cols: 4 });
-    for (let y = rearY + 7.7; y < glassStep; y += 4.08)
-      seg(
-        "minor",
-        [GC.x0, y, z - 0.02],
-        [y < 54.5 ? GC.x1 : 18.9, y, z - 0.02],
-      );
+    const x0 = 4;
+    const x1 = tower.x1 + 0.6;
+    const z0 = tower.z0 - 0.6;
+    const z1 = tower.z0 + 6;
+    const top = tower.h + 1.5;
+    addBox(x0, x1, 0, top, z0, tower.z0 + 0.01);
+    addBox(tower.x1 - 0.01, x1, 0, top, tower.z0, z1);
+    addBox(x0 - 0.2, x1 + 0.2, top, top + 0.6, z0 - 0.2, z1, COL.roof, "minor");
+    win("-z", z0, x0 + 0.6, x1 - 0.6, 50.2, tower.h - 0.2, {
+      cols: 3,
+      rows: 4,
+      out: 0.25,
+    });
+    win("+x", x1, tower.z0 + 0.4, z1 - 0.6, 50.2, tower.h - 0.2, {
+      cols: 2,
+      rows: 4,
+      out: 0.25,
+    });
+    for (let y = rearY + 3.6; y < 48; y += 4)
+      win("-z", z0, x0 + 1.2, x1 - 1.2, y - 0.6, y + 0.6, { cols: 2 });
+    win("+x", x1, tower.z0 + 2, tower.z0 + 4, rearY + 2, 47.4, {
+      rows: 10,
+      out: 0.2,
+    });
   }
   {
     const z = tower.z0;
-    win("-z", z, 6.1, 9.1, rearY + 7.9, 62.2, { rows: 11, out: 0.3 });
+    win("-z", z, 1, 3, rearY + 7.9, 62.2, { rows: 11, out: 0.3 });
     for (let k = 0; k < 10; k++) {
       const y = 20 + k * 4;
-      win("-z", z, 1.7, 5, y - 0.6, y + 0.6, { cols: 2 });
-      win("-z", z, -3.1, 0.3, y - 0.6, y + 0.6, { cols: 2 });
-      win("-z", z, -5.8, -4.6, y - 0.6, y + 0.6);
+      win("-z", z, -3.4, -0.2, y - 0.6, y + 0.6, { cols: 2 });
+      win("-z", z, -8.2, -5, y - 0.6, y + 0.6, { cols: 2 });
+      win("-z", z, -11.2, -10, y - 0.6, y + 0.6);
     }
-    win("-z", z, -5.8, -4.6, 60.4, 61.6);
-    [8.4, 3.6, -0.6].forEach((x) =>
+    win("-z", z, -11.2, -10, 60.4, 61.6);
+    [2, -2.2, -6.4].forEach((x) =>
       win("-z", z, x - 0.55, x + 0.55, rearY + 2.3, rearY + 6),
     );
     for (let y = rearY + 7.9; y < 64; y += 4)
-      seg("minor", [-13, y, z - 0.02], [11, y, z - 0.02]);
+      seg("minor", [-13, y, z - 0.02], [4, y, z - 0.02]);
   }
   {
-    const z = -12;
-    addBox(-13, -11.6, 0, wingH, z, tower.z0);
+    const z = tower.z0;
     const X0 = -11.7;
     const X1 = -31.1;
     const Y0 = rearY + 8.5;
@@ -507,15 +501,14 @@ export function buildKimSuHwan({ scale = 1, castShadow = true } = {}) {
     });
     win("-z", z, -16.5, -12.7, rearY + 2.5, rearY + 5.8, { cols: 3 });
     win("-z", z, -31, -27.7, rearY + 2.5, rearY + 5.8, { cols: 2 });
-    seg("minor", [-16.8, rearY + 2.5, -9.1], [11, rearY + 2.5, -9.1]);
   }
   [20.6, 24.6, 28.6, 32.6, 36.4].forEach((y) =>
     [-36.2, -38.6].forEach((x) =>
-      win("-z", -12, x - 0.45, x + 0.45, y - 0.65, y + 0.65),
+      win("-z", tower.z0, x - 0.45, x + 0.45, y - 0.65, y + 0.65),
     ),
   );
   [-36.2, -38.6].forEach((x) =>
-    win("-z", -12, x - 0.5, x + 0.5, rearY + 2.5, rearY + 5.8),
+    win("-z", tower.z0, x - 0.5, x + 0.5, rearY + 2.5, rearY + 5.8),
   );
   {
     const zb = AX.z0 - 0.5;
@@ -558,7 +551,7 @@ export function buildKimSuHwan({ scale = 1, castShadow = true } = {}) {
   return finish({
     scale,
     castShadow,
-    vent: [6.8, tower.h + 4.8, -0.7],
+    vent: [tower.x0 + 3, tower.h + 1.5, tower.z0 + 6],
     lines: {
       major: [0x8f969d, 1.1],
       minor: [0xa4aab0, 0.85],
