@@ -5,7 +5,7 @@ import DataCard from "../../components/simulator/DataCard";
 import LiveSimulatorCard from "../../components/simulator/LiveSimulatorCard";
 import SimulatorPanel from "../../components/simulator/SimulatorPanel";
 import SummaryCard from "../../components/simulator/SummaryCard";
-import { BUILDINGS } from "../../data/campus";
+import { BUILDINGS, CAMPUS } from "../../data/campus";
 import { useSim } from "../../state/simulatorStore";
 import styles from "./SimulatorPage.module.css";
 
@@ -41,10 +41,7 @@ function SimulatorPage() {
       <BackButton to="/map" />
 
       <div className={styles.left}>
-        <SimulatorPanel
-          campus="가톨릭대 성심교정"
-          isControlMode={isControlMode}
-        >
+        <SimulatorPanel campus={CAMPUS.shortName} isControlMode={isControlMode}>
           <Suspense fallback={null}>
             <Simulator3D />
           </Suspense>
