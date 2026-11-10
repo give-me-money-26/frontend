@@ -551,8 +551,8 @@ export function buildKimSuHwan({ scale = 1, castShadow = true } = {}) {
   return finish({
     scale,
     castShadow,
-    vent: [tower.x0 + 7, tower.h + 1.5, tower.z0 + 10],
-    ventAngle: -Math.PI / 2,
+    vent: [tower.x0 + 7, tower.h + 1.5, tower.z1 - 10],
+    ventAngle: Math.PI / 2,
     lines: {
       major: [0x8f969d, 1.1],
       minor: [0xa4aab0, 0.85],
