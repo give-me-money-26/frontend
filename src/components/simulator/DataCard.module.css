@@ -55,32 +55,34 @@
 }
 
 .buildingItem {
-  display: flex;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  height: 39px;
-  padding-left: 52px;
+  height: 51px;
+  overflow: visible;
   border-radius: 16px;
 }
 
 .buildingInfo {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
+  align-items: center;
+  gap: 12px;
 }
 
-.buildingName {
-  width: 148px;
-  padding-left: 2px;
+.buildingInfo:first-child {
+  justify-content: flex-end;
+  padding-right: 14px;
+}
+
+.buildingInfo:last-child {
+  padding-left: 26px;
 }
 
 .buildingDivider {
   flex-shrink: 0;
-  width: 0.5px;
-  height: 21px;
-}
-
-.buildingPriority {
-  margin-left: 33px;
+  width: 1px;
+  height: 29px;
 }
 
 .buildingLabel {
@@ -486,12 +488,16 @@
     padding: 10px;
   }
 
-  .buildingItem {
-    padding-left: 20px;
+  .buildingInfo {
+    gap: 8px;
   }
 
-  .buildingPriority {
-    margin-left: 20px;
+  .buildingInfo:first-child {
+    padding-right: 10px;
+  }
+
+  .buildingInfo:last-child {
+    padding-left: 14px;
   }
 
   .control {
