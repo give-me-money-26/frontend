@@ -6,6 +6,7 @@ import LiveSimulatorCard from "../../components/simulator/LiveSimulatorCard";
 import SimulatorPanel from "../../components/simulator/SimulatorPanel";
 import SummaryCard from "../../components/simulator/SummaryCard";
 import { BUILDINGS, CAMPUS } from "../../data/campus";
+import useDesignScale from "../../hooks/useDesignScale";
 import { useSim } from "../../state/simulatorStore";
 import styles from "./SimulatorPage.module.css";
 
@@ -19,6 +20,7 @@ function SimulatorPage() {
   const baseline = useSim((s) => s.baseline);
   const setSim = useSim((s) => s.set);
   const isControlMode = mode === "control";
+  const scale = useDesignScale();
   const building = BUILDINGS.find(({ id }) => id === buildingId);
 
   const setBaseline = () => {
@@ -37,7 +39,7 @@ function SimulatorPage() {
   };
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} style={{ zoom: scale }}>
       <BackButton to="/map" />
 
       <div className={styles.left}>
