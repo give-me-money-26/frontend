@@ -1,15 +1,17 @@
 import * as THREE from "three";
 
-function streakTexture([head, body, tail]) {
+const [HEAD, BODY, TAIL] = ["64,160,160", "90,175,175", "120,190,190"];
+
+function streakTexture() {
   const canvas = document.createElement("canvas");
   canvas.width = 256;
   canvas.height = 16;
   const ctx = canvas.getContext("2d");
   const gradient = ctx.createLinearGradient(0, 0, 256, 0);
-  gradient.addColorStop(0, `rgba(${head},0)`);
-  gradient.addColorStop(0.25, `rgba(${head},0.95)`);
-  gradient.addColorStop(0.7, `rgba(${body},0.7)`);
-  gradient.addColorStop(1, `rgba(${tail},0)`);
+  gradient.addColorStop(0, `rgba(${HEAD},0)`);
+  gradient.addColorStop(0.25, `rgba(${HEAD},0.95)`);
+  gradient.addColorStop(0.7, `rgba(${BODY},0.7)`);
+  gradient.addColorStop(1, `rgba(${TAIL},0)`);
   ctx.fillStyle = gradient;
   ctx.beginPath();
   ctx.moveTo(0, 8);
@@ -22,8 +24,8 @@ function streakTexture([head, body, tail]) {
   return tex;
 }
 
-export function createStreaks(count, colors) {
-  const tex = streakTexture(colors);
+export function createStreaks(count) {
+  const tex = streakTexture();
   const geo = new THREE.PlaneGeometry(1, 1);
   const mat = new THREE.MeshBasicMaterial({
     map: tex,
@@ -78,27 +80,60 @@ export function createStreaks(count, colors) {
   };
 }
 
-export function createAmbientWind(count) {
-  const streaks = createStreaks(count, [
-    "150,198,204",
-    "170,208,214",
-    "190,220,224",
-  ]);
+// 건물 높이 격자. 각 칸은 바람 방향(+x)으로 몇 칸 앞까지의 최고 높이를 담아 미리 떠오르게 함
+const CELL = 1;
+const LOOK_AHEAD = 4;
+const CLEARANCE = 0.5;
+
+export function createAmbientWind(count, { length, thickness, scale }) {
+  const streaks = createStreaks(count);
   const bounds = new THREE.Box3();
   const span = new THREE.Vector3();
   const particles = Array.from({ length: count }, () => ({}));
+  let cols = 0;
+  let rows = 0;
+  let ceiling = new Float32Array(0);
 
-  const spawn = (p, anywhere) => {
-    p.x = bounds.min.x + (anywhere ? Math.random() * span.x : 0);
-    p.y = bounds.min.y + Math.random() * span.y;
-    p.z = bounds.min.z + Math.random() * span.z;
-    p.len = 2 + Math.random() * 4;
-    p.v = 0.7 + Math.random() * 0.6;
+  const ceilingAt = (x, z) => {
+    const c = THREE.MathUtils.clamp(
+      Math.round((x - bounds.min.x) / CELL),
+      0,
+      cols - 1,
+    );
+    const r = THREE.MathUtils.clamp(
+      Math.round((z - bounds.min.z) / CELL),
+      0,
+      rows - 1,
+    );
+    return ceiling[r * cols + c];
   };
 
-  function setBounds(box) {
+  const spawn = (p, initial) => {
+    p.start = bounds.min.x + Math.random() * span.x;
+    p.base = bounds.min.y + Math.random() * span.y;
+    p.z = bounds.min.z + Math.random() * span.z;
+    p.len = (0.35 + Math.random() * 0.75) * scale;
+    p.v = 0.8 + Math.random() * 0.5;
+    p.life = length * (0.35 + Math.random() * 0.65) * scale;
+    p.x = p.start + (initial ? p.life * Math.random() : 0);
+    p.y = Math.max(p.base, ceilingAt(p.x, p.z));
+  };
+
+  function setBounds(box, heightAt) {
     bounds.copy(box);
     bounds.getSize(span);
+    cols = Math.ceil(span.x / CELL) + 1;
+    rows = Math.ceil(span.z / CELL) + 1;
+    const height = new Float32Array(cols * rows);
+    for (let r = 0; r < rows; r++)
+      for (let c = 0; c < cols; c++)
+        height[r * cols + c] =
+          heightAt(bounds.min.x + c * CELL, bounds.min.z + r * CELL) ?? 0;
+    ceiling = height.map((_, i) => {
+      const end = Math.min(i - (i % cols) + cols, i + LOOK_AHEAD + 1);
+      const top = Math.max(...height.subarray(i, end));
+      return top > 0 ? top + CLEARANCE : 0;
+    });
     particles.forEach((p) => spawn(p, true));
   }
 
@@ -106,11 +141,22 @@ export function createAmbientWind(count) {
     const visible = Math.round(count * THREE.MathUtils.clamp(amount, 0, 1));
     for (let i = 0; i < visible; i++) {
       const p = particles[i];
-      p.x += dt * p.v * speed;
-      if (p.x > bounds.max.x) spawn(p, false);
-      const k = (p.x - bounds.min.x) / span.x;
-      const opacity = Math.sin(Math.PI * k) * 0.55;
-      streaks.set(i, p.x, p.y, p.z, p.len, 0.07, opacity, camera.position);
+      p.x += dt * p.v * speed * scale;
+      const d = p.x - p.start;
+      if (d > p.life) spawn(p, false);
+      const target = Math.max(p.base, ceilingAt(p.x, p.z));
+      p.y += (target - p.y) * Math.min(1, dt * 3);
+      const k = Math.min(1, d / p.life);
+      streaks.set(
+        i,
+        p.x,
+        p.y + Math.sin(d * 1.4 + i) * 0.02 * scale,
+        p.z,
+        p.len * (1 - 0.3 * k),
+        thickness * scale,
+        Math.sin(Math.PI * k) * 0.55,
+        camera.position,
+      );
     }
     streaks.commit(visible);
   }
