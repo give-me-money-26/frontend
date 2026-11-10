@@ -96,19 +96,16 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
     MATS.body,
   );
   mesh(
-    lathe(
-      [
-        [0, 0.85],
-        [0.92, 0.85],
-        [0.92, 7.6],
-        [0.98, 8.1],
-        [1.1, 8.5],
-        [1.22, 8.9],
-        [1.2, 9.4],
-        [0, 9.4],
-      ],
-      48,
-    ),
+    lathe([
+      [0, 0.85],
+      [0.92, 0.85],
+      [0.92, 7.6],
+      [0.98, 8.1],
+      [1.1, 8.5],
+      [1.22, 8.9],
+      [1.2, 9.4],
+      [0, 9.4],
+    ]),
     MATS.body,
   );
   const nac = new THREE.Group();
@@ -241,13 +238,9 @@ export function buildTurbine({ scale = 1, castShadow = true } = {}) {
   }
 
   group.scale.setScalar(scale);
-  const size = new THREE.Box3()
-    .setFromObject(group)
-    .getSize(new THREE.Vector3());
   return {
     group,
     rotor,
-    size,
     dispose() {
       geos.forEach((g) => g.dispose());
       Object.values(MATS).forEach((m) => m.dispose());
