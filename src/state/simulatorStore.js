@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { BUILDINGS } from "../data/campus";
+import { DEFAULT_CONDITIONS } from "../data/conditions";
 
 export const enterBuilding = (id) => ({
   buildingId: id,
@@ -21,6 +22,7 @@ export const useSim = create(
       ...enterBuilding("NICHOLLS"),
       mode: "view",
       conditions: null,
+      defaults: null,
       loading: false,
       error: null,
 
@@ -29,7 +31,9 @@ export const useSim = create(
     {
       name: "aeroharvest-sim",
       storage: createJSONStorage(() => sessionStorage),
-      partialize: ({ loading, error, set, ...keep }) => keep,
+      partialize: ({ loading, error, defaults, set, ...keep }) => keep,
     },
   ),
 );
+
+export const defaultConditions = (s) => s.defaults ?? DEFAULT_CONDITIONS;
