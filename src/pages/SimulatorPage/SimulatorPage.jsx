@@ -6,6 +6,7 @@ import LiveSimulatorCard from "../../components/simulator/LiveSimulatorCard";
 import SimulatorPanel from "../../components/simulator/SimulatorPanel";
 import SummaryCard from "../../components/simulator/SummaryCard";
 import { CAMPUS } from "../../data/campus";
+import useBuildingDetail from "../../hooks/useBuildingDetail";
 import useDesignScale from "../../hooks/useDesignScale";
 import { useSim } from "../../state/simulatorStore";
 import styles from "./SimulatorPage.module.css";
@@ -21,6 +22,7 @@ function SimulatorPage() {
   const setSim = useSim((s) => s.set);
   const isControlMode = mode === "control";
   const scale = useDesignScale();
+  useBuildingDetail();
 
   const setBaseline = () => {
     const { hour, windSpeedMS, distanceM, angleDegrees, conditions } =
