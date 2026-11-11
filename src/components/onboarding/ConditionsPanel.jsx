@@ -47,7 +47,7 @@ function ConditionsPanel({ onClose }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    useSim.getState().set({ conditions: toConditions(values) });
+    useSim.getState().set({ conditions: toConditions(values), result: null });
     onClose();
   };
 

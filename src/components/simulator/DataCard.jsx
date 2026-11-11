@@ -12,6 +12,7 @@ import graphMarkerOuter from "../../assets/icons/graph-marker-outer.svg";
 import ventDivider from "../../assets/icons/vent-divider.svg";
 import { BUILDINGS } from "../../data/campus";
 import { HOUR_RANGE, WIND_RANGE } from "../../data/wind";
+import { runSimulation } from "../../hooks/useSimulation";
 import { useSim } from "../../state/simulatorStore";
 import Slider from "../common/Slider";
 import BuildingSelect from "./BuildingSelect";
@@ -128,6 +129,9 @@ function seriesPath(series) {
     .join("");
 }
 
+const commitWind = () => runSimulation({ sourceMode: "DIRECT_SPEED" });
+const commitHour = () => runSimulation({ sourceMode: "TIME_SLOT" });
+
 function StatBox({ label, value, unit, tall = false }) {
   return (
     <div className={`${styles.statBox} ${tall ? styles.statBoxTall : ""}`}>
@@ -142,17 +146,16 @@ function StatBox({ label, value, unit, tall = false }) {
 
 function DataCard({
   priority = "1순위",
-  power = "123",
   maxEnergyDensity = "17.1",
   maxTime = "15:00",
   graphValue,
   efficiencyNote = "변환 효율 25% · 일 8시간 운전",
   optimization = "건물 사이 통로와 주변 흐름을 함께 살펴 배기구와 터빈의 거리를 조절하세요.",
-  onCommit,
 }) {
   const hour = useSim((s) => s.hour);
   const windSpeedMS = useSim((s) => s.windSpeedMS);
   const detail = useSim((s) => s.buildingDetail);
+  const powerW = useSim((s) => s.result?.recoveredPowerW);
   const buildingId = useSim((s) => s.buildingId);
   const { vent } = BUILDINGS.find(({ id }) => id === buildingId);
   const series = detail?.hourlySeries;
@@ -195,7 +198,11 @@ function DataCard({
                 value={windSpeedMS.toFixed(1)}
                 unit="m/s"
               />
-              <StatBox label="발전량" value={power} unit="W" />
+              <StatBox
+                label="발전량"
+                value={powerW === undefined ? "-" : powerW.toFixed(2)}
+                unit="W"
+              />
             </div>
             <Slider
               className={styles.control}
@@ -205,7 +212,7 @@ function DataCard({
               max={WIND_RANGE[1]}
               step={0.1}
               onChange={(next) => setSim({ windSpeedMS: next })}
-              onCommit={onCommit}
+              onCommit={commitWind}
             />
           </div>
 
@@ -321,7 +328,7 @@ function DataCard({
               min={HOUR_RANGE[0]}
               max={HOUR_RANGE[1]}
               onChange={(next) => setSim({ hour: next })}
-              onCommit={onCommit}
+              onCommit={commitHour}
             />
           </div>
 

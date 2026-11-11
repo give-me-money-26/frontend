@@ -8,6 +8,7 @@ import SummaryCard from "../../components/simulator/SummaryCard";
 import { CAMPUS } from "../../data/campus";
 import useBuildingDetail from "../../hooks/useBuildingDetail";
 import useDesignScale from "../../hooks/useDesignScale";
+import useSimulation from "../../hooks/useSimulation";
 import { useSim } from "../../state/simulatorStore";
 import styles from "./SimulatorPage.module.css";
 
@@ -19,10 +20,12 @@ function SimulatorPage() {
   const mode = useSim((s) => s.mode);
   const buildingId = useSim((s) => s.buildingId);
   const baseline = useSim((s) => s.baseline);
+  const result = useSim((s) => s.result);
   const setSim = useSim((s) => s.set);
   const isControlMode = mode === "control";
   const scale = useDesignScale();
   useBuildingDetail();
+  useSimulation();
 
   const setBaseline = () => {
     const { hour, windSpeedMS, distanceM, angleDegrees, conditions } =
@@ -55,16 +58,24 @@ function SimulatorPage() {
           <SummaryCard
             to="/revenue"
             title="수익 분석"
-            value="1,454"
+            value={
+              result
+                ? Math.round(result.annualSavingsKrw).toLocaleString("ko-KR")
+                : "-"
+            }
             unit="원 / 1년"
-            description="9.7kWh/년 · 현재 풍속 유지 가정"
+            description={`${result ? result.annualEnergyKwh.toFixed(1) : "-"}kWh/년 · 현재 풍속 유지 가정`}
             footerLabel="단순 투자 회수"
-            footerValue="설치비 입력 필요"
+            footerValue={
+              result?.simplePaybackYears == null
+                ? "설치비 입력 필요"
+                : `${result.simplePaybackYears.toFixed(1)}년`
+            }
           />
           <SummaryCard
             to="/environment"
             title="환경 영향"
-            value="3.9"
+            value={result ? result.annualCarbonReductionKg.toFixed(1) : "-"}
             unit={
               <>
                 kgCO<sub>2</sub> / 1년
