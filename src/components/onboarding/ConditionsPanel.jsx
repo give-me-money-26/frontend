@@ -1,6 +1,5 @@
 import { useId, useState } from "react";
-import { DEFAULT_CONDITIONS } from "../../data/conditions";
-import { useSim } from "../../state/simulatorStore";
+import { defaultConditions, useSim } from "../../state/simulatorStore";
 import SidePanel from "./SidePanel";
 import styles from "./ConditionsPanel.module.css";
 
@@ -36,8 +35,9 @@ const toConditions = (inputs) =>
 
 function ConditionsPanel({ onClose }) {
   const idPrefix = useId();
+  const defaults = useSim(defaultConditions);
   const [values, setValues] = useState(() =>
-    toInputs(useSim.getState().conditions ?? DEFAULT_CONDITIONS),
+    toInputs(useSim.getState().conditions ?? defaults),
   );
 
   const handleChange = (event) => {
@@ -86,7 +86,7 @@ function ConditionsPanel({ onClose }) {
           <button
             type="button"
             className={styles.resetButton}
-            onClick={() => setValues(toInputs(DEFAULT_CONDITIONS))}
+            onClick={() => setValues(toInputs(defaults))}
           >
             예시 조건 복원
           </button>

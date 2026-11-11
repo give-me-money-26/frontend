@@ -1,13 +1,12 @@
 import { useEffect } from "react";
 import { isAbort } from "../api/client";
 import { simulate } from "../api/endpoints";
-import { DEFAULT_CONDITIONS } from "../data/conditions";
-import { useSim } from "../state/simulatorStore";
+import { defaultConditions, useSim } from "../state/simulatorStore";
 
 let controller;
 
 const toRequest = (s) => ({
-  ...(s.conditions ?? DEFAULT_CONDITIONS),
+  ...(s.conditions ?? defaultConditions(s)),
   buildingId: s.buildingId,
   sourceMode: s.sourceMode,
   hour: s.hour,
