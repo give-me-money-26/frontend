@@ -6,7 +6,10 @@ import BackButton from "../../components/common/BackButton";
 import CostAnalysis from "../../components/detail/CostAnalysis";
 import DataDescription from "../../components/detail/DataDescription";
 import KeyMetrics from "../../components/detail/KeyMetrics";
+import { BUILDINGS } from "../../data/campus";
 import useDesignScale from "../../hooks/useDesignScale";
+import useSimulation from "../../hooks/useSimulation";
+import { useSim } from "../../state/simulatorStore";
 import styles from "./DetailPage.module.css";
 
 const COMMON_INFO_ITEMS = [
@@ -21,7 +24,14 @@ const VIEWS = {
   revenue: {
     title: "예상 수익 상세분석",
     toggleLabel: "환경 영향 상세분석 보기",
-    highlight: { label: "예상 연간 절감액", value: "1,454", unit: "원" },
+    highlight: {
+      label: "예상 연간 절감액",
+      format: (result) =>
+        Math.round(result.annualSavingsKrw).toLocaleString("ko-KR"),
+      unit: "원",
+    },
+    unitLine: (c) =>
+      `절감액 = 발전량 ⨯ ${c.tariffKrwPerKwh.toLocaleString("ko-KR")}원/kWh`,
     infoItems: [
       { title: "연간 절감액", description: "= 연간 발전량 * 적용 전기요금" },
       ...COMMON_INFO_ITEMS,
@@ -32,13 +42,14 @@ const VIEWS = {
     toggleLabel: "예상 수익 상세분석 보기",
     highlight: {
       label: "예상 연간 탄소저감",
-      value: "2.43",
+      format: (result) => result.annualCarbonReductionKg.toFixed(2),
       unit: (
         <>
           kgCO<sub>2</sub>
         </>
       ),
     },
+    unitLine: (c) => `탄소 저감량 = 발전량 ⨯ ${c.carbonFactorKgPerKwh}kg/kWh`,
     infoItems: [
       { title: "탄소 저감량", description: "= 연간 발전량 * 적용 배출계수" },
       ...COMMON_INFO_ITEMS,
@@ -52,10 +63,33 @@ const TURBINES = [
   { name: "터빈 3", price: "1,454", installCost: "1,454" },
 ];
 
+function describe(result, unitLine) {
+  if (!result) return { calculation: ["-"], assumption: ["-"] };
+  const c = result.appliedConditions;
+  return {
+    calculation: [
+      `회수 전력 ${result.recoveredPowerW.toFixed(2)} W ⨯ ${c.operatingHoursPerDay}시간 ⨯ ${c.operatingDaysPerYear}일 ÷ 1,000`,
+      unitLine(c),
+    ],
+    assumption: [
+      `회수 면적 ${c.collectionAreaM2} m² · 효율 ${c.efficiencyPercent}%`,
+      `배기구 거리 ${c.distanceM.toFixed(1)} m · 터빈 각도 ${c.angleDegrees}° · 배치 계수 ${result.placementFactor.toFixed(3)}`,
+      `에너지 밀도 ${result.densityWM2.toFixed(2)} W/m²`,
+    ],
+  };
+}
+
 function DetailPage({ initialView = "revenue" }) {
   const [view, setView] = useState(initialView);
-  const { title, toggleLabel, highlight, infoItems } = VIEWS[view];
+  const { title, toggleLabel, highlight, unitLine, infoItems } = VIEWS[view];
   const scale = useDesignScale();
+  const buildingId = useSim((s) => s.buildingId);
+  const result = useSim((s) => s.result);
+  useSimulation();
+
+  const buildingName =
+    result?.buildingName ?? BUILDINGS.find(({ id }) => id === buildingId).name;
+  const { calculation, assumption } = describe(result, unitLine);
 
   const toggleView = () => {
     setView((prev) => (prev === "revenue" ? "environment" : "revenue"));
@@ -79,27 +113,31 @@ function DetailPage({ initialView = "revenue" }) {
         <div className={styles.analysis}>
           <section className={styles.top}>
             <KeyMetrics
-              building="니콜스관"
-              highlight={highlight}
+              building={buildingName}
+              highlight={{
+                label: highlight.label,
+                value: result ? highlight.format(result) : "-",
+                unit: highlight.unit,
+              }}
               infoItems={infoItems}
-              generation="6.08"
+              generation={result ? result.annualEnergyKwh.toFixed(2) : "-"}
               interpretation="현재 설정이 운전시간동안 유지된다는 가정입니다. 실제 설치 판단에는 시각별 실측 풍속, 터빈 성능 곡선, 운전 일정과 설비 영향 검증이 필요합니다. 전기요금은 예시 입력값입니다."
             />
             <DataDescription
-              calculation={[
-                "회수 전력 2.08 W ⨯ 8시간 ⨯ 365일 ÷ 1,000",
-                "절감액 = 발전량 ⨯ 150원/kWh",
-              ]}
-              assumption={[
-                "회수 면적 0.8 m² · 효율 25%",
-                "배기구 거리 4.5 m · 터빈 각도 6° · 배치 계수 0.628",
-                "에너지 밀도 16.60 W/m²",
-              ]}
+              calculation={calculation}
+              assumption={assumption}
             />
           </section>
 
           <div className={styles.bottom}>
-            <CostAnalysis turbines={TURBINES} payback="1,454" />
+            <CostAnalysis
+              turbines={TURBINES}
+              payback={
+                result?.simplePaybackYears == null
+                  ? "-"
+                  : result.simplePaybackYears.toFixed(1)
+              }
+            />
 
             <div className={styles.actions}>
               <button

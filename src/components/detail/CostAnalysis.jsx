@@ -91,7 +91,7 @@ function CostAnalysis({ turbines, payback }) {
             <h3 className={styles.paybackTitle}>투자 회수 기간</h3>
             <p className={styles.amount}>
               <span className={styles.paybackValue}>{payback}</span>
-              <span className={styles.paybackUnit}>일</span>
+              <span className={styles.paybackUnit}>년</span>
             </p>
           </div>
           <InfoTip

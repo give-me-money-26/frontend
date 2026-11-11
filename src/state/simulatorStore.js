@@ -6,6 +6,7 @@ export const enterBuilding = (id) => ({
   buildingId: id,
   buildingDetail: null, // GET /buildings/{id} 응답
   hour: 15,
+  sourceMode: "DIRECT_SPEED",
   windSpeedMS: BUILDINGS.find((b) => b.id === id).windSpeedMS,
   distanceM: 2,
   angleDegrees: 0,
