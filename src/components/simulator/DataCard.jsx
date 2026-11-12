@@ -1,10 +1,10 @@
 import dataDivider from "../../assets/icons/data-divider.svg";
 import graphCurve from "../../assets/icons/graph-curve.svg";
 import graphCurveSource from "../../assets/icons/graph-curve.svg?raw";
-import graphGrid from "../../assets/icons/graph-grid.svg";
-import graphGrid0 from "../../assets/icons/graph-grid-0.svg";
-import graphGrid5 from "../../assets/icons/graph-grid-5.svg";
-import graphGridTop from "../../assets/icons/graph-grid-top.svg";
+import GraphGrid from "../../assets/icons/graph-grid.svg?react";
+import GraphGrid0 from "../../assets/icons/graph-grid-0.svg?react";
+import GraphGrid5 from "../../assets/icons/graph-grid-5.svg?react";
+import GraphGridTop from "../../assets/icons/graph-grid-top.svg?react";
 import graphMarkerInner from "../../assets/icons/graph-marker-inner.svg";
 import graphMarkerLine from "../../assets/icons/graph-marker-line.svg";
 import graphMarkerMiddle from "../../assets/icons/graph-marker-middle.svg";
@@ -25,11 +25,11 @@ const HOUR_ANCHORS = [
 ];
 
 const GRID_ROWS = [
-  { label: "20", line: graphGridTop, className: styles.gridTop },
-  { label: "15", line: graphGrid, className: styles.grid15 },
-  { label: "10", line: graphGrid, className: styles.grid10 },
-  { label: "5", line: graphGrid5, className: styles.grid5 },
-  { label: "0", line: graphGrid0, className: styles.grid0 },
+  { label: "20", Line: GraphGridTop, className: styles.gridTop },
+  { label: "15", Line: GraphGrid, className: styles.grid15 },
+  { label: "10", Line: GraphGrid, className: styles.grid10 },
+  { label: "5", Line: GraphGrid5, className: styles.grid5 },
+  { label: "0", Line: GraphGrid0, className: styles.grid0 },
 ];
 
 const CURVE_OFFSET_X = -14;
@@ -245,7 +245,7 @@ function DataCard({
                     className={`${styles.gridRow} ${row.className}`}
                   >
                     <span className={styles.gridLabel}>{row.label}</span>
-                    <img src={row.line} alt="" className={styles.gridLine} />
+                    <row.Line className={styles.gridLine} aria-hidden="true" />
                   </div>
                 ))}
               </div>
