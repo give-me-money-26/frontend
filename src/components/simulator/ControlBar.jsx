@@ -6,10 +6,27 @@ import styles from "./ControlBar.module.css";
 
 const commitPlacement = () => runSimulation();
 
-function ControlBar({ delta = "+0.0W (+0.0%)" }) {
+const signed = (value, digits) => {
+  const text = Math.abs(value).toFixed(digits);
+  return `${value < 0 && Number(text) !== 0 ? "-" : "+"}${text}`;
+};
+
+const formatDelta = (compare) => {
+  if (!compare) return "-";
+  const watts = `${signed(compare.recoveredPowerDeltaW, 2)}W`;
+  const hasPercent =
+    compare.baseline.recoveredPowerW !== 0 &&
+    compare.recoveredPowerDeltaPercent != null;
+  return hasPercent
+    ? `${watts} (${signed(compare.recoveredPowerDeltaPercent, 1)}%)`
+    : watts;
+};
+
+function ControlBar() {
   const distanceM = useSim((s) => s.distanceM);
   const angleDegrees = useSim((s) => s.angleDegrees);
   const powerW = useSim((s) => s.result?.recoveredPowerW);
+  const delta = useSim((s) => formatDelta(s.compare));
   const setSim = useSim((s) => s.set);
 
   return (

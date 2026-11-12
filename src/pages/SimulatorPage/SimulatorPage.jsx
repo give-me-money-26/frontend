@@ -8,7 +8,10 @@ import SummaryCard from "../../components/simulator/SummaryCard";
 import { CAMPUS } from "../../data/campus";
 import useBuildingDetail from "../../hooks/useBuildingDetail";
 import useDesignScale from "../../hooks/useDesignScale";
-import useSimulation from "../../hooks/useSimulation";
+import useSimulation, {
+  clearBaseline,
+  setBaseline,
+} from "../../hooks/useSimulation";
 import { useSim } from "../../state/simulatorStore";
 import styles from "./SimulatorPage.module.css";
 
@@ -18,7 +21,6 @@ const Simulator3D = lazy(
 
 function SimulatorPage() {
   const mode = useSim((s) => s.mode);
-  const buildingId = useSim((s) => s.buildingId);
   const baseline = useSim((s) => s.baseline);
   const result = useSim((s) => s.result);
   const setSim = useSim((s) => s.set);
@@ -26,21 +28,6 @@ function SimulatorPage() {
   const scale = useDesignScale();
   useBuildingDetail();
   useSimulation();
-
-  const setBaseline = () => {
-    const { hour, windSpeedMS, distanceM, angleDegrees, conditions } =
-      useSim.getState();
-    setSim({
-      baseline: {
-        buildingId,
-        hour,
-        windSpeedMS,
-        distanceM,
-        angleDegrees,
-        conditions,
-      },
-    });
-  };
 
   return (
     <div className={styles.page} style={{ zoom: scale }}>
@@ -91,7 +78,7 @@ function SimulatorPage() {
           isControlMode={isControlMode}
           baseline={baseline}
           onSetBaseline={setBaseline}
-          onClearBaseline={() => setSim({ baseline: null, compare: null })}
+          onClearBaseline={clearBaseline}
           onToggleMode={() =>
             setSim({ mode: isControlMode ? "view" : "control" })
           }
