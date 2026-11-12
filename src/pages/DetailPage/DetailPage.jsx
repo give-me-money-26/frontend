@@ -87,8 +87,7 @@ function DetailPage({ initialView = "revenue" }) {
   const result = useSim((s) => s.result);
   useSimulation();
 
-  const buildingName =
-    result?.buildingName ?? BUILDINGS.find(({ id }) => id === buildingId).name;
+  const buildingName = BUILDINGS.find(({ id }) => id === buildingId).name;
   const { calculation, assumption } = describe(result, unitLine);
 
   const toggleView = () => {
