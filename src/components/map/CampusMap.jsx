@@ -3,6 +3,7 @@ import locationIcon from "../../assets/icons/location.svg";
 import mapImage from "../../assets/images/map.webp";
 import BuildingPopup from "./BuildingPopup";
 import { BUILDINGS, CAMPUS, MAP_HEIGHT, MAP_WIDTH } from "../../data/campus";
+import useBuildings from "../../hooks/useBuildings";
 import styles from "./CampusMap.module.css";
 
 const toPosition = ([x, y]) => ({
@@ -13,6 +14,7 @@ const toPosition = ([x, y]) => ({
 function CampusMap({ onNavigate }) {
   const [selectedId, setSelectedId] = useState(null);
   const selected = BUILDINGS.find(({ id }) => id === selectedId);
+  const buildings = useBuildings();
 
   useEffect(() => {
     if (!selectedId) return undefined;
@@ -116,6 +118,7 @@ function CampusMap({ onNavigate }) {
       {selected && (
         <BuildingPopup
           building={selected}
+          summary={buildings?.[selected.id]}
           style={toPosition(selected.label)}
           onClose={() => setSelectedId(null)}
           onNavigate={() => onNavigate(selected)}

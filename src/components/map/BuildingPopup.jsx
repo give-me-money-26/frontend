@@ -2,8 +2,17 @@ import ArrowRightIcon from "../../assets/icons/arrow-right.svg?react";
 import XIcon from "../../assets/icons/x.svg?react";
 import styles from "./BuildingPopup.module.css";
 
-function BuildingPopup({ building, style, onClose, onNavigate }) {
-  const { name, summary } = building;
+const DATA_STATUS_LABELS = {
+  PRELIMINARY_DATA: "테스트 데이터",
+};
+
+const toNote = ({ dataStatus, priorityRank }) =>
+  [DATA_STATUS_LABELS[dataStatus], `설치 검토 ${priorityRank}순위`]
+    .filter(Boolean)
+    .join(" · ");
+
+function BuildingPopup({ building, summary, style, onClose, onNavigate }) {
+  const { name } = building;
 
   return (
     <section
@@ -26,11 +35,11 @@ function BuildingPopup({ building, style, onClose, onNavigate }) {
 
       {summary ? (
         <p className={styles.meta}>
-          <span>{summary.note}</span>
+          <span>{toNote(summary)}</span>
           <span>
             최대 에너지 밀도{" "}
             <strong className={styles.value}>
-              {summary.maxEnergyDensity} W/m²
+              {summary.peakDensityWM2.toFixed(1)} W/m²
             </strong>
           </span>
         </p>
