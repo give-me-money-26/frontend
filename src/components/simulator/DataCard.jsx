@@ -13,7 +13,7 @@ import ventDivider from "../../assets/icons/vent-divider.svg";
 import { BUILDINGS } from "../../data/campus";
 import { HOUR_RANGE, WIND_RANGE } from "../../data/wind";
 import { runSimulation } from "../../hooks/useSimulation";
-import { useSim } from "../../state/simulatorStore";
+import { defaultConditions, useSim } from "../../state/simulatorStore";
 import Slider from "../common/Slider";
 import BuildingSelect from "./BuildingSelect";
 import styles from "./DataCard.module.css";
@@ -149,13 +149,15 @@ function DataCard({
   maxEnergyDensity = "17.1",
   maxTime = "15:00",
   graphValue,
-  efficiencyNote = "변환 효율 25% · 일 8시간 운전",
   optimization = "건물 사이 통로와 주변 흐름을 함께 살펴 배기구와 터빈의 거리를 조절하세요.",
 }) {
   const hour = useSim((s) => s.hour);
   const windSpeedMS = useSim((s) => s.windSpeedMS);
   const detail = useSim((s) => s.buildingDetail);
   const powerW = useSim((s) => s.result?.recoveredPowerW);
+  const conditions = useSim(
+    (s) => s.result?.appliedConditions ?? s.conditions ?? defaultConditions(s),
+  );
   const buildingId = useSim((s) => s.buildingId);
   const { vent } = BUILDINGS.find(({ id }) => id === buildingId);
   const series = detail?.hourlySeries;
@@ -334,7 +336,10 @@ function DataCard({
 
           <div className={`${styles.item} ${styles.ventItem}`}>
             <h3 className={styles.itemTitle}>배기구 위치 및 정보</h3>
-            <p className={styles.ventNote}>{efficiencyNote}</p>
+            <p className={styles.ventNote}>
+              변환 효율 {conditions.efficiencyPercent}% · 일{" "}
+              {conditions.operatingHoursPerDay}시간 운전
+            </p>
             <div className={styles.ventBox}>
               <p className={styles.ventLocation}>{vent.location}</p>
               <img src={ventDivider} alt="" className={styles.ventDivider} />
