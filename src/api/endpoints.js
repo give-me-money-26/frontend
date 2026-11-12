@@ -1,5 +1,7 @@
 import { request } from "./client";
 
+export const getBuildings = (signal) => request("/buildings", { signal });
+
 export const getBuilding = (buildingId, signal) =>
   request(`/buildings/${encodeURIComponent(buildingId)}`, { signal });
 

@@ -56,10 +56,6 @@ export const BUILDINGS = [
     outline:
       "M31.5 96H22V49L89 37.5L129.5 66V74.5L159.5 70L152.5 66V52.5L164.5 49V27L198.5 22L256.5 57L289.5 52.5L318.5 72V93.5L292 77.5L261 81V111L102 139.5L79 128.5L31.5 96Z",
     offset: [381.5, 255],
-    summary: {
-      note: "테스트 데이터 · 설치 검토 1순위",
-      maxEnergyDensity: 18.9,
-    },
   },
   {
     id: "MARIA",
