@@ -5,5 +5,4 @@ export const DEFAULT_CONDITIONS = {
   operatingDaysPerYear: 365,
   tariffKrwPerKwh: 150,
   carbonFactorKgPerKwh: 0.4,
-  installationCostKrw: null,
 };

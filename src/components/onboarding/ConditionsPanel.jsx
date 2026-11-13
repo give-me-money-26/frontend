@@ -10,11 +10,6 @@ const FIELDS = [
   { name: "operatingDaysPerYear", label: "연간 운전일 (일)" },
   { name: "tariffKrwPerKwh", label: "전기요금 가정 (원/kWh)" },
   { name: "carbonFactorKgPerKwh", label: "배출계수 가정 (kgCO₂/kWh)" },
-  {
-    name: "installationCostKrw",
-    label: "터빈 + 설치비 (원)",
-    placeholder: "미입력",
-  },
 ];
 
 const toInputs = (conditions) =>
@@ -61,7 +56,7 @@ function ConditionsPanel({ onClose }) {
     >
       <form className={styles.card} onSubmit={handleSubmit}>
         <div className={styles.fields}>
-          {FIELDS.map(({ name, label, placeholder }) => (
+          {FIELDS.map(({ name, label }) => (
             <div key={name} className={styles.field}>
               <label htmlFor={`${idPrefix}-${name}`} className={styles.label}>
                 {label}
@@ -75,7 +70,6 @@ function ConditionsPanel({ onClose }) {
                 step="any"
                 className={styles.input}
                 value={values[name]}
-                placeholder={placeholder}
                 onChange={handleChange}
               />
             </div>

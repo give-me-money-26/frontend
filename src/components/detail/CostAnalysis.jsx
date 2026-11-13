@@ -2,20 +2,31 @@ import { Fragment, useState } from "react";
 import costDivider from "../../assets/icons/cost-divider.svg";
 import dropdownDivider from "../../assets/icons/dropdown-divider.svg";
 import dropdownTriangle from "../../assets/icons/dropdown-triangle.svg";
+import { PAYBACK_LIMIT_YEARS } from "../../utils/turbine";
 import InfoTip from "./InfoTip";
 import styles from "./CostAnalysis.module.css";
 
 const PAYBACK_INFO = [
-  { title: "단순 투자 회수 기간", description: "= 설치비 / 연간 절감액" },
+  {
+    title: "단순 투자 회수 기간",
+    description: "= (터빈 가격 + 설치 비용) ÷ 연간 절감액",
+  },
 ];
 
-function CostAnalysis({ turbines, payback }) {
+function formatPayback(years) {
+  if (years == null) return { value: "-", unit: "년", isLow: false };
+  if (years >= PAYBACK_LIMIT_YEARS) {
+    return { value: PAYBACK_LIMIT_YEARS, unit: "년 이상", isLow: true };
+  }
+  return { value: years.toFixed(1), unit: "년", isLow: false };
+}
+
+function CostAnalysis({ turbines, selected, onSelect, paybackYears }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(null);
-  const turbine = selected ?? turbines[0];
+  const payback = formatPayback(paybackYears);
 
   const handleSelect = (next) => {
-    setSelected(next);
+    onSelect(next);
     setIsOpen(false);
   };
 
@@ -29,7 +40,9 @@ function CostAnalysis({ turbines, payback }) {
                 <div className={styles.costItem}>
                   <span className={styles.costLabel}>터빈 가격</span>
                   <p className={styles.amount}>
-                    <span className={styles.value}>{turbine.price}</span>
+                    <span className={styles.value}>
+                      {selected.priceKrw.toLocaleString("ko-KR")}
+                    </span>
                     <span className={styles.unit}>원</span>
                   </p>
                 </div>
@@ -38,7 +51,9 @@ function CostAnalysis({ turbines, payback }) {
               <div className={`${styles.costItem} ${styles.costInstall}`}>
                 <span className={styles.costLabel}>터빈 설치 비용</span>
                 <p className={styles.amount}>
-                  <span className={styles.value}>{turbine.installCost}</span>
+                  <span className={styles.value}>
+                    {selected.installCostKrw.toLocaleString("ko-KR")}
+                  </span>
                   <span className={styles.unit}>원</span>
                 </p>
               </div>
@@ -46,7 +61,10 @@ function CostAnalysis({ turbines, payback }) {
           </div>
 
           <div className={styles.costHeader}>
-            <h3 className={styles.costTitle}>비용 분석</h3>
+            <h3 className={styles.costTitle}>
+              비용 분석
+              <span className={styles.assumed}>가정값</span>
+            </h3>
             <div className={styles.dropdown}>
               <button
                 type="button"
@@ -54,7 +72,7 @@ function CostAnalysis({ turbines, payback }) {
                 aria-expanded={isOpen}
                 onClick={() => setIsOpen((prev) => !prev)}
               >
-                <span>{selected ? selected.name : "터빈 종류"}</span>
+                <span>{selected.name}</span>
                 <span className={styles.triangle}>
                   <img src={dropdownTriangle} alt="" />
                 </span>
@@ -90,9 +108,12 @@ function CostAnalysis({ turbines, payback }) {
           <div className={styles.payback}>
             <h3 className={styles.paybackTitle}>투자 회수 기간</h3>
             <p className={styles.amount}>
-              <span className={styles.paybackValue}>{payback}</span>
-              <span className={styles.paybackUnit}>년</span>
+              <span className={styles.paybackValue}>{payback.value}</span>
+              <span className={styles.paybackUnit}>{payback.unit}</span>
             </p>
+            {payback.isLow && (
+              <span className={styles.lowBadge}>경제성 낮음</span>
+            )}
           </div>
           <InfoTip
             label="투자 회수 기간 정보"

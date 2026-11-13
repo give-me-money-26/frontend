@@ -5,15 +5,19 @@ import { defaultConditions, useSim } from "../state/simulatorStore";
 
 let controller;
 
-const toRequest = (s) => ({
-  ...(s.conditions ?? defaultConditions(s)),
-  buildingId: s.buildingId,
-  sourceMode: s.sourceMode,
-  hour: s.hour,
-  windSpeedMS: s.windSpeedMS,
-  distanceM: s.distanceM,
-  angleDegrees: s.angleDegrees,
-});
+const toRequest = (s) => {
+  const { installationCostKrw, ...conditions } =
+    s.conditions ?? defaultConditions(s);
+  return {
+    ...conditions,
+    buildingId: s.buildingId,
+    sourceMode: s.sourceMode,
+    hour: s.hour,
+    windSpeedMS: s.windSpeedMS,
+    distanceM: s.distanceM,
+    angleDegrees: s.angleDegrees,
+  };
+};
 
 const isCurrent = (baseline, buildingId) => {
   const s = useSim.getState();
