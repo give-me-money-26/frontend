@@ -99,6 +99,9 @@
 
 .costTitle {
   position: absolute;
+  display: flex;
+  gap: 8px;
+  align-items: center;
   top: 53%;
   left: 17px;
   transform: translateY(-50%);
@@ -108,6 +111,17 @@
   font-weight: 500;
   line-height: normal;
   letter-spacing: -0.03em;
+}
+
+.assumed {
+  padding: 2px 8px;
+  border: 0.5px solid var(--color-frame-stroke);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: var(--color-dropdown-text);
+  white-space: nowrap;
 }
 
 .dropdown {
@@ -237,6 +251,23 @@
   letter-spacing: -0.06em;
 }
 
+.lowBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  margin-top: 4px;
+  padding: 0 10px;
+  line-height: 1;
+  background: var(--color-control);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--color-white);
+  white-space: nowrap;
+}
+
 .info {
   top: 2.6px;
   left: 168.6px;
@@ -279,6 +310,11 @@
 
   .costItem {
     justify-content: space-between;
+    gap: 12px;
+  }
+
+  .costItem .amount {
+    width: auto;
   }
 
   .costHeader {
@@ -287,10 +323,16 @@
     order: -1;
   }
 
+  .paybackCard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .payback {
     position: static;
     width: auto;
-    padding: 32px 0 24px;
+    padding: 24px 0;
     transform: none;
   }
 
@@ -316,5 +358,13 @@
 
   .paybackCard {
     width: auto;
+  }
+
+  .costContent {
+    padding: 20px 16px;
+  }
+
+  .value {
+    font-size: 28px;
   }
 }

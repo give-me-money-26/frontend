@@ -11,6 +11,7 @@ import { TURBINES } from "../../data/turbineModels";
 import useDesignScale from "../../hooks/useDesignScale";
 import useSimulation from "../../hooks/useSimulation";
 import { useSim } from "../../state/simulatorStore";
+import { applyTurbine } from "../../utils/turbine";
 import styles from "./DetailPage.module.css";
 
 const COMMON_INFO_ITEMS = [
@@ -76,10 +77,12 @@ function describe(result, unitLine) {
 
 function DetailPage({ initialView = "revenue" }) {
   const [view, setView] = useState(initialView);
+  const [turbine, setTurbine] = useState(TURBINES[0]);
   const { title, toggleLabel, highlight, unitLine, infoItems } = VIEWS[view];
   const scale = useDesignScale();
   const buildingId = useSim((s) => s.buildingId);
-  const result = useSim((s) => s.result);
+  const serverResult = useSim((s) => s.result);
+  const result = applyTurbine(serverResult, turbine);
   useSimulation();
 
   const buildingName = BUILDINGS.find(({ id }) => id === buildingId).name;
@@ -126,11 +129,9 @@ function DetailPage({ initialView = "revenue" }) {
           <div className={styles.bottom}>
             <CostAnalysis
               turbines={TURBINES}
-              payback={
-                result?.simplePaybackYears == null
-                  ? "-"
-                  : result.simplePaybackYears.toFixed(1)
-              }
+              selected={turbine}
+              onSelect={setTurbine}
+              paybackYears={result?.paybackYears ?? null}
             />
 
             <div className={styles.actions}>
