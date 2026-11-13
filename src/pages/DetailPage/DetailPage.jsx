@@ -7,6 +7,7 @@ import CostAnalysis from "../../components/detail/CostAnalysis";
 import DataDescription from "../../components/detail/DataDescription";
 import KeyMetrics from "../../components/detail/KeyMetrics";
 import { BUILDINGS } from "../../data/campus";
+import { TURBINES } from "../../data/turbineModels";
 import useDesignScale from "../../hooks/useDesignScale";
 import useSimulation from "../../hooks/useSimulation";
 import { useSim } from "../../state/simulatorStore";
@@ -56,12 +57,6 @@ const VIEWS = {
     ],
   },
 };
-
-const TURBINES = [
-  { name: "터빈 1", price: "1,454", installCost: "1,454" },
-  { name: "터빈 2", price: "1,454", installCost: "1,454" },
-  { name: "터빈 3", price: "1,454", installCost: "1,454" },
-];
 
 function describe(result, unitLine) {
   if (!result) return { calculation: ["-"], assumption: ["-"] };

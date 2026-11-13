@@ -29,7 +29,9 @@ function CostAnalysis({ turbines, payback }) {
                 <div className={styles.costItem}>
                   <span className={styles.costLabel}>터빈 가격</span>
                   <p className={styles.amount}>
-                    <span className={styles.value}>{turbine.price}</span>
+                    <span className={styles.value}>
+                      {turbine.priceKrw.toLocaleString("ko-KR")}
+                    </span>
                     <span className={styles.unit}>원</span>
                   </p>
                 </div>
@@ -38,7 +40,9 @@ function CostAnalysis({ turbines, payback }) {
               <div className={`${styles.costItem} ${styles.costInstall}`}>
                 <span className={styles.costLabel}>터빈 설치 비용</span>
                 <p className={styles.amount}>
-                  <span className={styles.value}>{turbine.installCost}</span>
+                  <span className={styles.value}>
+                    {turbine.installCostKrw.toLocaleString("ko-KR")}
+                  </span>
                   <span className={styles.unit}>원</span>
                 </p>
               </div>
@@ -54,7 +58,7 @@ function CostAnalysis({ turbines, payback }) {
                 aria-expanded={isOpen}
                 onClick={() => setIsOpen((prev) => !prev)}
               >
-                <span>{selected ? selected.name : "터빈 종류"}</span>
+                <span>{turbine.name}</span>
                 <span className={styles.triangle}>
                   <img src={dropdownTriangle} alt="" />
                 </span>
@@ -72,7 +76,7 @@ function CostAnalysis({ turbines, payback }) {
                         <button
                           type="button"
                           className={styles.menuItem}
-                          aria-pressed={item === selected}
+                          aria-pressed={item === turbine}
                           onClick={() => handleSelect(item)}
                         >
                           {item.name}
