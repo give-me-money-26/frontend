@@ -109,16 +109,12 @@
 
 .note {
   margin: 0;
-  padding: 0 10px;
+  padding: 0 10px 0 calc(10px + 1.1em);
   font-size: 12px;
   line-height: normal;
   letter-spacing: -0.04em;
+  text-indent: -1.1em;
   color: var(--color-accent);
-}
-
-.noteIndent {
-  display: block;
-  padding-left: 1.1em;
 }
 
 .references {
