@@ -105,14 +105,16 @@ function CostAnalysis({ turbines, selected, onSelect, paybackYears }) {
         </section>
 
         <section className={styles.paybackCard}>
-          <div className={styles.payback}>
+          <div
+            className={`${styles.payback} ${payback.isLow ? styles.paybackLow : ""}`}
+          >
             <h3 className={styles.paybackTitle}>투자 회수 기간</h3>
             <p className={styles.amount}>
               <span className={styles.paybackValue}>{payback.value}</span>
               <span className={styles.paybackUnit}>{payback.unit}</span>
             </p>
             {payback.isLow && (
-              <span className={styles.lowBadge}>경제성 낮음</span>
+              <span className={styles.lowText}>경제성 낮음</span>
             )}
           </div>
           <InfoTip

@@ -114,6 +114,8 @@
 }
 
 .assumed {
+  position: relative;
+  top: 1px;
   padding: 2px 8px;
   border: 0.5px solid var(--color-frame-stroke);
   border-radius: 999px;
@@ -251,20 +253,22 @@
   letter-spacing: -0.06em;
 }
 
-.lowBadge {
+.paybackLow .paybackValue,
+.paybackLow .paybackUnit {
+  color: var(--color-frame-stroke);
+}
+
+.lowText {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 20px;
   margin-top: 4px;
-  padding: 0 10px;
   line-height: 1;
-  background: var(--color-control);
-  border-radius: 999px;
   font-size: 12px;
   font-weight: 500;
   letter-spacing: -0.03em;
-  color: var(--color-white);
+  color: var(--color-frame-stroke);
   white-space: nowrap;
 }
 

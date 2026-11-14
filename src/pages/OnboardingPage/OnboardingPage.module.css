@@ -55,9 +55,6 @@
 .logo {
   font-size: 53.42px;
   letter-spacing: -0.04em;
-}
-
-.brand .logo {
   -webkit-text-stroke: 0.8px currentColor;
 }
 

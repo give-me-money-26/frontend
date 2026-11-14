@@ -14,6 +14,7 @@
   font-weight: 400;
   letter-spacing: -0.03em;
   color: var(--color-primary);
+  -webkit-text-stroke: 0.2px currentColor;
 }
 
 .card {
@@ -175,12 +176,7 @@
 }
 
 .graphItem {
-  height: 192px;
-}
-
-.graphItem .control {
-  top: 147px;
-  bottom: auto;
+  height: 197px;
 }
 
 .graph {
@@ -383,7 +379,6 @@
   height: 65px;
   display: flex;
   align-items: center;
-  padding-left: 20px;
   overflow: hidden;
   background: var(--color-button-2);
   border: 1px solid var(--color-card-2);
@@ -392,7 +387,7 @@
 
 .ventLocation {
   flex-shrink: 0;
-  width: 134px;
+  width: 154px;
   margin: 0;
   font-size: 14px;
   font-weight: 500;
@@ -450,15 +445,15 @@
 }
 
 .optimizeItem {
-  height: 87px;
+  padding: 15px 19px 15px 18px;
+}
+
+.optimizeItem .itemTitle {
+  position: static;
 }
 
 .optimizeText {
-  position: absolute;
-  top: 39px;
-  left: 19px;
-  width: 368px;
-  margin: 0;
+  margin: 7px 0 0 1px;
   font-size: 13px;
   font-weight: 500;
   line-height: 1.3;
@@ -485,11 +480,6 @@
   }
 
   .ventBox {
-    width: auto;
-  }
-
-  .optimizeText {
-    right: 19px;
     width: auto;
   }
 }
