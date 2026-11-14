@@ -49,8 +49,7 @@
   --radius-card: 24px;
 
   --font-display: "Offside", sans-serif;
-  --font-body:
-    -apple-system, BlinkMacSystemFont, "SF Pro", "Noto Sans KR", sans-serif;
+  --font-body: "Noto Sans KR", sans-serif;
 
   font-family: var(--font-body);
   color: var(--color-primary);
