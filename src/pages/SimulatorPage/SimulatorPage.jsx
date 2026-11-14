@@ -52,12 +52,6 @@ function SimulatorPage() {
             }
             unit="원 / 1년"
             description={`${result ? result.annualEnergyKwh.toFixed(1) : "-"}kWh/년 · 현재 풍속 유지 가정`}
-            footerLabel="단순 투자 회수"
-            footerValue={
-              result?.simplePaybackYears == null
-                ? "설치비 입력 필요"
-                : `${result.simplePaybackYears.toFixed(1)}년`
-            }
           />
           <SummaryCard
             to="/environment"
@@ -69,8 +63,6 @@ function SimulatorPage() {
               </>
             }
             description="예상 연간 탄소 저감 · 입력한 배출계수 적용"
-            footerLabel="에너지 회수"
-            footerValue="캠퍼스 보조 전원 검토"
           />
         </div>
 
