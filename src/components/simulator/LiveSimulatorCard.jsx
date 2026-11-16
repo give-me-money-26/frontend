@@ -17,13 +17,15 @@ function LiveSimulatorCard({
           <p className={styles.subtitle}>터빈 배치 조정 후 비교하기</p>
         </div>
         <div className={styles.actions}>
-          <button
-            type="button"
-            className={styles.secondaryButton}
-            onClick={baseline ? onClearBaseline : onSetBaseline}
-          >
-            {baseline ? "기준안 해제" : "현재 조건으로 기준 설정"}
-          </button>
+          {isControlMode && (
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              onClick={baseline ? onClearBaseline : onSetBaseline}
+            >
+              {baseline ? "기준안 해제" : "현재 조건으로 기준 설정"}
+            </button>
+          )}
           <button
             type="button"
             className={styles.primaryButton}
