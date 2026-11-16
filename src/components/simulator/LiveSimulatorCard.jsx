@@ -37,7 +37,7 @@ function LiveSimulatorCard({
         </div>
       </div>
 
-      {baseline && (
+      {isControlMode && baseline && (
         <p className={styles.baseline}>
           <span>현재 기준안 정보</span>
           <span className={styles.baselineValue}>
