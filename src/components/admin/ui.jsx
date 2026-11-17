@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import DropDownIcon from "../../assets/icons/drop-down.svg?react";
 import AdminDialog from "./AdminDialog";
 import { cx } from "./cx";
 import { TERMS, label } from "./labels";
-import { errorText, format } from "./shared";
+import { errorText, format, todaySeoul } from "./shared";
 
 export function Term({ k, children }) {
   return (
@@ -75,18 +76,193 @@ export function SubTabs({ tabs, value, onChange }) {
   );
 }
 
+function usePopover() {
+  const ref = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const handlePointerDown = (event) => {
+      if (!ref.current.contains(event.target)) setIsOpen(false);
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setIsOpen(false);
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
+
+  return { ref, isOpen, setIsOpen };
+}
+
+export function Dropdown({ label, value, options, onChange, placeholder }) {
+  const { ref, isOpen, setIsOpen } = usePopover();
+  const current = options.find(([key]) => key === value);
+
+  const handleSelect = (key) => {
+    onChange(key);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className={cx("field")}>
+      {label}
+      <div ref={ref} className={cx("picker")}>
+        <button
+          type="button"
+          className={cx("picker-trigger")}
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen((open) => !open)}
+        >
+          <span>{current ? current[1] : placeholder}</span>
+          <DropDownIcon aria-hidden="true" />
+        </button>
+        {isOpen && (
+          <ul className={cx("menu")} role="listbox" aria-label={label}>
+            {options.map(([key, text]) => (
+              <li key={key} role="option" aria-selected={key === value}>
+                <button type="button" onClick={() => handleSelect(key)}>
+                  {text}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function BuildingSelect({ buildings, value, onChange }) {
   return (
-    <label className={cx("field")}>
-      건물
-      <select value={value} onChange={(e) => onChange(e.target.value)}>
-        {buildings.map((b) => (
-          <option key={b.id} value={b.id}>
-            {b.name}
-          </option>
-        ))}
-      </select>
-    </label>
+    <Dropdown
+      label="건물"
+      value={value}
+      options={buildings.map((b) => [b.id, b.name])}
+      onChange={onChange}
+    />
+  );
+}
+
+const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
+const pad = (n) => String(n).padStart(2, "0");
+
+function monthDays(month) {
+  const [year, index] = month.split("-").map(Number);
+  const blanks = new Date(year, index - 1, 1).getDay();
+  const count = new Date(year, index, 0).getDate();
+  return [
+    ...Array(blanks).fill(null),
+    ...Array.from({ length: count }, (_, i) => `${month}-${pad(i + 1)}`),
+  ];
+}
+
+function shiftMonth(month, step) {
+  const [year, index] = month.split("-").map(Number);
+  const date = new Date(year, index - 1 + step, 1);
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}`;
+}
+
+export function DatePicker({ label, value, onChange, min }) {
+  const { ref, isOpen, setIsOpen } = usePopover();
+  const today = todaySeoul();
+  const [month, setMonth] = useState(today.slice(0, 7));
+  const [year, monthIndex] = month.split("-").map(Number);
+  const isBlocked = (date) => Boolean(min) && date < min;
+
+  const toggle = () => {
+    if (!isOpen) setMonth((value || today).slice(0, 7));
+    setIsOpen((open) => !open);
+  };
+
+  const pick = (date) => {
+    onChange(date);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className={cx("field")}>
+      {label}
+      <div ref={ref} className={cx("picker")}>
+        <button
+          type="button"
+          className={cx("picker-trigger")}
+          aria-haspopup="dialog"
+          aria-expanded={isOpen}
+          onClick={toggle}
+        >
+          <span className={cx(!value && "placeholder")}>
+            {value || "날짜 선택"}
+          </span>
+          <DropDownIcon aria-hidden="true" />
+        </button>
+        {isOpen && (
+          <div className={cx("calendar")} role="dialog" aria-label={label}>
+            <div className={cx("calendar-head")}>
+              <b>
+                {year}년 {monthIndex}월
+              </b>
+              <button
+                type="button"
+                aria-label="이전 달"
+                onClick={() => setMonth(shiftMonth(month, -1))}
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                aria-label="다음 달"
+                onClick={() => setMonth(shiftMonth(month, 1))}
+              >
+                ›
+              </button>
+            </div>
+            <div className={cx("calendar-grid")}>
+              {WEEKDAYS.map((day) => (
+                <span key={day} className={cx("calendar-week")}>
+                  {day}
+                </span>
+              ))}
+              {monthDays(month).map((date, i) =>
+                date ? (
+                  <button
+                    type="button"
+                    key={date}
+                    className={cx(
+                      date === value && "on",
+                      date === today && "today",
+                    )}
+                    disabled={isBlocked(date)}
+                    onClick={() => pick(date)}
+                  >
+                    {Number(date.slice(8))}
+                  </button>
+                ) : (
+                  <span key={`blank-${i}`} />
+                ),
+              )}
+            </div>
+            <div className={cx("calendar-foot")}>
+              <button type="button" onClick={() => pick("")}>
+                지우기
+              </button>
+              <button
+                type="button"
+                disabled={isBlocked(today)}
+                onClick={() => pick(today)}
+              >
+                오늘
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
