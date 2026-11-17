@@ -20,12 +20,17 @@ function formatPayback(years) {
   return { value: years.toFixed(1), unit: "년", isLow: false };
 }
 
-function CostAnalysis({ turbines, selected, onSelect, paybackYears }) {
+function formatKrw(value) {
+  return value == null ? "-" : value.toLocaleString("ko-KR");
+}
+
+function CostAnalysis({ turbines, selectedIndex, onSelect, paybackYears }) {
   const [isOpen, setIsOpen] = useState(false);
   const payback = formatPayback(paybackYears);
+  const selected = turbines[selectedIndex];
 
-  const handleSelect = (next) => {
-    onSelect(next);
+  const handleSelect = (index) => {
+    onSelect(index);
     setIsOpen(false);
   };
 
@@ -42,7 +47,7 @@ function CostAnalysis({ turbines, selected, onSelect, paybackYears }) {
               aria-expanded={isOpen}
               onClick={() => setIsOpen((prev) => !prev)}
             >
-              <span>{selected.name}</span>
+              <span>{selected?.name ?? "-"}</span>
               <span className={styles.triangle}>
                 <img src={dropdownTriangle} alt="" />
               </span>
@@ -50,7 +55,7 @@ function CostAnalysis({ turbines, selected, onSelect, paybackYears }) {
             {isOpen && (
               <ul className={styles.menu}>
                 {turbines.map((item, index) => (
-                  <Fragment key={item.name}>
+                  <Fragment key={item.turbineId}>
                     {index > 0 && (
                       <li className={styles.menuDivider} aria-hidden="true">
                         <img src={dropdownDivider} alt="" />
@@ -60,8 +65,8 @@ function CostAnalysis({ turbines, selected, onSelect, paybackYears }) {
                       <button
                         type="button"
                         className={styles.menuItem}
-                        aria-pressed={item === selected}
-                        onClick={() => handleSelect(item)}
+                        aria-pressed={index === selectedIndex}
+                        onClick={() => handleSelect(index)}
                       >
                         {item.name}
                       </button>
@@ -78,7 +83,7 @@ function CostAnalysis({ turbines, selected, onSelect, paybackYears }) {
             <span className={styles.costLabel}>터빈 가격</span>
             <p className={styles.amount}>
               <span className={styles.value}>
-                {selected.priceKrw.toLocaleString("ko-KR")}
+                {formatKrw(selected?.priceKrw)}
               </span>
               <span className={styles.unit}>원</span>
             </p>
@@ -88,7 +93,7 @@ function CostAnalysis({ turbines, selected, onSelect, paybackYears }) {
             <span className={styles.costLabel}>터빈 설치 비용</span>
             <p className={styles.amount}>
               <span className={styles.value}>
-                {selected.installCostKrw.toLocaleString("ko-KR")}
+                {formatKrw(selected?.installCostKrw)}
               </span>
               <span className={styles.unit}>원</span>
             </p>

@@ -6,11 +6,9 @@ import DataDescription from "../../components/detail/DataDescription";
 import KeyMetrics from "../../components/detail/KeyMetrics";
 import PaybackGoal from "../../components/detail/PaybackGoal";
 import { BUILDINGS } from "../../data/campus";
-import { TURBINES } from "../../data/turbineModels";
 import useDesignScale from "../../hooks/useDesignScale";
 import useSimulation from "../../hooks/useSimulation";
 import { useSim } from "../../state/simulatorStore";
-import { applyTurbine } from "../../utils/turbine";
 import styles from "./DetailPage.module.css";
 
 const COMMON_INFO_ITEMS = [
@@ -76,12 +74,14 @@ function describe(result, unitLine) {
 
 function DetailPage({ initialView = "revenue" }) {
   const [view, setView] = useState(initialView);
-  const [turbine, setTurbine] = useState(TURBINES[0]);
+  const [turbineIndex, setTurbineIndex] = useState(0);
   const { title, highlight, unitLine, infoItems } = VIEWS[view];
   const scale = useDesignScale();
   const buildingId = useSim((s) => s.buildingId);
   const serverResult = useSim((s) => s.result);
-  const result = applyTurbine(serverResult, turbine);
+  const turbines = serverResult?.turbineScenarios ?? [];
+  const scenario = turbines[turbineIndex] ?? null;
+  const result = scenario ? { ...serverResult, ...scenario } : null;
   useSimulation();
 
   const buildingName = BUILDINGS.find(({ id }) => id === buildingId).name;
@@ -129,7 +129,7 @@ function DetailPage({ initialView = "revenue" }) {
               }}
               infoItems={infoItems}
               generation={result ? result.annualEnergyKwh.toFixed(2) : "-"}
-              interpretation="현재 설정이 운전시간동안 유지된다는 가정입니다. 실제 설치 판단에는 시각별 실측 풍속, 터빈 성능 곡선, 운전 일정과 설비 영향 검증이 필요합니다. 전기요금은 예시 입력값입니다."
+              interpretation={scenario?.interpretation?.[view] ?? "-"}
             />
             <DataDescription
               calculation={calculation}
@@ -140,16 +140,18 @@ function DetailPage({ initialView = "revenue" }) {
           <section className={styles.bottom}>
             <h3 className={styles.bottomTitle}>비용 및 회수 분석</h3>
             <CostAnalysis
-              turbines={TURBINES}
-              selected={turbine}
-              onSelect={setTurbine}
+              turbines={turbines}
+              selectedIndex={turbineIndex}
+              onSelect={setTurbineIndex}
               paybackYears={result?.paybackYears ?? null}
             />
             <img src={detailDownArrow} alt="" className={styles.downArrow} />
             <PaybackGoal
               paybackYears={result?.paybackYears ?? null}
               areaM2={result?.appliedConditions.collectionAreaM2 ?? 0}
-              totalCostKrw={turbine.priceKrw + turbine.installCostKrw}
+              totalCostKrw={
+                scenario ? scenario.priceKrw + scenario.installCostKrw : 0
+              }
             />
           </section>
         </div>
