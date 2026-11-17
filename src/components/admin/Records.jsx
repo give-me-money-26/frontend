@@ -17,7 +17,9 @@ import {
   Big,
   BuildingSelect,
   ConfirmWrite,
+  DatePicker,
   Drawer,
+  Dropdown,
   Empty,
   ErrorNote,
   SubTabs,
@@ -37,6 +39,10 @@ const THRESHOLDS = {
   maxAbsoluteBiasW: 0.5,
 };
 const MAX_POWER_W = 10_000;
+const POLICIES = [
+  ["VALID_AND_SUSPECT", "정상 + 의심"],
+  ["VALID_ONLY", "정상만"],
+];
 
 const parsePairs = (text) =>
   text
@@ -166,45 +172,31 @@ function Records({
           <h3>실측 기반 예측</h3>
           <div className={cx("row controls")}>
             {buildingSelect}
-            <label className={cx("field")}>
-              터빈
-              <select
-                value={ts.turbineId}
-                onChange={(e) => setTs({ ...ts, turbineId: e.target.value })}
-              >
-                {turbines.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.model} ({label(t.verificationStatus)})
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className={cx("field")}>
-              포함할 기록
-              <select
-                value={ts.policy}
-                onChange={(e) => setTs({ ...ts, policy: e.target.value })}
-              >
-                <option value="VALID_AND_SUSPECT">정상 + 의심</option>
-                <option value="VALID_ONLY">정상만</option>
-              </select>
-            </label>
-            <label className={cx("field")}>
-              시작
-              <input
-                type="date"
-                value={ts.from}
-                onChange={(e) => setTs({ ...ts, from: e.target.value })}
-              />
-            </label>
-            <label className={cx("field")}>
-              끝
-              <input
-                type="date"
-                value={ts.to}
-                onChange={(e) => setTs({ ...ts, to: e.target.value })}
-              />
-            </label>
+            <Dropdown
+              label="터빈"
+              value={ts.turbineId}
+              options={turbines.map((t) => [
+                t.id,
+                `${t.model} (${label(t.verificationStatus)})`,
+              ])}
+              onChange={(turbineId) => setTs({ ...ts, turbineId })}
+            />
+            <Dropdown
+              label="포함할 기록"
+              value={ts.policy}
+              options={POLICIES}
+              onChange={(policy) => setTs({ ...ts, policy })}
+            />
+            <DatePicker
+              label="시작"
+              value={ts.from}
+              onChange={(from) => setTs({ ...ts, from })}
+            />
+            <DatePicker
+              label="끝"
+              value={ts.to}
+              onChange={(to) => setTs({ ...ts, to })}
+            />
             <button
               type="button"
               className={cx("btn pri")}

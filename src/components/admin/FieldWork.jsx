@@ -19,7 +19,9 @@ import {
   Badge,
   BuildingSelect,
   ConfirmWrite,
+  DatePicker,
   Drawer,
+  Dropdown,
   Empty,
   ErrorNote,
   SubTabs,
@@ -34,7 +36,15 @@ const TABS = [
   ["meas", "측정 기록"],
   ["assets", "배기구·장비"],
 ];
-const QUALITY_FLAGS = ["VALID", "SUSPECT", "INVALID"];
+const QUALITY_FLAGS = ["VALID", "SUSPECT", "INVALID"].map((flag) => [
+  flag,
+  label(flag),
+]);
+const HVAC_STATES = [
+  ["ON", "가동"],
+  ["OFF", "정지"],
+  ["UNKNOWN", "확인 전"],
+];
 
 function measurementProblem(form, speed) {
   if (!form.ventId) return "배기구를 고르세요.";
@@ -187,22 +197,16 @@ function FieldWork({
           <div className={cx("row between controls")}>
             <div className={cx("row")}>
               {buildingSelect}
-              <label className={cx("field")}>
-                시작{" "}
-                <input
-                  type="date"
-                  value={range.from}
-                  onChange={(e) => changeRange({ from: e.target.value })}
-                />
-              </label>
-              <label className={cx("field")}>
-                끝{" "}
-                <input
-                  type="date"
-                  value={range.to}
-                  onChange={(e) => changeRange({ to: e.target.value })}
-                />
-              </label>
+              <DatePicker
+                label="시작"
+                value={range.from}
+                onChange={(from) => changeRange({ from })}
+              />
+              <DatePicker
+                label="끝"
+                value={range.to}
+                onChange={(to) => changeRange({ to })}
+              />
               {(range.from || range.to) && (
                 <button
                   type="button"
@@ -490,21 +494,12 @@ function MeasurementDrawer({ id, ventName, onClose, onSaved }) {
           <section className={cx("panel")}>
             <h3>품질 판정</h3>
             <div className={cx("row")}>
-              <label className={cx("field")}>
-                판정
-                <select
-                  value={form.qualityFlag}
-                  onChange={(e) =>
-                    setForm({ ...form, qualityFlag: e.target.value })
-                  }
-                >
-                  {QUALITY_FLAGS.map((q) => (
-                    <option key={q} value={q}>
-                      {label(q)}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <Dropdown
+                label="판정"
+                value={form.qualityFlag}
+                options={QUALITY_FLAGS}
+                onChange={(qualityFlag) => setForm({ ...form, qualityFlag })}
+              />
               <label className={cx("field grow")}>
                 사유 (필수)
                 <input
@@ -657,38 +652,31 @@ function MeasurementForm({
   ) : (
     <AdminDialog title="측정 등록" onClose={onClose}>
       <div className={cx("grid g2")}>
-        <label className={cx("field")}>
-          배기구
-          <select
-            value={v.ventId}
-            onChange={(e) => setV({ ...v, ventId: e.target.value })}
-          >
-            {vents.map((x) => (
-              <option key={x.id} value={x.id}>
-                {x.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className={cx("field")}>
-          장비
-          <select
-            value={v.sensorId}
-            onChange={(e) => setV({ ...v, sensorId: e.target.value })}
-          >
-            {sensors.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.model} ({s.serialNumber})
-              </option>
-            ))}
-          </select>
-        </label>
+        <Dropdown
+          label="배기구"
+          value={v.ventId}
+          options={vents.map((x) => [x.id, x.name])}
+          onChange={(ventId) => setV({ ...v, ventId })}
+        />
+        <Dropdown
+          label="장비"
+          value={v.sensorId}
+          options={sensors.map((s) => [s.id, `${s.model} (${s.serialNumber})`])}
+          onChange={(sensorId) => setV({ ...v, sensorId })}
+        />
+        <DatePicker
+          label="측정 날짜"
+          value={v.at.slice(0, 10)}
+          onChange={(date) => setV({ ...v, at: `${date}T${v.at.slice(11)}` })}
+        />
         <label className={cx("field")}>
           측정 시각 (한국 시간)
           <input
-            type="datetime-local"
-            value={v.at}
-            onChange={(e) => setV({ ...v, at: e.target.value })}
+            type="time"
+            value={v.at.slice(11)}
+            onChange={(e) =>
+              setV({ ...v, at: `${v.at.slice(0, 10)}T${e.target.value}` })
+            }
           />
         </label>
         <label className={cx("field")}>
@@ -703,18 +691,13 @@ function MeasurementForm({
             onChange={(e) => setV({ ...v, speed: e.target.value })}
           />
         </label>
-        <label className={cx("field")}>
-          HVAC 상태
-          <select
-            value={v.state}
-            onChange={(e) => setV({ ...v, state: e.target.value })}
-          >
-            <option value="">고르세요</option>
-            <option value="ON">가동</option>
-            <option value="OFF">정지</option>
-            <option value="UNKNOWN">확인 전</option>
-          </select>
-        </label>
+        <Dropdown
+          label="HVAC 상태"
+          value={v.state}
+          options={HVAC_STATES}
+          placeholder="고르세요"
+          onChange={(state) => setV({ ...v, state })}
+        />
       </div>
       <p className={cx("note")}>
         HVAC 가동·정지는 배기풍과 주변 기류를 나누는 데 필요해 꼭 고릅니다.

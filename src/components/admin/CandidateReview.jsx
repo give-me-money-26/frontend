@@ -22,6 +22,8 @@ import {
   Badge,
   Big,
   ConfirmWrite,
+  DatePicker,
+  Dropdown,
   Empty,
   ErrorNote,
   SubTabs,
@@ -294,21 +296,12 @@ function CandidateReview({
         <h3>② 해볼 가치가 있나</h3>
         {input && (
           <div className={cx("row controls")}>
-            <label className={cx("field")}>
-              시각
-              <select
-                value={input.hour ?? 15}
-                onChange={(e) =>
-                  setInput({ ...input, hour: Number(e.target.value) })
-                }
-              >
-                {hours.map((h) => (
-                  <option key={h.hour} value={h.hour}>
-                    {h.hour}시
-                  </option>
-                ))}
-              </select>
-            </label>
+            <Dropdown
+              label="시각"
+              value={input.hour ?? 15}
+              options={hours.map((h) => [h.hour, `${h.hour}시`])}
+              onChange={(hour) => setInput({ ...input, hour })}
+            />
             {FIELDS.map(([key, name, min, max, step]) => (
               <label className={cx("field")} key={key}>
                 {PLACEMENT_FIELDS.includes(key) ? (
@@ -342,13 +335,13 @@ function CandidateReview({
             {baseline && (
               <button
                 type="button"
-                className={cx("btn sm")}
+                className={cx("btn")}
                 onClick={() => setBaseline(null)}
               >
                 기준안 해제
               </button>
             )}
-            <button type="button" className={cx("btn sm")} onClick={resetInput}>
+            <button type="button" className={cx("btn")} onClick={resetInput}>
               기본값으로
             </button>
             <button
@@ -653,15 +646,12 @@ function CandidateReview({
                   }
                 />
               </label>
-              <label className={cx("field")}>
-                기한
-                <input
-                  type="date"
-                  min={todaySeoul()}
-                  value={form.dueAt}
-                  onChange={(e) => setForm({ ...form, dueAt: e.target.value })}
-                />
-              </label>
+              <DatePicker
+                label="기한"
+                min={todaySeoul()}
+                value={form.dueAt}
+                onChange={(dueAt) => setForm({ ...form, dueAt })}
+              />
               {latest && (
                 <label className={cx("field")}>
                   바꾸는 사람 (필수)

@@ -782,6 +782,7 @@
 .dialog {
   width: min(640px, calc(100% - 32px));
   max-height: 90svh;
+  overflow: visible;
   border: 1px solid var(--color-accent);
   border-radius: 24px;
   background: #e2f6f8;
@@ -873,4 +874,151 @@
 }
 .pager {
   margin-top: 10px;
+}
+.picker {
+  position: relative;
+}
+.picker-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 120px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-frame-stroke);
+  border-radius: 10px;
+  background: var(--color-white);
+  font-size: 13px;
+  color: var(--color-primary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.picker-trigger svg {
+  flex-shrink: 0;
+}
+.placeholder {
+  color: var(--muted);
+}
+.menu,
+.calendar {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 30;
+  border: 0.5px solid var(--color-button);
+  border-radius: 11px;
+  background: var(--color-dropdown);
+  box-shadow: 0 6px 18px rgba(19, 87, 95, 0.12);
+}
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 100%;
+  max-height: 260px;
+  margin: 0;
+  padding: 12px;
+  overflow-y: auto;
+  list-style: none;
+}
+.menu li + li {
+  padding-top: 10px;
+  border-top: 1px solid var(--color-frame-stroke);
+}
+.menu button {
+  width: 100%;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  font-size: 13px;
+  letter-spacing: -0.04em;
+  color: var(--color-dropdown-text);
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.menu button:hover,
+.menu [aria-selected="true"] button {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+.calendar {
+  width: 252px;
+  padding: 14px;
+}
+.calendar-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.calendar-head b {
+  flex: 1;
+  font-size: 14px;
+  color: var(--color-primary);
+}
+.calendar-head button,
+.calendar-foot button {
+  border: 0;
+  background: none;
+  color: var(--color-accent);
+  cursor: pointer;
+}
+.calendar-head button {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 1;
+}
+.calendar-head button:hover {
+  background: var(--color-card);
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
+}
+.calendar-week {
+  padding: 4px 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+.calendar-grid button {
+  height: 30px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: none;
+  font-size: 12px;
+  color: var(--color-primary);
+  cursor: pointer;
+}
+.calendar-grid button:hover:not(:disabled) {
+  background: var(--color-card);
+}
+.calendar-grid button.today {
+  border-color: var(--color-accent);
+}
+.calendar-grid button.on {
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-weight: 600;
+}
+.calendar-grid button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.calendar-foot {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-frame-stroke);
+  font-size: 12px;
+}
+.calendar-foot button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
