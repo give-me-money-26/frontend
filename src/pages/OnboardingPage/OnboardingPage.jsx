@@ -1,5 +1,6 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import guideAdminIcon from "../../assets/icons/guide-admin.svg";
 import guideInfoIcon from "../../assets/icons/guide-info.png";
 import guidePlanningIcon from "../../assets/icons/guide-planning.png";
 import logoSymbol from "../../assets/images/logo-symbol.svg";
@@ -15,6 +16,13 @@ const LOCATIONS = [CAMPUS.name];
 const GUIDE_LINKS = [
   { id: "guide", label: "이용 안내", icon: guideInfoIcon, iconGap: 6 },
   { id: "planning", label: "서비스 기획", icon: guidePlanningIcon, iconGap: 8 },
+  {
+    id: "admin",
+    label: "운영 화면",
+    icon: guideAdminIcon,
+    iconGap: 6,
+    to: "/admin",
+  },
 ];
 
 function Brand({ variant }) {
@@ -49,7 +57,7 @@ function OnboardingPage() {
             <Brand variant="brand" />
 
             <nav className={styles.guide}>
-              {GUIDE_LINKS.map(({ id, label, icon, iconGap }, index) => (
+              {GUIDE_LINKS.map(({ id, label, icon, iconGap, to }, index) => (
                 <Fragment key={id}>
                   {index > 0 && (
                     <span className={styles.guideDivider} aria-hidden="true">
@@ -60,9 +68,13 @@ function OnboardingPage() {
                     type="button"
                     className={styles.guideLink}
                     style={{ gap: iconGap }}
-                    aria-expanded={openPanel === id}
+                    aria-expanded={to ? undefined : openPanel === id}
                     onClick={() =>
-                      setOpenPanel((current) => (current === id ? null : id))
+                      to
+                        ? navigate(to)
+                        : setOpenPanel((current) =>
+                            current === id ? null : id,
+                          )
                     }
                   >
                     <img
