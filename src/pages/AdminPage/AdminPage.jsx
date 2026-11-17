@@ -6,6 +6,7 @@ import AdminDialog from "../../components/admin/AdminDialog";
 import CandidateReview from "../../components/admin/CandidateReview";
 import { cx } from "../../components/admin/cx";
 import DecisionBoard from "../../components/admin/DecisionBoard";
+import FieldWork from "../../components/admin/FieldWork";
 import { INFO, NAV } from "../../components/admin/labels";
 import { errorText } from "../../components/admin/shared";
 import { ErrorNote } from "../../components/admin/ui";
@@ -13,6 +14,9 @@ import useToast from "../../components/admin/useToast";
 import Logo from "../../components/common/Logo";
 
 const PAGES = ["home", "review", "field", "records", "evidence"];
+const TABS = {
+  field: ["todo", "meas", "assets"],
+};
 const INTRO_KEY = "aeroharvest-admin-intro";
 const MENU_ORDER = NAV.flatMap(([, pages]) => pages);
 const ROLES = [
@@ -53,6 +57,7 @@ function AdminPage() {
   const [error, setError] = useState("");
   const [reload, setReload] = useState(0);
   const [toastNode, toast] = useToast();
+  const [buildingId, setBuildingId] = useState("NICHOLLS");
   const refresh = () => setReload((v) => v + 1);
 
   const go = (page, arg) => navigate(pathOf(page, arg));
@@ -70,8 +75,9 @@ function AdminPage() {
       adminApi.candidates(undefined, signal),
       adminApi.decisions({}, signal),
       adminApi.defaults(signal),
+      adminApi.sensors(signal),
     ])
-      .then(([buildings, candidates, decisions, defaults]) => {
+      .then(([buildings, candidates, decisions, defaults, sensors]) => {
         const rank = (id) =>
           buildings.find((b) => b.id === id)?.priorityRank ?? Infinity;
         setError("");
@@ -82,11 +88,15 @@ function AdminPage() {
           ),
           decisions,
           defaults,
+          sensors,
         });
       })
       .catch((e) => !isAbort(e) && setError(errorText(e)));
     return () => controller.abort();
   }, [reload]);
+
+  const tabOf = (page, fallback) =>
+    TABS[page].includes(route.arg) ? route.arg : fallback;
 
   const renderPage = () => {
     switch (route.page) {
@@ -102,12 +112,27 @@ function AdminPage() {
             candidateId={reviewId}
             data={data}
             onSelect={(id) => go("review", id)}
-            onGo={(page) => go(page, page === "field" ? "meas" : "ts")}
+            onGo={(page, id) => {
+              setBuildingId(id);
+              go(page, page === "field" ? "meas" : "ts");
+            }}
             onChanged={refresh}
             toast={toast}
           />
         );
       }
+      case "field":
+        return (
+          <FieldWork
+            data={data}
+            tab={tabOf("field", "todo")}
+            onTab={(tab) => go("field", tab)}
+            buildingId={buildingId}
+            onBuilding={setBuildingId}
+            onChanged={refresh}
+            toast={toast}
+          />
+        );
       default:
         return null;
     }

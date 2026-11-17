@@ -82,3 +82,5 @@ export const seoulTime = (iso, withYear = false) => {
 };
 
 export const seoulDate = (iso) => seoulTime(iso, true).slice(0, 10);
+
+export const toSeoulIso = (local) => `${local.slice(0, 16)}:00+09:00`;
