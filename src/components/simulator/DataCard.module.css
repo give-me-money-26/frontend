@@ -6,6 +6,30 @@
   height: 100%;
 }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 3px;
+}
+
+.conditionsButton {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 15px;
+  border: 0;
+  background: none;
+  color: var(--color-dropdown-text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
 .title {
   margin: 0;
   padding-left: 15px;

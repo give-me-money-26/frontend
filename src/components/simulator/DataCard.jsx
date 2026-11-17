@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import dataDivider from "../../assets/icons/data-divider.svg";
 import graphCurve from "../../assets/icons/graph-curve.svg";
 import graphCurveSource from "../../assets/icons/graph-curve.svg?raw";
@@ -9,6 +10,7 @@ import graphMarkerInner from "../../assets/icons/graph-marker-inner.svg";
 import graphMarkerLine from "../../assets/icons/graph-marker-line.svg";
 import graphMarkerMiddle from "../../assets/icons/graph-marker-middle.svg";
 import graphMarkerOuter from "../../assets/icons/graph-marker-outer.svg";
+import pencilIcon from "../../assets/icons/pencil.png";
 import ventDivider from "../../assets/icons/vent-divider.svg";
 import { BUILDINGS } from "../../data/campus";
 import { HOUR_RANGE, WIND_RANGE } from "../../data/wind";
@@ -16,6 +18,7 @@ import { runSimulation } from "../../hooks/useSimulation";
 import { defaultConditions, useSim } from "../../state/simulatorStore";
 import Slider from "../common/Slider";
 import BuildingSelect from "./BuildingSelect";
+import ConditionsModal from "./ConditionsModal";
 import styles from "./DataCard.module.css";
 
 const HOUR_ANCHORS = [
@@ -151,6 +154,8 @@ function DataCard({
   graphValue,
   optimization = "건물 사이 통로와 주변 흐름을 함께 살펴 배기구와 터빈의 거리를 조절하세요.",
 }) {
+  const [isConditionsOpen, setIsConditionsOpen] = useState(false);
+  const closeConditions = useCallback(() => setIsConditionsOpen(false), []);
   const hour = useSim((s) => s.hour);
   const windSpeedMS = useSim((s) => s.windSpeedMS);
   const detail = useSim((s) => s.buildingDetail);
@@ -174,7 +179,19 @@ function DataCard({
 
   return (
     <section className={styles.container}>
-      <h2 className={styles.title}>DATA CARD</h2>
+      <div className={styles.titleRow}>
+        <h2 className={styles.title}>DATA CARD</h2>
+        <button
+          type="button"
+          className={styles.conditionsButton}
+          aria-haspopup="dialog"
+          onClick={() => setIsConditionsOpen(true)}
+        >
+          <img src={pencilIcon} alt="" width={16} height={16} />
+          계산 조건
+        </button>
+      </div>
+      {isConditionsOpen && <ConditionsModal onClose={closeConditions} />}
 
       <div className={styles.card}>
         <div className={styles.list}>
