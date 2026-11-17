@@ -54,7 +54,8 @@
 
 .chip[aria-pressed="true"] {
   background: var(--color-accent);
-  border: 1.5px solid var(--color-accent);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 0.7px var(--color-accent);
   font-weight: 500;
   color: var(--color-white);
 }
@@ -79,7 +80,8 @@
 
 .customInput:focus {
   outline: none;
-  border: 1.5px solid var(--color-dropdown-text);
+  border-color: var(--color-dropdown-text);
+  box-shadow: 0 0 0 0.7px var(--color-dropdown-text);
 }
 
 .body {
