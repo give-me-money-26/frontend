@@ -60,7 +60,8 @@ function PaybackGoal({ paybackYears, areaM2, totalCostKrw }) {
             </p>
           </div>
           <div className={styles.conclusion}>
-            현재 조건으로도 목표 회수기간 내 투자비 회수가 가능합니다.
+            현재 조건으로 목표 회수기간 안에 회수할 수 있습니다. 설치 전 현장
+            확인이 필요합니다.
           </div>
         </>
       );
