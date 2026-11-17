@@ -856,3 +856,18 @@
 .summary {
   margin-bottom: 18px;
 }
+.controls {
+  margin-bottom: 12px;
+}
+.spaced {
+  margin-top: 12px;
+}
+.decision-seg {
+  margin: 6px 0 10px;
+}
+.decision-meta {
+  margin-top: 8px;
+}
+.decision-actions {
+  margin-top: 10px;
+}
