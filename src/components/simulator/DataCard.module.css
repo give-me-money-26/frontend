@@ -78,6 +78,12 @@
   letter-spacing: -0.04em;
 }
 
+.itemAction {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+}
+
 .buildingItem {
   z-index: 1;
   display: grid;
