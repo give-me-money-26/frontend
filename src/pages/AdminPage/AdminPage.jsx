@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
+import { adminApi } from "../../api/adminEndpoints";
+import { isAbort } from "../../api/client";
 import AdminDialog from "../../components/admin/AdminDialog";
 import { cx } from "../../components/admin/cx";
+import DecisionBoard from "../../components/admin/DecisionBoard";
 import { INFO, NAV } from "../../components/admin/labels";
+import { errorText } from "../../components/admin/shared";
+import { ErrorNote } from "../../components/admin/ui";
 import Logo from "../../components/common/Logo";
 
 const PAGES = ["home", "review", "field", "records", "evidence"];
@@ -42,6 +47,9 @@ function AdminPage() {
   const route = readRoute(pathname);
   const info = INFO[route.page];
   const [intro, setIntro] = useState(() => !hasSeenIntro());
+  const [data, setData] = useState(null);
+  const [error, setError] = useState("");
+  const [reload, setReload] = useState(0);
 
   const go = (page, arg) => navigate(pathOf(page, arg));
 
@@ -49,6 +57,41 @@ function AdminPage() {
     document.title = "AeroHarvest 운영";
     window.scrollTo(0, 0);
   }, [pathname]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+    Promise.all([
+      adminApi.buildings(signal),
+      adminApi.candidates(undefined, signal),
+      adminApi.decisions({}, signal),
+      adminApi.defaults(signal),
+    ])
+      .then(([buildings, candidates, decisions, defaults]) => {
+        const rank = (id) =>
+          buildings.find((b) => b.id === id)?.priorityRank ?? Infinity;
+        setError("");
+        setData({
+          buildings,
+          candidates: candidates.toSorted(
+            (a, b) => rank(a.buildingId) - rank(b.buildingId),
+          ),
+          decisions,
+          defaults,
+        });
+      })
+      .catch((e) => !isAbort(e) && setError(errorText(e)));
+    return () => controller.abort();
+  }, [reload]);
+
+  const renderPage = () => {
+    switch (route.page) {
+      case "home":
+        return <DecisionBoard data={data} onOpen={(id) => go("review", id)} />;
+      default:
+        return null;
+    }
+  };
 
   const closeIntro = (page, arg) => {
     setIntro(false);
@@ -113,6 +156,10 @@ function AdminPage() {
           <div className={cx("todo")}>
             <b>이 화면에서 할 일</b> {info.todo}
           </div>
+          <ErrorNote error={error} onRetry={() => setReload((v) => v + 1)} />
+          {data
+            ? renderPage()
+            : !error && <p className={cx("note")}>불러오는 중…</p>}
           <div className={cx("nextbar")}>
             <span className={cx("note")}>다음 단계</span>
             <button
