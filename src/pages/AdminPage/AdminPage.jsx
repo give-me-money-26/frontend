@@ -3,11 +3,13 @@ import { Link, useLocation, useNavigate } from "react-router";
 import { adminApi } from "../../api/adminEndpoints";
 import { isAbort } from "../../api/client";
 import AdminDialog from "../../components/admin/AdminDialog";
+import CandidateReview from "../../components/admin/CandidateReview";
 import { cx } from "../../components/admin/cx";
 import DecisionBoard from "../../components/admin/DecisionBoard";
 import { INFO, NAV } from "../../components/admin/labels";
 import { errorText } from "../../components/admin/shared";
 import { ErrorNote } from "../../components/admin/ui";
+import useToast from "../../components/admin/useToast";
 import Logo from "../../components/common/Logo";
 
 const PAGES = ["home", "review", "field", "records", "evidence"];
@@ -50,6 +52,8 @@ function AdminPage() {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [reload, setReload] = useState(0);
+  const [toastNode, toast] = useToast();
+  const refresh = () => setReload((v) => v + 1);
 
   const go = (page, arg) => navigate(pathOf(page, arg));
 
@@ -88,6 +92,22 @@ function AdminPage() {
     switch (route.page) {
       case "home":
         return <DecisionBoard data={data} onOpen={(id) => go("review", id)} />;
+      case "review": {
+        const reviewId = data.candidates.some((c) => c.id === route.arg)
+          ? route.arg
+          : (data.candidates[0]?.id ?? "");
+        return (
+          <CandidateReview
+            key={reviewId}
+            candidateId={reviewId}
+            data={data}
+            onSelect={(id) => go("review", id)}
+            onGo={(page) => go(page, page === "field" ? "meas" : "ts")}
+            onChanged={refresh}
+            toast={toast}
+          />
+        );
+      }
       default:
         return null;
     }
@@ -156,7 +176,7 @@ function AdminPage() {
           <div className={cx("todo")}>
             <b>이 화면에서 할 일</b> {info.todo}
           </div>
-          <ErrorNote error={error} onRetry={() => setReload((v) => v + 1)} />
+          <ErrorNote error={error} onRetry={refresh} />
           {data
             ? renderPage()
             : !error && <p className={cx("note")}>불러오는 중…</p>}
@@ -210,6 +230,7 @@ function AdminPage() {
           </div>
         </AdminDialog>
       )}
+      {toastNode}
     </div>
   );
 }
