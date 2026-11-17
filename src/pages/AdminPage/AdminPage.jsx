@@ -7,6 +7,7 @@ import CandidateReview from "../../components/admin/CandidateReview";
 import { cx } from "../../components/admin/cx";
 import DecisionBoard from "../../components/admin/DecisionBoard";
 import FieldWork from "../../components/admin/FieldWork";
+import Records from "../../components/admin/Records";
 import { INFO, NAV } from "../../components/admin/labels";
 import { errorText } from "../../components/admin/shared";
 import { ErrorNote } from "../../components/admin/ui";
@@ -16,6 +17,7 @@ import Logo from "../../components/common/Logo";
 const PAGES = ["home", "review", "field", "records", "evidence"];
 const TABS = {
   field: ["todo", "meas", "assets"],
+  records: ["ts", "val", "dec"],
 };
 const INTRO_KEY = "aeroharvest-admin-intro";
 const MENU_ORDER = NAV.flatMap(([, pages]) => pages);
@@ -130,6 +132,20 @@ function AdminPage() {
             buildingId={buildingId}
             onBuilding={setBuildingId}
             onChanged={refresh}
+            toast={toast}
+          />
+        );
+      case "records":
+        return (
+          <Records
+            key={buildingId}
+            data={data}
+            tab={tabOf("records", "ts")}
+            onTab={(tab) => go("records", tab)}
+            buildingId={buildingId}
+            onBuilding={setBuildingId}
+            onReview={(id) => go("review", id)}
+            onField={() => go("field", "meas")}
             toast={toast}
           />
         );
