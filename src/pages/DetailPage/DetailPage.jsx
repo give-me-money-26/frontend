@@ -1,17 +1,14 @@
 import { useState } from "react";
-import { Link } from "react-router";
-import arrowRightLong from "../../assets/icons/arrow-right-long.svg";
-import simulatorButtonIcon from "../../assets/icons/simulator-button-icon.svg";
+import detailDownArrow from "../../assets/icons/detail-down-arrow.svg";
 import BackButton from "../../components/common/BackButton";
 import CostAnalysis from "../../components/detail/CostAnalysis";
 import DataDescription from "../../components/detail/DataDescription";
 import KeyMetrics from "../../components/detail/KeyMetrics";
+import PaybackGoal from "../../components/detail/PaybackGoal";
 import { BUILDINGS } from "../../data/campus";
-import { TURBINES } from "../../data/turbineModels";
 import useDesignScale from "../../hooks/useDesignScale";
 import useSimulation from "../../hooks/useSimulation";
 import { useSim } from "../../state/simulatorStore";
-import { applyTurbine } from "../../utils/turbine";
 import styles from "./DetailPage.module.css";
 
 const COMMON_INFO_ITEMS = [
@@ -25,7 +22,7 @@ const COMMON_INFO_ITEMS = [
 const VIEWS = {
   revenue: {
     title: "예상 수익 상세분석",
-    toggleLabel: "환경 영향 상세분석 보기",
+    tabLabel: "예상 수익",
     highlight: {
       label: "예상 연간 절감액",
       format: (result) =>
@@ -41,7 +38,7 @@ const VIEWS = {
   },
   environment: {
     title: "환경 영향 상세분석",
-    toggleLabel: "예상 수익 상세분석 보기",
+    tabLabel: "환경 영향",
     highlight: {
       label: "예상 연간 탄소저감",
       format: (result) => result.annualCarbonReductionKg.toFixed(2),
@@ -77,26 +74,40 @@ function describe(result, unitLine) {
 
 function DetailPage({ initialView = "revenue" }) {
   const [view, setView] = useState(initialView);
-  const [turbine, setTurbine] = useState(TURBINES[0]);
-  const { title, toggleLabel, highlight, unitLine, infoItems } = VIEWS[view];
+  const [turbineIndex, setTurbineIndex] = useState(0);
+  const { title, highlight, unitLine, infoItems } = VIEWS[view];
   const scale = useDesignScale();
   const buildingId = useSim((s) => s.buildingId);
   const serverResult = useSim((s) => s.result);
-  const result = applyTurbine(serverResult, turbine);
+  const turbines = serverResult?.turbineScenarios ?? [];
+  const scenario = turbines[turbineIndex] ?? null;
+  const result = scenario ? { ...serverResult, ...scenario } : null;
   useSimulation();
 
   const buildingName = BUILDINGS.find(({ id }) => id === buildingId).name;
   const { calculation, assumption } = describe(result, unitLine);
 
-  const toggleView = () => {
-    setView((prev) => (prev === "revenue" ? "environment" : "revenue"));
-  };
-
   return (
     <div className={styles.page} style={{ zoom: scale }}>
       <BackButton />
 
-      <h2 className={styles.title}>{title}</h2>
+      <div className={styles.titleRow}>
+        <h2 className={styles.title}>{title}</h2>
+        <div className={styles.tabs} role="tablist" aria-label="상세분석 종류">
+          {Object.entries(VIEWS).map(([key, { tabLabel }]) => (
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              className={styles.tab}
+              aria-selected={view === key}
+              onClick={() => setView(key)}
+            >
+              {tabLabel}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <div className={styles.content}>
         <div className={styles.purpose}>
@@ -118,7 +129,7 @@ function DetailPage({ initialView = "revenue" }) {
               }}
               infoItems={infoItems}
               generation={result ? result.annualEnergyKwh.toFixed(2) : "-"}
-              interpretation="현재 설정이 운전시간동안 유지된다는 가정입니다. 실제 설치 판단에는 시각별 실측 풍속, 터빈 성능 곡선, 운전 일정과 설비 영향 검증이 필요합니다. 전기요금은 예시 입력값입니다."
+              interpretation={scenario?.interpretation?.[view] ?? "-"}
             />
             <DataDescription
               calculation={calculation}
@@ -126,29 +137,23 @@ function DetailPage({ initialView = "revenue" }) {
             />
           </section>
 
-          <div className={styles.bottom}>
+          <section className={styles.bottom}>
+            <h3 className={styles.bottomTitle}>비용 및 회수 분석</h3>
             <CostAnalysis
-              turbines={TURBINES}
-              selected={turbine}
-              onSelect={setTurbine}
+              turbines={turbines}
+              selectedIndex={turbineIndex}
+              onSelect={setTurbineIndex}
               paybackYears={result?.paybackYears ?? null}
             />
-
-            <div className={styles.actions}>
-              <button
-                type="button"
-                className={styles.toggleButton}
-                onClick={toggleView}
-              >
-                {toggleLabel}
-                <img src={arrowRightLong} alt="" />
-              </button>
-              <Link to="/simulator" className={styles.simulatorButton}>
-                <img src={simulatorButtonIcon} alt="" />
-                3D 시뮬레이터 보기
-              </Link>
-            </div>
-          </div>
+            <img src={detailDownArrow} alt="" className={styles.downArrow} />
+            <PaybackGoal
+              paybackYears={result?.paybackYears ?? null}
+              areaM2={result?.appliedConditions.collectionAreaM2 ?? 0}
+              totalCostKrw={
+                scenario ? scenario.priceKrw + scenario.installCostKrw : 0
+              }
+            />
+          </section>
         </div>
       </div>
     </div>

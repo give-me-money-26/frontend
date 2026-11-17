@@ -1,22 +1,16 @@
 .container {
-  flex: 1 0 0;
-  min-width: 0;
-  padding: 21px 23px;
-  background: var(--color-card-3);
-  border: 0.5px solid var(--color-logo-typo);
-  border-radius: 14px;
-}
-
-.list {
   display: flex;
-  gap: 11px;
-  height: 160px;
+  gap: 16px;
+  padding: 20px;
+  background: var(--color-card-3);
+  border: 0.8px solid var(--color-frame-stroke);
+  border-radius: 22px;
 }
 
 .amount {
   display: flex;
   align-items: baseline;
-  gap: 3px;
+  gap: 4px;
   margin: 0;
   line-height: normal;
   white-space: nowrap;
@@ -24,8 +18,8 @@
 
 .value {
   font-family: var(--font-display);
-  font-size: 35px;
-  letter-spacing: -0.06em;
+  font-size: 38px;
+  letter-spacing: -0.02em;
   color: var(--color-accent);
 }
 
@@ -35,102 +29,48 @@
 }
 
 .costCard {
-  position: relative;
+  display: flex;
   flex: 1 0 0;
+  flex-direction: column;
   min-width: 0;
   background: var(--color-button-2);
   border: 0.8px solid var(--color-logo-typo);
-  border-radius: 24px;
-}
-
-.costBody {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  border-radius: inherit;
-}
-
-.costContent {
-  position: absolute;
-  top: 77.6px;
-  left: -0.4px;
-  display: flex;
-  gap: 46px;
-  align-items: center;
-  padding: 0 44px;
-}
-
-.costPrice {
-  display: flex;
-  gap: 62px;
-  align-items: center;
-}
-
-.costItem {
-  display: flex;
-  gap: 42px;
-  align-items: center;
-  padding: 0 6px;
-}
-
-.costInstall {
-  gap: 46px;
-}
-
-.costItem .amount {
-  width: 104px;
-}
-
-.costLabel {
-  font-size: 16px;
-  font-weight: 500;
-  white-space: nowrap;
-  letter-spacing: -0.05em;
+  border-radius: 20px;
 }
 
 .costHeader {
-  position: absolute;
-  top: -0.4px;
-  left: -0.4px;
-  right: -0.4px;
-  height: 53px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 14px 18px 14px 24px;
   border-bottom: 0.8px solid var(--color-logo-typo);
 }
 
 .costTitle {
-  position: absolute;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  top: 53%;
-  left: 17px;
-  transform: translateY(-50%);
   margin: 0;
-  padding: 10px;
   font-size: 16px;
   font-weight: 500;
   line-height: normal;
   letter-spacing: -0.03em;
+  white-space: nowrap;
 }
 
 .assumed {
-  position: relative;
-  top: 1px;
-  padding: 2px 8px;
-  border: 0.5px solid var(--color-frame-stroke);
+  padding: 5px 14px;
+  background: var(--color-button-2);
+  border: 0.8px solid var(--color-frame-stroke);
   border-radius: 999px;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: -0.03em;
+  font-size: 13px;
+  line-height: normal;
+  letter-spacing: -0.04em;
   color: var(--color-dropdown-text);
   white-space: nowrap;
 }
 
 .dropdown {
-  position: absolute;
-  top: 13px;
-  right: 18px;
+  position: relative;
   z-index: 10;
+  margin-left: auto;
 }
 
 .dropdownButton {
@@ -184,6 +124,8 @@
   background: var(--color-dropdown);
   border: 0.5px solid var(--color-button);
   border-radius: 11px;
+  filter: drop-shadow(0 1px 1.5px rgba(19, 87, 95, 0.08))
+    drop-shadow(0 6px 9px rgba(19, 87, 95, 0.14));
 }
 
 .menuItem {
@@ -211,29 +153,52 @@
   transform: rotate(90deg);
 }
 
-.paybackCard {
-  position: relative;
-  flex-shrink: 0;
-  width: 213px;
-  background: var(--color-button-2);
-  border: 0.8px solid var(--color-logo-typo);
-  border-radius: 24px;
+.costContent {
+  display: flex;
+  align-items: center;
+  padding: 26px 24px;
 }
 
-.payback {
-  position: absolute;
-  top: 32px;
-  left: calc(50% + 1.5px);
+.costItem {
   display: flex;
+  flex: 1 0 0;
   flex-direction: column;
+  gap: 4px;
   align-items: center;
-  width: 120px;
-  transform: translateX(-50%);
+  min-width: 0;
+}
+
+.costLabel {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+}
+
+.divider {
+  flex-shrink: 0;
+  width: 1px;
+  height: 64px;
+  background: var(--color-frame-stroke);
+}
+
+.paybackCard {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  background: var(--color-button-2);
+  border: 0.8px solid var(--color-logo-typo);
+  border-radius: 20px;
 }
 
 .paybackTitle {
   margin: 0;
-  padding: 10px;
   font-size: 17px;
   font-weight: 500;
   line-height: normal;
@@ -243,7 +208,7 @@
 
 .paybackValue {
   font-family: var(--font-display);
-  font-size: 40px;
+  font-size: 44px;
   letter-spacing: -0.06em;
   color: var(--color-accent);
 }
@@ -259,95 +224,32 @@
 }
 
 .lowText {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 20px;
-  margin-top: 4px;
-  line-height: 1;
   font-size: 12px;
   font-weight: 500;
+  line-height: 1;
   letter-spacing: -0.03em;
   color: var(--color-frame-stroke);
   white-space: nowrap;
 }
 
 .info {
-  top: 2.6px;
-  left: 168.6px;
+  top: 7.2px;
+  right: 7.2px;
 }
 
 .infoPopover {
   top: -108px;
-  left: -174.9px;
+  right: 0;
 }
 
 @media (max-width: 1023px) {
-  .list {
-    height: auto;
-  }
-
-  .costCard {
-    display: flex;
+  .container {
     flex-direction: column;
-  }
-
-  .costBody {
-    position: static;
-  }
-
-  .costContent {
-    position: static;
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
-    padding: 24px;
-  }
-
-  .costPrice {
-    display: contents;
-  }
-
-  .costPrice img {
-    display: none;
-  }
-
-  .costItem {
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .costItem .amount {
-    width: auto;
-  }
-
-  .costHeader {
-    position: relative;
-    inset: auto;
-    order: -1;
   }
 
   .paybackCard {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .payback {
-    position: static;
     width: auto;
     padding: 24px 0;
-    transform: none;
-  }
-
-  .info {
-    left: auto;
-    right: 2px;
-  }
-
-  .infoPopover {
-    left: auto;
-    right: 0;
   }
 }
 
@@ -356,19 +258,23 @@
     padding: 16px;
   }
 
-  .list {
-    flex-direction: column;
-  }
-
-  .paybackCard {
-    width: auto;
+  .costHeader {
+    flex-wrap: wrap;
+    padding: 12px 16px;
   }
 
   .costContent {
+    flex-direction: column;
+    gap: 16px;
     padding: 20px 16px;
   }
 
+  .divider {
+    width: 64px;
+    height: 1px;
+  }
+
   .value {
-    font-size: 28px;
+    font-size: 30px;
   }
 }
