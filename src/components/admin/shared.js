@@ -19,12 +19,11 @@ export const format = (value, digits = 2) =>
     ? "—"
     : value.toLocaleString("ko-KR", { maximumFractionDigits: digits });
 
+export const byRecent = (a, b) =>
+  (b.updatedAt ?? b.createdAt).localeCompare(a.updatedAt ?? a.createdAt);
+
 export const latestDecision = (decisions, candidateId) =>
-  decisions
-    .filter((d) => d.candidateId === candidateId)
-    .sort((a, b) =>
-      (b.updatedAt ?? b.createdAt).localeCompare(a.updatedAt ?? a.createdAt),
-    )[0];
+  decisions.filter((d) => d.candidateId === candidateId).sort(byRecent)[0];
 
 export const stageOf = (candidate, decisions) =>
   latestDecision(decisions, candidate.id)?.status ?? candidate.recommendation;
