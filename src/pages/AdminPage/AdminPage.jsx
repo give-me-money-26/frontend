@@ -6,6 +6,7 @@ import AdminDialog from "../../components/admin/AdminDialog";
 import CandidateReview from "../../components/admin/CandidateReview";
 import { cx } from "../../components/admin/cx";
 import DecisionBoard from "../../components/admin/DecisionBoard";
+import Evidence from "../../components/admin/Evidence";
 import FieldWork from "../../components/admin/FieldWork";
 import Records from "../../components/admin/Records";
 import { INFO, NAV } from "../../components/admin/labels";
@@ -18,6 +19,7 @@ const PAGES = ["home", "review", "field", "records", "evidence"];
 const TABS = {
   field: ["todo", "meas", "assets"],
   records: ["ts", "val", "dec"],
+  evidence: ["money", "carbon", "turbine"],
 };
 const INTRO_KEY = "aeroharvest-admin-intro";
 const MENU_ORDER = NAV.flatMap(([, pages]) => pages);
@@ -149,8 +151,20 @@ function AdminPage() {
             toast={toast}
           />
         );
-      default:
-        return null;
+      case "evidence":
+        return (
+          <Evidence
+            data={data}
+            tab={tabOf("evidence", "money")}
+            onTab={(tab) => go("evidence", tab)}
+            onReview={(id) => {
+              const candidate = data.candidates.find(
+                (c) => c.buildingId === id,
+              );
+              if (candidate) go("review", candidate.id);
+            }}
+          />
+        );
     }
   };
 

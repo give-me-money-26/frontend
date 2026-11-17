@@ -15,6 +15,7 @@ import {
   seoulTime,
   stageOf,
   todaySeoul,
+  yearsText,
 } from "./shared";
 import {
   AreaChart,
@@ -44,11 +45,6 @@ const SECTIONS = [
 ];
 const SNAPSHOT_KEYS =
   /measurementCount|averageWindSpeedMS|recommendation|missingEvidence|latestValidation=\{?status/;
-
-const yearsText = (years) =>
-  years >= PAYBACK_LIMIT_YEARS
-    ? `${PAYBACK_LIMIT_YEARS}년 이상`
-    : `${format(years, 1)}년`;
 
 const snapshotSummary = (snapshot) =>
   snapshot

@@ -1,3 +1,4 @@
+import { PAYBACK_LIMIT_YEARS } from "../../data/turbine";
 import { CHECKS } from "./labels";
 
 const SEOUL_DATE = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" });
@@ -21,6 +22,11 @@ export const format = (value, digits = 2) =>
 
 export const byRecent = (a, b) =>
   (b.updatedAt ?? b.createdAt).localeCompare(a.updatedAt ?? a.createdAt);
+
+export const yearsText = (years) =>
+  years >= PAYBACK_LIMIT_YEARS
+    ? `${PAYBACK_LIMIT_YEARS}년 이상`
+    : `${format(years, 1)}년`;
 
 export const latestDecision = (decisions, candidateId) =>
   decisions.filter((d) => d.candidateId === candidateId).sort(byRecent)[0];
