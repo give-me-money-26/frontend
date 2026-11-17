@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PAYBACK_LIMIT_YEARS } from "../../utils/turbine";
+import { PAYBACK_LIMIT_YEARS } from "../../data/turbine";
 import styles from "./PaybackGoal.module.css";
 
 const PRESET_YEARS = [10, 20, 30];
