@@ -13,9 +13,10 @@ import graphMarkerOuter from "../../assets/icons/graph-marker-outer.svg";
 import pencilIcon from "../../assets/icons/pencil.png";
 import ventDivider from "../../assets/icons/vent-divider.svg";
 import { BUILDINGS } from "../../data/campus";
-import { HOUR_RANGE, WIND_RANGE } from "../../data/wind";
+import { DEFAULT_HOUR, HOUR_RANGE, WIND_RANGE } from "../../data/wind";
 import { runSimulation } from "../../hooks/useSimulation";
 import { defaultConditions, useSim } from "../../state/simulatorStore";
+import ResetChip from "../common/ResetChip";
 import Slider from "../common/Slider";
 import BuildingSelect from "./BuildingSelect";
 import ConditionsModal from "./ConditionsModal";
@@ -133,7 +134,16 @@ function seriesPath(series) {
 }
 
 const commitWind = () => runSimulation({ sourceMode: "DIRECT_SPEED" });
+const resetWind = () => {
+  const { buildingId } = useSim.getState();
+  runSimulation({
+    sourceMode: "DIRECT_SPEED",
+    windSpeedMS: BUILDINGS.find(({ id }) => id === buildingId).windSpeedMS,
+  });
+};
 const commitHour = () => runSimulation({ sourceMode: "TIME_SLOT" });
+const resetHour = () =>
+  runSimulation({ hour: DEFAULT_HOUR, sourceMode: "TIME_SLOT" });
 
 function StatBox({ label, value, unit, tall = false }) {
   return (
@@ -164,7 +174,9 @@ function DataCard({
     (s) => s.result?.appliedConditions ?? s.conditions ?? defaultConditions(s),
   );
   const buildingId = useSim((s) => s.buildingId);
-  const { vent } = BUILDINGS.find(({ id }) => id === buildingId);
+  const { vent, windSpeedMS: defaultWindSpeedMS } = BUILDINGS.find(
+    ({ id }) => id === buildingId,
+  );
   const series = detail?.hourlySeries;
   const setSim = useSim((s) => s.set);
   const point = series?.find((p) => p.hour === hour);
@@ -211,6 +223,11 @@ function DataCard({
 
           <div className={`${styles.item} ${styles.statusItem}`}>
             <h3 className={styles.itemTitle}>현재 상태</h3>
+            {windSpeedMS !== defaultWindSpeedMS && (
+              <ResetChip className={styles.itemAction} onClick={resetWind}>
+                풍속 초기화
+              </ResetChip>
+            )}
             <div className={styles.statRow}>
               <StatBox
                 label="추정 풍속"
@@ -254,6 +271,11 @@ function DataCard({
 
           <div className={`${styles.item} ${styles.graphItem}`}>
             <h3 className={styles.itemTitle}>시간대별 흐름 그래프 (w/m²)</h3>
+            {hour !== DEFAULT_HOUR && (
+              <ResetChip className={styles.itemAction} onClick={resetHour}>
+                시간 초기화
+              </ResetChip>
+            )}
             <div className={styles.graph}>
               <div className={styles.gridRows}>
                 {GRID_ROWS.map((row) => (

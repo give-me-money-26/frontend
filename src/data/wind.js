@@ -1,5 +1,6 @@
 export const WIND_RANGE = [1.1, 3.2];
 export const HOUR_RANGE = [10, 22];
+export const DEFAULT_HOUR = 15;
 
 // 건물 데이터가 없을 때 그래프 기본 곡선의 시간대별 에너지 밀도(W/m²)
 const DEFAULT_DENSITY = [

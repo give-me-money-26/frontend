@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { DISTANCE_RANGE } from "../data/turbine.js";
+import { DEFAULT_PLACEMENT, DISTANCE_RANGE } from "../data/turbine.js";
 import { WIND_RANGE } from "../data/wind.js";
 import {
   BUILDING_FIT_SIZE,
@@ -101,8 +101,7 @@ export function createSimulatorScene(container) {
   const state = {
     buildingId: null,
     mode: "view",
-    distanceM: 2,
-    angleDegrees: 0,
+    ...DEFAULT_PLACEMENT,
     windSpeedMS: DEFAULT_WIND_SPEED,
     hourStrength: 1,
   };

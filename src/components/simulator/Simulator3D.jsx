@@ -2,9 +2,12 @@ import { useEffect, useRef } from "react";
 import handIcon from "../../assets/icons/hand.svg";
 import rotateIcon from "../../assets/icons/rotate.svg";
 import zoomIcon from "../../assets/icons/zoom.svg";
+import { DEFAULT_PLACEMENT } from "../../data/turbine";
 import { hourlyStrength } from "../../data/wind";
+import { runSimulation } from "../../hooks/useSimulation";
 import { useSim } from "../../state/simulatorStore";
 import { createSimulatorScene } from "../../three/createSimulatorScene";
+import ResetChip from "../common/ResetChip";
 import styles from "./Simulator3D.module.css";
 
 const GUIDES = [
@@ -39,6 +42,12 @@ function Simulator3D() {
   const hostRef = useRef(null);
   const sceneRef = useRef(null);
   const mode = useSim((s) => s.mode);
+  const placementChanged = useSim(
+    (s) =>
+      s.mode === "control" &&
+      (s.distanceM !== DEFAULT_PLACEMENT.distanceM ||
+        s.angleDegrees !== DEFAULT_PLACEMENT.angleDegrees),
+  );
 
   useEffect(() => {
     const host = hostRef.current;
@@ -85,13 +94,22 @@ function Simulator3D() {
           </li>
         ))}
       </ul>
-      <button
-        type="button"
-        className={styles.reset}
-        onClick={() => sceneRef.current?.resetCamera()}
-      >
-        시점 초기화
-      </button>
+      <div className={styles.actions}>
+        {placementChanged && (
+          <ResetChip
+            className={styles.reset}
+            onClick={() => runSimulation(DEFAULT_PLACEMENT)}
+          >
+            배치 초기화
+          </ResetChip>
+        )}
+        <ResetChip
+          className={styles.reset}
+          onClick={() => sceneRef.current?.resetCamera()}
+        >
+          시점 초기화
+        </ResetChip>
+      </div>
     </div>
   );
 }
