@@ -14,7 +14,7 @@ function formatKrw(value) {
 }
 
 function PaybackGoal({ paybackYears, areaM2, totalCostKrw }) {
-  const [preset, setPreset] = useState(PRESET_YEARS[0]);
+  const [preset, setPreset] = useState(PRESET_YEARS[1]);
   const [custom, setCustom] = useState("");
 
   const customYears = Number(custom);
