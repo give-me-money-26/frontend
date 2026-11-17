@@ -9,6 +9,13 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 const router = createBrowserRouter([
   { path: "/", element: <OnboardingPage /> },
   {
+    path: "admin/*",
+    lazy: () =>
+      import("./pages/AdminPage/AdminPage").then((module) => ({
+        Component: module.default,
+      })),
+  },
+  {
     element: <Layout />,
     children: [
       { path: "map", element: <MapPage /> },
