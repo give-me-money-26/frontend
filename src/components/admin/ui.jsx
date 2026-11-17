@@ -18,11 +18,7 @@ export function Term({ k, children }) {
 
 export function Badge({ code }) {
   if (!code) return null;
-  return (
-    <span className={cx(`badge b-${code}`)} title={code}>
-      {label(code)}
-    </span>
-  );
+  return <span className={cx(`badge b-${code}`)}>{label(code)}</span>;
 }
 
 export function Big({ value, unit, digits = 1 }) {
@@ -166,6 +162,60 @@ function shiftMonth(month, step) {
   const [year, index] = month.split("-").map(Number);
   const date = new Date(year, index - 1 + step, 1);
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}`;
+}
+
+const HOURS = Array.from({ length: 24 }, (_, i) => pad(i));
+const MINUTES = Array.from({ length: 60 }, (_, i) => pad(i));
+
+export function TimePicker({ label, value, onChange }) {
+  const { ref, isOpen, setIsOpen } = usePopover();
+  const [hour, minute] = value.split(":");
+
+  const columns = [
+    ["시", HOURS, hour, (h) => onChange(`${h}:${minute}`)],
+    ["분", MINUTES, minute, (m) => onChange(`${hour}:${m}`)],
+  ];
+
+  return (
+    <div className={cx("field")}>
+      {label}
+      <div ref={ref} className={cx("picker")}>
+        <button
+          type="button"
+          className={cx("picker-trigger")}
+          aria-haspopup="dialog"
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen((open) => !open)}
+        >
+          <span>{value}</span>
+          <DropDownIcon aria-hidden="true" />
+        </button>
+        {isOpen && (
+          <div className={cx("time-panel")} role="dialog" aria-label={label}>
+            {columns.map(([unit, items, current, select]) => (
+              <ul key={unit} className={cx("time-col")} aria-label={unit}>
+                {items.map((item) => (
+                  <li key={item}>
+                    <button
+                      type="button"
+                      className={cx(item === current && "on")}
+                      ref={(node) => {
+                        if (node && item === current)
+                          node.closest("ul").scrollTop = node.offsetTop - 70;
+                      }}
+                      onClick={() => select(item)}
+                    >
+                      {item}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export function DatePicker({ label, value, onChange, min }) {

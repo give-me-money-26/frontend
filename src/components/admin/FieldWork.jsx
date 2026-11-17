@@ -25,6 +25,7 @@ import {
   Empty,
   ErrorNote,
   SubTabs,
+  TimePicker,
 } from "./ui";
 import useFetch from "./useFetch";
 
@@ -669,16 +670,13 @@ function MeasurementForm({
           value={v.at.slice(0, 10)}
           onChange={(date) => setV({ ...v, at: `${date}T${v.at.slice(11)}` })}
         />
-        <label className={cx("field")}>
-          측정 시각 (한국 시간)
-          <input
-            type="time"
-            value={v.at.slice(11)}
-            onChange={(e) =>
-              setV({ ...v, at: `${v.at.slice(0, 10)}T${e.target.value}` })
-            }
-          />
-        </label>
+        <TimePicker
+          label="측정 시각 (한국 시간)"
+          value={v.at.slice(11)}
+          onChange={(time) =>
+            setV({ ...v, at: `${v.at.slice(0, 10)}T${time}` })
+          }
+        />
         <label className={cx("field")}>
           풍속 (m/s)
           <input
@@ -778,15 +776,18 @@ function BatchForm({ buildingId, vents, sensors, onClose, onSaved }) {
         />
       </label>
       <div className={cx("row decision-meta")}>
-        <input
-          type="file"
-          accept=".csv,text/csv"
-          aria-label="CSV 파일 선택"
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-            if (f) f.text().then(setText);
-          }}
-        />
+        <label className={cx("btn file-button")}>
+          CSV 파일 선택
+          <input
+            type="file"
+            accept=".csv,text/csv"
+            className={cx("sr-only")}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) file.text().then(setText);
+            }}
+          />
+        </label>
         <label className={cx("field")}>
           배치 ID
           <input
