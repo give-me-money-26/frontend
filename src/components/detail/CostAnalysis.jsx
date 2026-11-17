@@ -1,5 +1,4 @@
 import { Fragment, useState } from "react";
-import costDivider from "../../assets/icons/cost-divider.svg";
 import dropdownDivider from "../../assets/icons/dropdown-divider.svg";
 import dropdownTriangle from "../../assets/icons/dropdown-triangle.svg";
 import { PAYBACK_LIMIT_YEARS } from "../../utils/turbine";
@@ -32,100 +31,88 @@ function CostAnalysis({ turbines, selected, onSelect, paybackYears }) {
 
   return (
     <div className={styles.container}>
-      <div className={styles.list}>
-        <section className={styles.costCard}>
-          <div className={styles.costBody}>
-            <div className={styles.costContent}>
-              <div className={styles.costPrice}>
-                <div className={styles.costItem}>
-                  <span className={styles.costLabel}>터빈 가격</span>
-                  <p className={styles.amount}>
-                    <span className={styles.value}>
-                      {selected.priceKrw.toLocaleString("ko-KR")}
-                    </span>
-                    <span className={styles.unit}>원</span>
-                  </p>
-                </div>
-                <img src={costDivider} alt="" />
-              </div>
-              <div className={`${styles.costItem} ${styles.costInstall}`}>
-                <span className={styles.costLabel}>터빈 설치 비용</span>
-                <p className={styles.amount}>
-                  <span className={styles.value}>
-                    {selected.installCostKrw.toLocaleString("ko-KR")}
-                  </span>
-                  <span className={styles.unit}>원</span>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.costHeader}>
-            <h3 className={styles.costTitle}>
-              비용 분석
-              <span className={styles.assumed}>가정값</span>
-            </h3>
-            <div className={styles.dropdown}>
-              <button
-                type="button"
-                className={styles.dropdownButton}
-                aria-expanded={isOpen}
-                onClick={() => setIsOpen((prev) => !prev)}
-              >
-                <span>{selected.name}</span>
-                <span className={styles.triangle}>
-                  <img src={dropdownTriangle} alt="" />
-                </span>
-              </button>
-              {isOpen && (
-                <ul className={styles.menu}>
-                  {turbines.map((item, index) => (
-                    <Fragment key={item.name}>
-                      {index > 0 && (
-                        <li className={styles.menuDivider} aria-hidden="true">
-                          <img src={dropdownDivider} alt="" />
-                        </li>
-                      )}
-                      <li>
-                        <button
-                          type="button"
-                          className={styles.menuItem}
-                          aria-pressed={item === selected}
-                          onClick={() => handleSelect(item)}
-                        >
-                          {item.name}
-                        </button>
+      <section className={styles.costCard}>
+        <div className={styles.costHeader}>
+          <h3 className={styles.costTitle}>비용 분석</h3>
+          <span className={styles.assumed}>가정값</span>
+          <div className={styles.dropdown}>
+            <button
+              type="button"
+              className={styles.dropdownButton}
+              aria-expanded={isOpen}
+              onClick={() => setIsOpen((prev) => !prev)}
+            >
+              <span>{selected.name}</span>
+              <span className={styles.triangle}>
+                <img src={dropdownTriangle} alt="" />
+              </span>
+            </button>
+            {isOpen && (
+              <ul className={styles.menu}>
+                {turbines.map((item, index) => (
+                  <Fragment key={item.name}>
+                    {index > 0 && (
+                      <li className={styles.menuDivider} aria-hidden="true">
+                        <img src={dropdownDivider} alt="" />
                       </li>
-                    </Fragment>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.paybackCard}>
-          <div
-            className={`${styles.payback} ${payback.isLow ? styles.paybackLow : ""}`}
-          >
-            <h3 className={styles.paybackTitle}>투자 회수 기간</h3>
-            <p className={styles.amount}>
-              <span className={styles.paybackValue}>{payback.value}</span>
-              <span className={styles.paybackUnit}>{payback.unit}</span>
-            </p>
-            {payback.isLow && (
-              <span className={styles.lowText}>경제성 낮음</span>
+                    )}
+                    <li>
+                      <button
+                        type="button"
+                        className={styles.menuItem}
+                        aria-pressed={item === selected}
+                        onClick={() => handleSelect(item)}
+                      >
+                        {item.name}
+                      </button>
+                    </li>
+                  </Fragment>
+                ))}
+              </ul>
             )}
           </div>
-          <InfoTip
-            label="투자 회수 기간 정보"
-            items={PAYBACK_INFO}
-            iconSize={22}
-            className={styles.info}
-            popoverClassName={styles.infoPopover}
-          />
-        </section>
-      </div>
+        </div>
+
+        <div className={styles.costContent}>
+          <div className={styles.costItem}>
+            <span className={styles.costLabel}>터빈 가격</span>
+            <p className={styles.amount}>
+              <span className={styles.value}>
+                {selected.priceKrw.toLocaleString("ko-KR")}
+              </span>
+              <span className={styles.unit}>원</span>
+            </p>
+          </div>
+          <span className={styles.divider} aria-hidden="true" />
+          <div className={styles.costItem}>
+            <span className={styles.costLabel}>터빈 설치 비용</span>
+            <p className={styles.amount}>
+              <span className={styles.value}>
+                {selected.installCostKrw.toLocaleString("ko-KR")}
+              </span>
+              <span className={styles.unit}>원</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        className={`${styles.paybackCard} ${payback.isLow ? styles.paybackLow : ""}`}
+      >
+        <h3 className={styles.paybackTitle}>투자 회수 기간</h3>
+        <p className={styles.amount}>
+          <span className={styles.paybackValue}>{payback.value}</span>
+          <span className={styles.paybackUnit}>{payback.unit}</span>
+        </p>
+        {payback.isLow && <span className={styles.lowText}>경제성 낮음</span>}
+        <InfoTip
+          label="투자 회수 기간 정보"
+          items={PAYBACK_INFO}
+          iconSize={22}
+          className={styles.info}
+          popoverClassName={styles.infoPopover}
+        />
+      </section>
     </div>
   );
 }
