@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 import dropdownDivider from "../../assets/icons/dropdown-divider.svg";
 import dropdownTriangle from "../../assets/icons/dropdown-triangle.svg";
-import { PAYBACK_LIMIT_YEARS } from "../../utils/turbine";
+import { PAYBACK_LIMIT_YEARS } from "../../data/turbine";
 import InfoTip from "./InfoTip";
 import styles from "./CostAnalysis.module.css";
 
