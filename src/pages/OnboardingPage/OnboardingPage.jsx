@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import logoSymbol from "../../assets/images/logo-symbol.svg";
 import Logo from "../../components/common/Logo";
-import ConditionsPanel from "../../components/onboarding/ConditionsPanel";
 import GuidePanel from "../../components/onboarding/GuidePanel";
 import LocationSelect from "../../components/onboarding/LocationSelect";
 import PlanningPanel from "../../components/onboarding/PlanningPanel";
@@ -14,7 +13,6 @@ const LOCATIONS = [CAMPUS.name];
 const GUIDE_LINKS = [
   { id: "guide", label: "이용 안내" },
   { id: "planning", label: "서비스 기획" },
-  { id: "conditions", label: "계산 조건" },
 ];
 
 function Brand({ variant }) {
@@ -74,7 +72,6 @@ function OnboardingPage() {
 
       {openPanel === "guide" && <GuidePanel onClose={closePanel} />}
       {openPanel === "planning" && <PlanningPanel onClose={closePanel} />}
-      {openPanel === "conditions" && <ConditionsPanel onClose={closePanel} />}
     </div>
   );
 }
