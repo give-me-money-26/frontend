@@ -61,10 +61,13 @@
 .guide {
   display: flex;
   align-items: center;
+  gap: 17px;
   margin: 22px 0 70px;
 }
 
 .guideLink {
+  display: flex;
+  align-items: center;
   padding: 0;
   border: 0;
   background: none;
@@ -76,11 +79,14 @@
   cursor: pointer;
 }
 
-.guideLink + .guideLink::before {
-  content: "|";
-  margin: 0 11px;
+.guideIcon {
+  transform: translateY(1px);
+}
+
+.guideDivider {
   font-size: 12px;
-  vertical-align: 1px;
+  line-height: 100%;
+  color: var(--color-accent);
 }
 
 @media (max-width: 767px) {

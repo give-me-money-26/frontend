@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import guideInfoIcon from "../../assets/icons/guide-info.png";
+import guidePlanningIcon from "../../assets/icons/guide-planning.png";
 import logoSymbol from "../../assets/images/logo-symbol.svg";
 import Logo from "../../components/common/Logo";
 import GuidePanel from "../../components/onboarding/GuidePanel";
@@ -11,8 +13,8 @@ import styles from "./OnboardingPage.module.css";
 const SPLASH_DURATION = 800;
 const LOCATIONS = [CAMPUS.name];
 const GUIDE_LINKS = [
-  { id: "guide", label: "이용 안내" },
-  { id: "planning", label: "서비스 기획" },
+  { id: "guide", label: "이용 안내", icon: guideInfoIcon, iconGap: 6 },
+  { id: "planning", label: "서비스 기획", icon: guidePlanningIcon, iconGap: 8 },
 ];
 
 function Brand({ variant }) {
@@ -47,18 +49,32 @@ function OnboardingPage() {
             <Brand variant="brand" />
 
             <nav className={styles.guide}>
-              {GUIDE_LINKS.map(({ id, label }) => (
-                <button
-                  key={id}
-                  type="button"
-                  className={styles.guideLink}
-                  aria-expanded={openPanel === id}
-                  onClick={() =>
-                    setOpenPanel((current) => (current === id ? null : id))
-                  }
-                >
-                  {label}
-                </button>
+              {GUIDE_LINKS.map(({ id, label, icon, iconGap }, index) => (
+                <Fragment key={id}>
+                  {index > 0 && (
+                    <span className={styles.guideDivider} aria-hidden="true">
+                      |
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    className={styles.guideLink}
+                    style={{ gap: iconGap }}
+                    aria-expanded={openPanel === id}
+                    onClick={() =>
+                      setOpenPanel((current) => (current === id ? null : id))
+                    }
+                  >
+                    <img
+                      src={icon}
+                      alt=""
+                      width={19}
+                      height={19}
+                      className={styles.guideIcon}
+                    />
+                    {label}
+                  </button>
+                </Fragment>
               ))}
             </nav>
 
