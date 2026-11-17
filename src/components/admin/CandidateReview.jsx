@@ -591,7 +591,7 @@ function CandidateReview({
         <ul className={cx("checks")}>
           {checks.map((c) => (
             <li key={c.name} className={cx(c.done ? "done" : "")}>
-              <span aria-hidden>{c.done ? "✅" : "⬜"}</span>
+              <span className={cx("check-mark")} aria-hidden />
               {c.name}
               <span className={cx("sr-only")}>
                 {c.done ? " 확보" : " 미확보"}
