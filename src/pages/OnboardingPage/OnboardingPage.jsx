@@ -18,7 +18,7 @@ const GUIDE_LINKS = [
   { id: "planning", label: "서비스 기획", icon: guidePlanningIcon, iconGap: 8 },
   {
     id: "admin",
-    label: "운영 화면",
+    label: "관리자 화면",
     icon: guideAdminIcon,
     iconGap: 6,
     to: "/admin",

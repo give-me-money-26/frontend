@@ -68,7 +68,7 @@ function AdminPage() {
   const go = (page, arg) => navigate(pathOf(page, arg));
 
   useEffect(() => {
-    document.title = "AeroHarvest 운영";
+    document.title = "AeroHarvest 관리자";
     window.scrollTo(0, 0);
   }, [pathname]);
 
@@ -181,10 +181,8 @@ function AdminPage() {
         <Link className={cx("logo")} to="/admin" aria-label="판단 현황으로">
           <Logo />
         </Link>
-        <span className={cx("tag")}>운영</span>
-        <span className={cx("tag warn")}>
-          담당자용 · 저장하면 실제 DB에 기록됩니다
-        </span>
+        <span className={cx("tag")}>관리자</span>
+        <span className={cx("tag warn")}>저장하면 실제 DB에 기록됩니다</span>
         <span className={cx("spacer")} />
         <Link className={cx("btn sm")} to="/" state={{ skipSplash: true }}>
           시연 화면
