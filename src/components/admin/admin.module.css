@@ -195,22 +195,10 @@
   min-width: 0;
 }
 .ptitle {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
   margin: 4px 0 6px;
-}
-.ptitle h1 {
-  margin: 0;
   font-size: 28px;
   font-weight: 700;
   letter-spacing: -0.5px;
-}
-.ptitle span {
-  font-family: Offside, sans-serif;
-  font-size: 30px;
-  letter-spacing: -2px;
-  color: var(--color-frame-stroke);
 }
 .todo {
   background: var(--white);
@@ -223,13 +211,6 @@
 .todo b {
   margin-right: 8px;
   color: var(--color-accent);
-}
-.nextbar {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 12px;
-  margin-top: 8px;
 }
 
 .panel {
@@ -776,9 +757,6 @@
     padding: 0 16px;
   }
   .tag.warn {
-    display: none;
-  }
-  .ptitle span {
     display: none;
   }
 }
