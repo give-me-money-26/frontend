@@ -35,21 +35,21 @@ VS Code를 쓴다면 Prettier 확장을 설치하고 Format On Save를 켜 두�
 
 ## 페이지
 
-| 경로           | 페이지         | 설명                                                                         |
-| -------------- | -------------- | ---------------------------------------------------------------------------- |
-| `/`            | OnboardingPage | 로고 스플래시 → 위치 선택, 이용 안내 · 서비스 기획 · 계산 조건 패널          |
-| `/map`         | MapPage        | 캠퍼스 지도에서 건물 선택 → 로딩 화면                                        |
-| `/simulator`   | SimulatorPage  | 3D 시뮬레이터 (보기 / 조작 모드), 데이터 카드 · 건물 선택 드롭다운           |
-| `/revenue`     | DetailPage     | 수익 분석 상세                                                               |
-| `/environment` | DetailPage     | 환경 영향 상세                                                               |
-| `/admin/*`     | AdminPage      | 운영 화면 (판단 현황 · 후보 검토서 · 현장 실측 · 검증·기록 · 비용·탄소 근거) |
-| 그 외 경로     | NotFoundPage   | 없는 주소 안내 · 처음으로 버튼                                               |
+| 경로           | 페이지         | 설명                                                                           |
+| -------------- | -------------- | ------------------------------------------------------------------------------ |
+| `/`            | OnboardingPage | 로고 스플래시 → 위치 선택, 이용 안내 · 서비스 기획 · 계산 조건 패널            |
+| `/map`         | MapPage        | 캠퍼스 지도에서 건물 선택 → 로딩 화면                                          |
+| `/simulator`   | SimulatorPage  | 3D 시뮬레이터 (보기 / 조작 모드), 데이터 카드 · 건물 선택 드롭다운             |
+| `/revenue`     | DetailPage     | 수익 분석 상세                                                                 |
+| `/environment` | DetailPage     | 환경 영향 상세                                                                 |
+| `/admin/*`     | AdminPage      | 관리자 화면 (판단 현황 · 후보 검토서 · 현장 실측 · 검증·기록 · 비용·탄소 근거) |
+| 그 외 경로     | NotFoundPage   | 없는 주소 안내 · 처음으로 버튼                                                 |
 
 라우트는 `src/router.jsx`에서 관리합니다. `/`와 `/admin` 외의 페이지는 헤더가 있는 `Layout` 안에 있습니다. `/admin`은 처음 들어갈 때 불러옵니다(lazy).
 
-### 운영 화면
+### 관리자 화면
 
-온보딩 화면의 운영 화면 바로가기로 들어갑니다. 처음 들어오면 이용 안내 모달이 뜨고, 한 번 본 뒤에는 다시 뜨지 않습니다.
+온보딩 화면의 관리자 화면 바로가기로 들어갑니다. 처음 들어오면 이용 안내 모달이 뜨고, 한 번 본 뒤에는 다시 뜨지 않습니다.
 
 | 경로                 | 화면           | 사용자                   | 탭                                               |
 | -------------------- | -------------- | ------------------------ | ------------------------------------------------ |
@@ -71,7 +71,7 @@ VS Code를 쓴다면 Prettier 확장을 설치하고 Format On Save를 켜 두�
 ```
 src/
 ├─ pages/            # 라우트 단위 페이지 (PageName/PageName.jsx + .module.css)
-├─ api/              # API 요청 (client.js 공통 요청, endpoints.js 시연 화면, adminEndpoints.js 운영 화면)
+├─ api/              # API 요청 (client.js 공통 요청, endpoints.js 시연 화면, adminEndpoints.js 관리자 화면)
 ├─ components/
 │  ├─ common/        # 여러 페이지에서 쓰는 컴포넌트
 │  ├─ layout/        # Header, Layout
@@ -79,7 +79,7 @@ src/
 │  ├─ map/           # 캠퍼스 지도, 건물 팝업, 로딩 화면
 │  ├─ simulator/     # 시뮬레이터 화면, 3D 화면, 데이터 카드
 │  ├─ detail/        # 상세 분석 화면
-│  └─ admin/         # 운영 화면
+│  └─ admin/         # 관리자 화면
 ├─ three/            # three.js 장면, 건물 · 터빈 · 배기구 3D 모델, 바람 표현
 ├─ state/            # 공유 상태 (simulatorStore.js)
 ├─ data/             # 정적 데이터 (캠퍼스 건물 · 등가 풍속, 계산 조건, 슬라이더 범위)
@@ -94,7 +94,7 @@ src/
 - Base URL: `https://aeromap.khoon.net/api/v1` (`.env`의 `VITE_API_BASE_URL`에서 읽습니다)
 - 요청은 `src/api/client.js`의 `request`로 보냅니다.
 - 요청이 실패하면 `ApiError`(`status`, `message`, `fieldErrors`)를 던지고, 요청 취소는 `isAbort`로 구분합니다.
-- 총 33개를 사용합니다. 시연 화면 API 5개는 운영 화면에서도 함께 씁니다.
+- 총 33개를 사용합니다. 시연 화면 API 5개는 관리자 화면에서도 함께 씁니다.
 
 ### 시연 화면 API
 
@@ -104,7 +104,7 @@ src/
 - **계산 조건:** `GET /assumptions/defaults` (`useDefaultAssumptions`)
 - **계산:** `POST /simulations`, `POST /simulations/compare` (`useSimulation`)
 
-### 운영 화면 API
+### 관리자 화면 API
 
 `src/api/adminEndpoints.js`에서 관리합니다. 시연 화면 API 5개 외에 아래 28개를 씁니다.
 
