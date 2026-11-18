@@ -1,0 +1,280 @@
+.container {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  background: var(--color-card-3);
+  border: 0.8px solid var(--color-frame-stroke);
+  border-radius: 22px;
+}
+
+.amount {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.value {
+  font-family: var(--font-display);
+  font-size: 38px;
+  letter-spacing: -0.02em;
+  color: var(--color-accent);
+}
+
+.unit {
+  font-size: 18px;
+  letter-spacing: -0.06em;
+}
+
+.costCard {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--color-button-2);
+  border: 0.8px solid var(--color-logo-typo);
+  border-radius: 20px;
+}
+
+.costHeader {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 14px 18px 14px 24px;
+  border-bottom: 0.8px solid var(--color-logo-typo);
+}
+
+.costTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.assumed {
+  padding: 5px 14px;
+  background: var(--color-button-2);
+  border: 0.8px solid var(--color-frame-stroke);
+  border-radius: 999px;
+  font-size: 13px;
+  line-height: normal;
+  letter-spacing: -0.04em;
+  color: var(--color-dropdown-text);
+  white-space: nowrap;
+}
+
+.dropdown {
+  position: relative;
+  z-index: 10;
+  margin-left: auto;
+}
+
+.dropdownButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 126px;
+  height: 31px;
+  padding: 0 0 0 19.5px;
+  background: var(--color-dropdown);
+  border: 0.5px solid var(--color-frame-stroke);
+  border-radius: 11px;
+  font: inherit;
+  font-size: 13px;
+  line-height: normal;
+  letter-spacing: -0.04em;
+  color: var(--color-dropdown-text);
+  cursor: pointer;
+}
+
+.triangle {
+  position: absolute;
+  top: calc(50% - 1px);
+  right: 11.5px;
+  width: 15px;
+  height: 15px;
+  transform: translateY(-50%) scaleY(-1);
+}
+
+.dropdownButton[aria-expanded="true"] .triangle {
+  transform: translateY(calc(-50% + 2.4px));
+}
+
+.triangle img {
+  position: absolute;
+  top: 1px;
+  left: 1.735px;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 3.5px);
+  left: -1.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 170px;
+  margin: 0;
+  padding: 12px;
+  list-style: none;
+  background: var(--color-dropdown);
+  border: 0.5px solid var(--color-button);
+  border-radius: 11px;
+  filter: drop-shadow(0 1px 1.5px rgba(19, 87, 95, 0.08))
+    drop-shadow(0 6px 9px rgba(19, 87, 95, 0.14));
+}
+
+.menuItem {
+  display: block;
+  padding: 0 4px;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 13px;
+  line-height: normal;
+  letter-spacing: -0.04em;
+  color: var(--color-dropdown-text);
+  cursor: pointer;
+}
+
+.menuDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 142px;
+  height: 0;
+}
+
+.menuDivider img {
+  transform: rotate(90deg);
+}
+
+.costContent {
+  display: flex;
+  align-items: center;
+  padding: 26px 24px;
+}
+
+.costItem {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  min-width: 0;
+}
+
+.costLabel {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+}
+
+.divider {
+  flex-shrink: 0;
+  width: 1px;
+  height: 64px;
+  background: var(--color-frame-stroke);
+}
+
+.paybackCard {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  background: var(--color-button-2);
+  border: 0.8px solid var(--color-logo-typo);
+  border-radius: 20px;
+}
+
+.paybackTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.paybackValue {
+  font-family: var(--font-display);
+  font-size: 44px;
+  letter-spacing: -0.06em;
+  color: var(--color-accent);
+}
+
+.paybackUnit {
+  font-size: 20px;
+  letter-spacing: -0.06em;
+}
+
+.paybackLow .paybackValue,
+.paybackLow .paybackUnit {
+  color: var(--color-frame-stroke);
+}
+
+.lowText {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-frame-stroke);
+  white-space: nowrap;
+}
+
+.info {
+  top: 7.2px;
+  right: 7.2px;
+}
+
+.infoPopover {
+  top: -108px;
+  right: 0;
+}
+
+@media (max-width: 1023px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .paybackCard {
+    width: auto;
+    padding: 24px 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding: 16px;
+  }
+
+  .costHeader {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+  }
+
+  .costContent {
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 16px;
+  }
+
+  .divider {
+    width: 64px;
+    height: 1px;
+  }
+
+  .value {
+    font-size: 30px;
+  }
+}

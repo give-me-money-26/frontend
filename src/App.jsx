@@ -1,8 +1,9 @@
 import { RouterProvider } from "react-router";
+import useDefaultAssumptions from "./hooks/useDefaultAssumptions";
 import router from "./router";
-import "./App.css";
 
 function App() {
+  useDefaultAssumptions();
   return <RouterProvider router={router} />;
 }
 

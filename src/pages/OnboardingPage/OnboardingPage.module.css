@@ -1,0 +1,123 @@
+.page {
+  display: flex;
+  min-height: 100vh;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    var(--gradient-onboarding-start) 0%,
+    var(--gradient-onboarding-end) 100%
+  );
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.splash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.splash .symbol {
+  width: 115px;
+  height: 114px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fade-in 300ms linear;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.brand .symbol {
+  width: 68px;
+  height: 67px;
+}
+
+.title {
+  margin: 0;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.logo {
+  font-size: 53.42px;
+  letter-spacing: -0.04em;
+  -webkit-text-stroke: 0.8px currentColor;
+}
+
+.guide {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  margin: 22px 0 70px;
+}
+
+.guideLink {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: -0.04em;
+  color: var(--color-accent);
+  cursor: pointer;
+}
+
+.guideIcon {
+  transform: translateY(1px);
+}
+
+.guideDivider {
+  font-size: 12px;
+  line-height: 100%;
+  color: var(--color-accent);
+}
+
+@media (max-width: 767px) {
+  .content {
+    width: 100%;
+    padding: 0 16px;
+  }
+
+  .brand {
+    gap: 8px;
+  }
+
+  .brand .symbol {
+    width: 46px;
+    height: 45px;
+  }
+
+  .logo {
+    font-size: 38px;
+  }
+
+  .guide {
+    margin: 18px 0 48px;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

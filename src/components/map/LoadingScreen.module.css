@@ -1,0 +1,130 @@
+.screen {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--gradient-main);
+}
+
+.winds {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mask-image: radial-gradient(
+    ellipse 260px 190px at 50% calc(50% + 16px),
+    transparent 65%,
+    #000 100%
+  );
+}
+
+.wind {
+  position: absolute;
+  width: 108px;
+  height: 4px;
+  animation: blow linear infinite;
+}
+
+.content {
+  position: relative;
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 97px;
+  height: 95px;
+  animation: spin 1.6s linear infinite;
+}
+
+.message {
+  margin: 34px 0 0;
+  color: var(--color-accent);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 29px;
+  letter-spacing: -0.04em;
+}
+
+.track {
+  width: 300px;
+  height: 6px;
+  margin-top: 30px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-frame-stroke);
+}
+
+.bar {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-accent-2);
+}
+
+.percent {
+  margin: 16px 0 0;
+  color: var(--color-accent-2);
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 100%;
+  letter-spacing: -0.04em;
+  -webkit-text-stroke: 0.2px currentColor;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes blow {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--x) - 100%));
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(calc(100vw - var(--x)));
+  }
+}
+
+@media (max-width: 767px) {
+  .content {
+    padding: 0 24px;
+  }
+
+  .logo {
+    width: 72px;
+    height: 70px;
+  }
+
+  .message {
+    margin-top: 28px;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+  }
+
+  .track {
+    width: 240px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo {
+    animation-duration: 6s;
+  }
+
+  .wind {
+    animation: none;
+  }
+}

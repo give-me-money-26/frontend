@@ -1,11 +1,29 @@
 .card {
+  padding: 0 24px 0 15px;
+  background: var(--color-card-3);
+  border: 0.8px solid var(--color-frame-stroke);
+  border-radius: var(--radius-card);
+}
+
+.main {
   display: flex;
   align-items: center;
   height: 99px;
-  padding: 0 24px 0 15px;
-  background: var(--color-card);
-  border: 0.8px solid var(--color-frame-stroke);
-  border-radius: var(--radius-card);
+}
+
+.baseline {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 0 9px;
+  padding: 16px 12px 20px;
+  border-top: 0.8px solid var(--color-frame-stroke);
+  font-size: 14px;
+  letter-spacing: -0.04em;
+  color: var(--color-primary);
+}
+
+.baselineValue {
+  color: var(--color-accent);
 }
 
 .text {
@@ -26,6 +44,7 @@
   margin: 0;
   font-size: 13px;
   letter-spacing: -0.03em;
+  color: var(--color-accent);
 }
 
 .actions {
@@ -47,12 +66,44 @@
 }
 
 .secondaryButton {
-  background: var(--color-card);
+  background: var(--color-button-2);
   color: var(--color-primary);
 }
 
 .primaryButton {
   padding: 10px 15px;
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-white);
+}
+
+@media (max-width: 767px) {
+  .card {
+    padding: 0 16px;
+  }
+
+  .main {
+    flex-wrap: wrap;
+    gap: 12px 0;
+    height: auto;
+    padding: 16px 0;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .secondaryButton,
+  .primaryButton {
+    flex: 1 1 auto;
+    padding-block: 12px;
+  }
+
+  .baseline {
+    flex-direction: column;
+    gap: 4px;
+    margin-left: 0;
+    padding-inline: 0;
+  }
 }

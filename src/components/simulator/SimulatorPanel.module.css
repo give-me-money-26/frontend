@@ -7,8 +7,8 @@
 .titleRow {
   display: flex;
   align-items: baseline;
-  gap: 18px;
-  padding: 0 6px 0 21px;
+  justify-content: space-between;
+  padding: 0 19px 0 30px;
 }
 
 .title {
@@ -18,35 +18,24 @@
   font-weight: 400;
   letter-spacing: -0.03em;
   color: var(--color-primary);
+  -webkit-text-stroke: 0.2px currentColor;
 }
 
-.location {
+.campus {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   margin: 0;
   font-size: 15px;
-  letter-spacing: -0.05em;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.04em;
   color: var(--color-accent);
 }
 
-.mapLink {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  align-self: center;
-  width: 133px;
-  height: 28px;
-  margin-left: auto;
-  background: var(--color-accent);
-  border: 1px solid var(--color-frame-stroke);
-  border-radius: 22px;
-  font-family: var(--font-display);
-  font-size: 15px;
-  letter-spacing: -0.03em;
-  color: #fff;
-}
-
-.mapArrow {
-  transform: scaleX(-1);
+.pin {
+  width: 20px;
+  height: 20px;
 }
 
 .card {
@@ -60,8 +49,9 @@
 
 .mode {
   position: absolute;
+  z-index: 1;
   top: 22px;
-  right: 32px;
+  left: 32px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -69,4 +59,49 @@
   line-height: 1;
   letter-spacing: -0.04em;
   color: var(--color-accent);
+}
+
+.controlMode {
+  border-color: var(--color-control-stroke);
+}
+
+.controlMode .mode {
+  font-weight: 500;
+  color: var(--color-control);
+}
+
+.modeDot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+}
+
+.modeDot img {
+  position: absolute;
+  top: -7px;
+  left: -7px;
+}
+
+@media (max-width: 1023px) {
+  .card {
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (max-width: 767px) {
+  .titleRow {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    padding: 0 4px 0 56px;
+  }
+
+  .card {
+    aspect-ratio: 4 / 5;
+  }
+
+  .mode {
+    top: 20px;
+    left: 20px;
+  }
 }

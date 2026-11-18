@@ -1,0 +1,71 @@
+.simulator,
+.host {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.host {
+  overflow: hidden;
+}
+
+.error {
+  display: none;
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 24px;
+  place-items: center;
+  text-align: center;
+  font-size: 14px;
+  color: var(--color-primary);
+}
+
+.host[data-error="true"] .error {
+  display: grid;
+}
+
+.guide {
+  position: absolute;
+  top: 22px;
+  right: 28px;
+  display: flex;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--color-accent);
+  pointer-events: none;
+}
+
+.guideItem {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.actions {
+  position: absolute;
+  top: 48px;
+  right: 24px;
+  display: flex;
+  gap: 6px;
+}
+
+@media (max-width: 767px) {
+  .guide {
+    display: none;
+  }
+
+  .actions {
+    top: 12px;
+    right: 14px;
+  }
+
+  .actions .reset {
+    padding: 8px 12px;
+  }
+}
