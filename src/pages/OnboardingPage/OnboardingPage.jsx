@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import guideAdminIcon from "../../assets/icons/guide-admin.svg";
 import guideInfoIcon from "../../assets/icons/guide-info.png";
 import guidePlanningIcon from "../../assets/icons/guide-planning.png";
@@ -38,7 +38,8 @@ function Brand({ variant }) {
 
 function OnboardingPage() {
   const navigate = useNavigate();
-  const [showSplash, setShowSplash] = useState(true);
+  const { state } = useLocation();
+  const [showSplash, setShowSplash] = useState(() => !state?.skipSplash);
   const [openPanel, setOpenPanel] = useState(null);
   const closePanel = useCallback(() => setOpenPanel(null), []);
 

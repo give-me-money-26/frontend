@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { adminApi } from "../../api/adminEndpoints";
 import { isAbort } from "../../api/client";
+import information from "../../assets/icons/information.png";
 import AdminDialog from "../../components/admin/AdminDialog";
 import CandidateReview from "../../components/admin/CandidateReview";
 import { cx } from "../../components/admin/cx";
@@ -185,15 +186,17 @@ function AdminPage() {
           담당자용 · 저장하면 실제 DB에 기록됩니다
         </span>
         <span className={cx("spacer")} />
-        <Link className={cx("btn sm")} to="/">
-          시연 화면으로
+        <Link className={cx("btn sm")} to="/" state={{ skipSplash: true }}>
+          시연 화면
         </Link>
         <button
           type="button"
           className={cx("btn sm")}
           onClick={() => setIntro(true)}
+          aria-label="이용 안내"
         >
-          ? 이용 안내
+          <img className={cx("intro-icon")} src={information} alt="" />
+          <span className={cx("intro-label")}>이용 안내</span>
         </button>
       </header>
       <div className={cx("wrap")}>
