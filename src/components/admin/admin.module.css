@@ -913,6 +913,10 @@
 .picker {
   position: relative;
 }
+.picker .pop-end {
+  left: auto;
+  right: 0;
+}
 .picker-trigger {
   display: flex;
   align-items: center;
