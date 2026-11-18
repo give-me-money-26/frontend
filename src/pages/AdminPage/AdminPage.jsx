@@ -227,10 +227,7 @@ function AdminPage() {
           ))}
         </nav>
         <main className={cx("main")}>
-          <div className={cx("ptitle")}>
-            <h1>{info.ko}</h1>
-            <span aria-hidden>{info.en}</span>
-          </div>
+          <h1 className={cx("ptitle")}>{info.ko}</h1>
           <div className={cx("todo")}>
             <b>이 화면에서 할 일</b> {info.todo}
           </div>
@@ -238,16 +235,6 @@ function AdminPage() {
           {data
             ? renderPage()
             : !error && <p className={cx("note")}>불러오는 중…</p>}
-          <div className={cx("nextbar")}>
-            <span className={cx("note")}>다음 단계</span>
-            <button
-              type="button"
-              className={cx("btn pri")}
-              onClick={() => go(info.next[0])}
-            >
-              {info.next[1]} →
-            </button>
-          </div>
         </main>
       </div>
       {intro && (

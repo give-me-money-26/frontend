@@ -73,38 +73,28 @@ export const TERMS = {
 export const INFO = {
   home: {
     ko: "판단 현황",
-    en: "DECISION BOARD",
     desc: "후보 한눈에 보기",
     todo: "후보 배기구 5곳이 어느 단계에 있는지 보고, 가장 먼저 할 일을 고릅니다.",
-    next: ["review", "② 후보 검토서: 후보 근거 읽기"],
   },
   review: {
     ko: "후보 검토서",
-    en: "CANDIDATE REVIEW",
     desc: "근거 읽고 결정",
     todo: "한 후보의 근거를 위에서부터 읽고, 맨 아래에서 결정을 남깁니다.",
-    next: ["field", "③ 현장 실측: 측정값 기록하기"],
   },
   field: {
     ko: "현장 실측",
-    en: "FIELD WORK",
     desc: "측정값 기록",
     todo: "측정 요청이 온 후보에 현장에서 잰 값을 기록하고, 이상한 기록은 품질 판정합니다.",
-    next: ["records", "④ 검증·기록: 예측·검증하기"],
   },
   records: {
     ko: "검증·기록",
-    en: "RECORDS",
     desc: "예측·검증·결정 기록",
     todo: "쌓인 실측으로 발전량을 예측하고, 예측이 맞았는지 오차를 남깁니다. 결정 기록도 여기 모입니다.",
-    next: ["evidence", "⑤ 비용·탄소 근거: 회수기간·탄소 확인"],
   },
   evidence: {
     ko: "비용·탄소 근거",
-    en: "EVIDENCE",
     desc: "회수기간·탄소 출처",
     todo: "회수기간·탄소 저감 숫자와 그 숫자가 나온 가정·출처를 확인합니다.",
-    next: ["home", "① 판단 현황: 처음부터 다시 보기"],
   },
 };
 
