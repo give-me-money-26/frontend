@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import DropDownIcon from "../../assets/icons/drop-down.svg?react";
 import AdminDialog from "./AdminDialog";
 import { cx } from "./cx";
@@ -75,6 +75,15 @@ export function SubTabs({ tabs, value, onChange }) {
 function usePopover() {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [alignEnd, setAlignEnd] = useState(false);
+
+  useLayoutEffect(() => {
+    if (!isOpen) return;
+    const box = ref.current;
+    const panel = box.lastElementChild;
+    const limit = document.documentElement.clientWidth - 8;
+    setAlignEnd(box.getBoundingClientRect().left + panel.offsetWidth > limit);
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -92,11 +101,11 @@ function usePopover() {
     };
   }, [isOpen]);
 
-  return { ref, isOpen, setIsOpen };
+  return { ref, isOpen, setIsOpen, alignEnd };
 }
 
 export function Dropdown({ label, value, options, onChange, placeholder }) {
-  const { ref, isOpen, setIsOpen } = usePopover();
+  const { ref, isOpen, setIsOpen, alignEnd } = usePopover();
   const current = options.find(([key]) => key === value);
 
   const handleSelect = (key) => {
@@ -119,7 +128,11 @@ export function Dropdown({ label, value, options, onChange, placeholder }) {
           <DropDownIcon aria-hidden="true" />
         </button>
         {isOpen && (
-          <ul className={cx("menu")} role="listbox" aria-label={label}>
+          <ul
+            className={cx("menu", alignEnd && "pop-end")}
+            role="listbox"
+            aria-label={label}
+          >
             {options.map(([key, text]) => (
               <li key={key} role="option" aria-selected={key === value}>
                 <button type="button" onClick={() => handleSelect(key)}>
@@ -168,7 +181,7 @@ const HOURS = Array.from({ length: 24 }, (_, i) => pad(i));
 const MINUTES = Array.from({ length: 60 }, (_, i) => pad(i));
 
 export function TimePicker({ label, value, onChange }) {
-  const { ref, isOpen, setIsOpen } = usePopover();
+  const { ref, isOpen, setIsOpen, alignEnd } = usePopover();
   const [hour, minute] = value.split(":");
 
   const columns = [
@@ -191,7 +204,11 @@ export function TimePicker({ label, value, onChange }) {
           <DropDownIcon aria-hidden="true" />
         </button>
         {isOpen && (
-          <div className={cx("time-panel")} role="dialog" aria-label={label}>
+          <div
+            className={cx("time-panel", alignEnd && "pop-end")}
+            role="dialog"
+            aria-label={label}
+          >
             {columns.map(([unit, items, current, select]) => (
               <ul key={unit} className={cx("time-col")} aria-label={unit}>
                 {items.map((item) => (
@@ -219,7 +236,7 @@ export function TimePicker({ label, value, onChange }) {
 }
 
 export function DatePicker({ label, value, onChange, min }) {
-  const { ref, isOpen, setIsOpen } = usePopover();
+  const { ref, isOpen, setIsOpen, alignEnd } = usePopover();
   const today = todaySeoul();
   const [month, setMonth] = useState(today.slice(0, 7));
   const [year, monthIndex] = month.split("-").map(Number);
@@ -252,7 +269,11 @@ export function DatePicker({ label, value, onChange, min }) {
           <DropDownIcon aria-hidden="true" />
         </button>
         {isOpen && (
-          <div className={cx("calendar")} role="dialog" aria-label={label}>
+          <div
+            className={cx("calendar", alignEnd && "pop-end")}
+            role="dialog"
+            aria-label={label}
+          >
             <div className={cx("calendar-head")}>
               <b>
                 {year}년 {monthIndex}월
