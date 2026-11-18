@@ -68,6 +68,16 @@
   border: 0;
   padding: 0;
   cursor: pointer;
+  font-size: 24px;
+  line-height: normal;
+  letter-spacing: -0.04em;
+  text-decoration: none;
+  -webkit-text-stroke: 0.45px currentColor;
+}
+.top .tag,
+.top .btn {
+  position: relative;
+  top: 1.5px;
 }
 .tag {
   font-size: 12px;
@@ -108,6 +118,11 @@
 .btn.sm {
   padding: 5px 12px;
   font-size: 12px;
+}
+.intro-icon {
+  display: none;
+  width: 16px;
+  height: 16px;
 }
 .btn:disabled {
   opacity: 0.45;
@@ -815,6 +830,29 @@
 }
 .dialog .dialogVars {
   display: contents;
+}
+
+@media (max-width: 767px) {
+  .top {
+    gap: 8px;
+    padding: 0 12px;
+  }
+  .intro-label {
+    display: none;
+  }
+  .intro-icon {
+    display: block;
+  }
+  .dialog {
+    overflow-y: auto;
+    padding: 20px;
+  }
+  .intro-title {
+    font-size: 17px;
+  }
+  .steps {
+    grid-template-columns: 1fr;
+  }
 }
 
 .chart stop {
